@@ -6,7 +6,8 @@
     <!-- Header -->
     <div class="mb-8">
         <h1 class="text-3xl font-bold text-slate-800">Editar imóvel</h1>
-        <p class="text-slate-500 mt-2">Atualize os dados do seu anúncio. O embedding será regenerado automaticamente.</p>
+        <p class="text-slate-500 mt-2">Atualize os dados do seu anúncio. O embedding será regenerado automaticamente.
+        </p>
     </div>
 
     <!-- Formulário -->
@@ -16,7 +17,8 @@
         <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
             <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
                 <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 Informações do imóvel
             </h2>
@@ -24,47 +26,54 @@
             <div>
                 <label for="titulo" class="block text-sm font-medium text-slate-700 mb-1.5">Título do anúncio</label>
                 <input type="text" id="titulo" name="titulo" required minlength="5" maxlength="200"
-                       value="{{ imovel.titulo }}"
-                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                    value="{{ imovel.titulo }}"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
             </div>
 
             <div>
-                <label for="descricao" class="block text-sm font-medium text-slate-700 mb-1.5">Descrição detalhada</label>
+                <label for="descricao" class="block text-sm font-medium text-slate-700 mb-1.5">Descrição
+                    detalhada</label>
                 <textarea id="descricao" name="descricao" required minlength="20" rows="5"
-                          class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white resize-y">{{ imovel.descricao }}</textarea>
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white resize-y">{{ imovel.descricao }}</textarea>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="tipo_imovel" class="block text-sm font-medium text-slate-700 mb-1.5">Tipo de imóvel</label>
+                    <label for="tipo_imovel" class="block text-sm font-medium text-slate-700 mb-1.5">Tipo de
+                        imóvel</label>
                     <select id="tipo_imovel" name="tipo_imovel"
-                            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
-                        <option value="apartamento" {% if imovel.tipo_imovel == 'apartamento' %}selected{% endif %}>Apartamento</option>
-                        <option value="casa" {% if imovel.tipo_imovel == 'casa' %}selected{% endif %}>Casa</option>
-                        <option value="cobertura" {% if imovel.tipo_imovel == 'cobertura' %}selected{% endif %}>Cobertura</option>
-                        <option value="terreno" {% if imovel.tipo_imovel == 'terreno' %}selected{% endif %}>Terreno</option>
-                        <option value="comercial" {% if imovel.tipo_imovel == 'comercial' %}selected{% endif %}>Comercial</option>
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                        <option value="apartamento" {% if imovel.tipo_imovel=='apartamento' %}selected{% endif %}>
+                            Apartamento</option>
+                        <option value="casa" {% if imovel.tipo_imovel=='casa' %}selected{% endif %}>Casa</option>
+                        <option value="cobertura" {% if imovel.tipo_imovel=='cobertura' %}selected{% endif %}>Cobertura
+                        </option>
+                        <option value="terreno" {% if imovel.tipo_imovel=='terreno' %}selected{% endif %}>Terreno
+                        </option>
+                        <option value="comercial" {% if imovel.tipo_imovel=='comercial' %}selected{% endif %}>Comercial
+                        </option>
                     </select>
                 </div>
                 <div>
                     <label for="preco" class="block text-sm font-medium text-slate-700 mb-1.5">Preço (R$)</label>
                     <input type="number" id="preco" name="preco" required min="1" step="any"
-                           value="{{ imovel.preco|int }}"
-                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                        value="{{ imovel.preco|int }}"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="quartos" class="block text-sm font-medium text-slate-700 mb-1.5">Quartos</label>
-                    <input type="number" id="quartos" name="quartos" value="{{ imovel.quartos }}" min="0" max="50" step="1"
-                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                    <input type="number" id="quartos" name="quartos" value="{{ imovel.quartos }}" min="0" max="50"
+                        step="1"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
                 <div>
                     <label for="area" class="block text-sm font-medium text-slate-700 mb-1.5">Área (m²)</label>
                     <input type="number" id="area" name="area" min="1" step="any"
-                           value="{{ imovel.area|int if imovel.area else '' }}"
-                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                        value="{{ imovel.area|int if imovel.area else '' }}"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
             </div>
         </div>
@@ -75,30 +84,29 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="cidade" class="block text-sm font-medium text-slate-700 mb-1.5">Cidade</label>
-                    <input type="text" id="cidade" name="cidade" required
-                           value="{{ imovel.cidade }}"
-                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                    <input type="text" id="cidade" name="cidade" required value="{{ imovel.cidade }}"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
                 <div>
                     <label for="bairro" class="block text-sm font-medium text-slate-700 mb-1.5">Bairro</label>
-                    <input type="text" id="bairro" name="bairro" required
-                           value="{{ imovel.bairro }}"
-                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                    <input type="text" id="bairro" name="bairro" required value="{{ imovel.bairro }}"
+                        class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
             </div>
 
             <div>
                 <label for="localizacao" class="block text-sm font-medium text-slate-700 mb-1.5">
                     Endereço exato / Localização
-                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md font-normal inline-flex items-center gap-1 border border-amber-200">
-                        🔒 Visível apenas para usuários logados
+                    <span
+                        class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md font-normal inline-flex items-center gap-1 border border-amber-200">
+                        Visível apenas para usuários logados
                     </span>
                 </label>
                 <input type="text" id="localizacao" name="localizacao" maxlength="255"
-                       value="{{ imovel.localizacao or '' }}"
-                       placeholder="Ex: Av. Paulista, 1500 - Ap. 82 - Bloco B"
-                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
-                <p class="text-xs text-slate-400 mt-1">Por questões de privacidade, visitantes anônimos verão apenas Cidade/Bairro.</p>
+                    value="{{ imovel.localizacao or '' }}" placeholder="Ex: Av. Paulista, 1500 - Ap. 82 - Bloco B"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                <p class="text-xs text-slate-400 mt-1">Por questões de privacidade, visitantes anônimos verão apenas
+                    Cidade/Bairro.</p>
             </div>
         </div>
 
@@ -111,15 +119,14 @@
                 <p class="text-sm font-medium text-slate-700 mb-2">Fotos atuais salvas:</p>
                 <div class="flex gap-3 flex-wrap">
                     {% for img in imovel.imagens %}
-                    <div class="img-preview-card relative group w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm shrink-0 bg-slate-100" style="position: relative; display: inline-block; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0;">
+                    <div class="img-preview-card relative group w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm shrink-0 bg-slate-100"
+                        style="position: relative; display: inline-block; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0;">
                         <img src="/static/uploads/{{ img.caminho }}" alt="Foto {{ loop.index }}"
-                             style="width: 100%; height: 100%; object-fit: cover;">
+                            style="width: 100%; height: 100%; object-fit: cover;">
                         <form action="/imoveis/{{ imovel.id }}/imagens/{{ img.id }}/excluir" method="post">
-                            <button type="submit"
-                                    onclick="return confirm('Tem certeza que deseja excluir esta foto?')"
-                                    title="Remover foto do imóvel"
-                                    class="btn-remover-foto"
-                                    style="position: absolute; top: 4px; right: 4px; z-index: 50; background-color: #dc2626; color: #ffffff; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+                            <button type="submit" onclick="return confirm('Tem certeza que deseja excluir esta foto?')"
+                                title="Remover foto do imóvel" class="btn-remover-foto"
+                                style="position: absolute; top: 4px; right: 4px; z-index: 50; background-color: #dc2626; color: #ffffff; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
                                 ✕
                             </button>
                         </form>
@@ -131,9 +138,8 @@
 
             <div>
                 <label class="block text-sm font-medium text-slate-700 mb-1.5">Adicionar novas fotos</label>
-                <input type="file" id="imagens" name="imagens" multiple accept="image/*"
-                       onchange="previewImagens(this)"
-                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-50 file:text-primary-600 file:font-medium file:cursor-pointer cursor-pointer">
+                <input type="file" id="imagens" name="imagens" multiple accept="image/*" onchange="previewImagens(this)"
+                    class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-50 file:text-primary-600 file:font-medium file:cursor-pointer cursor-pointer">
             </div>
             <div id="preview-container" class="flex gap-3 flex-wrap"></div>
         </div>
@@ -141,11 +147,11 @@
         <!-- Botões -->
         <div class="flex gap-4">
             <button type="submit"
-                    class="flex-1 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/25">
+                class="flex-1 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/25">
                 Salvar Alterações
             </button>
             <a href="/imoveis/{{ imovel.id }}"
-               class="px-6 py-3.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium rounded-xl transition-colors text-center">
+                class="px-6 py-3.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium rounded-xl transition-colors text-center">
                 Cancelar
             </a>
         </div>
