@@ -1,0 +1,137 @@
+{% extends "base.html" %}
+{% block titulo %}Anunciar Imóvel — ImóvelIA{% endblock %}
+
+{% block conteudo %}
+<div class="max-w-3xl mx-auto px-4 sm:px-6 py-10">
+    <!-- Header -->
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-slate-800">Anunciar novo imóvel</h1>
+        <p class="text-slate-500 mt-2">Preencha os dados do imóvel. Quanto mais detalhada a descrição, melhor será a busca por IA.</p>
+    </div>
+
+    <!-- Formulário -->
+    <form action="/imoveis/novo" method="post" enctype="multipart/form-data" class="space-y-8">
+
+        <!-- Informações principais -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                Informações do imóvel
+            </h2>
+
+            <div>
+                <label for="titulo" class="block text-sm font-medium text-slate-700 mb-1.5">Título do anúncio</label>
+                <input type="text" id="titulo" name="titulo" required minlength="5" maxlength="200"
+                       placeholder="Ex: Apartamento espaçoso com vista para o parque"
+                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+            </div>
+
+            <div>
+                <label for="descricao" class="block text-sm font-medium text-slate-700 mb-1.5">
+                    Descrição detalhada
+                    <span class="text-slate-400 font-normal">(importante para a busca por IA)</span>
+                </label>
+                <textarea id="descricao" name="descricao" required minlength="20" rows="5"
+                          placeholder="Descreva o imóvel com detalhes: ambiente, vizinhança, diferenciais, ventilação, iluminação, proximidade de transporte, comércio, escolas..."
+                          class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white resize-y"></textarea>
+                <p class="text-xs text-slate-400 mt-1">💡 Dica: uma boa descrição ajuda a IA a conectar seu imóvel com buscas relevantes.</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="tipo_imovel" class="block text-sm font-medium text-slate-700 mb-1.5">Tipo de imóvel</label>
+                    <select id="tipo_imovel" name="tipo_imovel"
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                        <option value="apartamento">Apartamento</option>
+                        <option value="casa">Casa</option>
+                        <option value="cobertura">Cobertura</option>
+                        <option value="terreno">Terreno</option>
+                        <option value="comercial">Comercial</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="preco" class="block text-sm font-medium text-slate-700 mb-1.5">Preço (R$)</label>
+                    <input type="number" id="preco" name="preco" required min="1" step="100"
+                           placeholder="Ex: 350000"
+                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="quartos" class="block text-sm font-medium text-slate-700 mb-1.5">Quartos</label>
+                    <input type="number" id="quartos" name="quartos" value="1" min="0" max="20"
+                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                </div>
+                <div>
+                    <label for="area" class="block text-sm font-medium text-slate-700 mb-1.5">Área (m²) <span class="text-slate-400 font-normal">- opcional</span></label>
+                    <input type="number" id="area" name="area" min="1" step="1"
+                           placeholder="Ex: 72"
+                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                </div>
+            </div>
+        </div>
+
+        <!-- Localização -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                </svg>
+                Localização
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="cidade" class="block text-sm font-medium text-slate-700 mb-1.5">Cidade</label>
+                    <input type="text" id="cidade" name="cidade" required minlength="2" maxlength="100"
+                           placeholder="Ex: São Paulo"
+                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                </div>
+                <div>
+                    <label for="bairro" class="block text-sm font-medium text-slate-700 mb-1.5">Bairro</label>
+                    <input type="text" id="bairro" name="bairro" required minlength="2" maxlength="100"
+                           placeholder="Ex: Vila Mariana"
+                           class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                </div>
+            </div>
+        </div>
+
+        <!-- Imagens -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 space-y-5">
+            <h2 class="text-lg font-semibold text-slate-800 flex items-center gap-2">
+                <svg class="w-5 h-5 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Fotos do imóvel
+            </h2>
+
+            <div>
+                <label class="block text-sm font-medium text-slate-700 mb-1.5">Upload de imagens <span class="text-slate-400 font-normal">- opcional</span></label>
+                <input type="file" id="imagens" name="imagens" multiple accept="image/*"
+                       onchange="previewImagens(this)"
+                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm bg-slate-50 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-primary-50 file:text-primary-600 file:font-medium file:cursor-pointer hover:file:bg-primary-100 cursor-pointer">
+                <p class="text-xs text-slate-400 mt-1">Aceita JPG, PNG ou WebP. Múltiplas fotos permitidas.</p>
+            </div>
+
+            <!-- Preview das imagens -->
+            <div id="preview-container" class="flex gap-3 flex-wrap"></div>
+        </div>
+
+        <!-- Botão submit -->
+        <div class="flex gap-4">
+            <button type="submit"
+                    class="flex-1 py-3.5 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/25 text-center">
+                Publicar Anúncio
+            </button>
+            <a href="/"
+               class="px-6 py-3.5 border border-slate-200 text-slate-600 hover:bg-slate-50 font-medium rounded-xl transition-colors text-center">
+                Cancelar
+            </a>
+        </div>
+    </form>
+</div>
+{% endblock %}

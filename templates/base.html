@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="Marketplace de Imóveis com busca inteligente por IA. Encontre seu imóvel ideal usando linguagem natural.">
+    <title>{% block titulo %}Marketplace de Imóveis{% endblock %}</title>
+
+    <!-- Tailwind CSS via CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { 50: '#eef2ff', 100: '#e0e7ff', 200: '#c7d2fe', 300: '#a5b4fc', 400: '#818cf8', 500: '#6366f1', 600: '#4f46e5', 700: '#4338ca', 800: '#3730a3', 900: '#312e81' },
+                        accent: { 400: '#34d399', 500: '#10b981', 600: '#059669' },
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+
+    <!-- Google Fonts — Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/static/css/custom.css">
+</head>
+
+<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex flex-col">
+
+    <!-- ================================================================= -->
+    <!-- NAVBAR                                                            -->
+    <!-- ================================================================= -->
+    <nav class="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo -->
+                <a href="/" class="flex items-center gap-2 group">
+                    <div
+                        class="w-9 h-9 bg-gradient-to-br from-primary-500 to-primary-700 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/25 group-hover:shadow-primary-500/40 transition-shadow">
+                        <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    <span class="text-lg font-bold text-slate-800">Imóvel<span class="text-primary-600">IA</span></span>
+                </a>
+
+                <!-- Nav links desktop -->
+                <div class="hidden md:flex items-center gap-1">
+                    <a href="/"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
+                        Buscar
+                    </a>
+                    {% if usuario %}
+                    <a href="/imoveis/novo"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
+                        Anunciar
+                    </a>
+                    <a href="/meus-imoveis"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
+                        Meus Imóveis
+                    </a>
+                    {% endif %}
+                </div>
+
+                <!-- Auth buttons -->
+                <div class="flex items-center gap-3">
+                    {% if usuario %}
+                    <span class="hidden sm:inline text-sm text-slate-500">
+                        Olá, <strong class="text-slate-700">{{ usuario.nome.split(' ')[0] }}</strong>
+                    </span>
+                    <a href="/logout"
+                        class="px-4 py-2 text-sm font-medium text-slate-500 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
+                        Sair
+                    </a>
+                    {% else %}
+                    <a href="/login"
+                        class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-primary-600 hover:bg-primary-50 rounded-lg transition-colors">
+                        Entrar
+                    </a>
+                    <a href="/cadastro"
+                        class="px-4 py-2 text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 rounded-lg transition-colors shadow-sm">
+                        Criar Conta
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ================================================================= -->
+    <!-- CONTEÚDO PRINCIPAL                                                -->
+    <!-- ================================================================= -->
+    <main class="flex-1">
+        {% if erro_404 is defined and erro_404 %}
+        <div class="max-w-2xl mx-auto px-4 py-24 text-center">
+            <h1 class="text-6xl font-extrabold text-slate-200 mb-4">404</h1>
+            <p class="text-lg text-slate-500 mb-6">Página não encontrada</p>
+            <a href="/"
+                class="inline-flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors font-medium">
+                ← Voltar à Home
+            </a>
+        </div>
+        {% else %}
+        {% block conteudo %}{% endblock %}
+        {% endif %}
+    </main>
+
+    <!-- ================================================================= -->
+    <!-- FOOTER                                                            -->
+    <!-- ================================================================= -->
+    <footer class="bg-slate-900 text-slate-400 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                <div class="flex items-center gap-2">
+                    <div
+                        class="w-7 h-7 bg-gradient-to-br from-primary-500 to-primary-700 rounded-lg flex items-center justify-center">
+                        <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    <span class="text-sm font-semibold text-slate-300">ImóvelIA</span>
+                </div>
+                <p class="text-sm">
+                    Projeto acadêmico Uno-Chapecó / Marketplace com busca semântica por IA
+                </p>
+                <p class="text-xs text-slate-500">
+                    © 2026 • Feito com Python + FastAPI + Sentence-transformers
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="/static/js/main.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+
+</html>
