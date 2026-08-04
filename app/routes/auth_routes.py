@@ -7,11 +7,58 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Usuario
+from app.models import Usuario, Imovel, Interesse
 from app.auth import hash_senha, verificar_senha, criar_token_jwt, obter_usuario_logado
 
 router = APIRouter(tags=["autenticação"])
 templates = Jinja2Templates(directory="templates")
+
+
+@router.get("/perfil")
+@router.get("/dashboard")
+async def pagina_perfil(
+    request: Request,
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Página de perfil / dashboard do usuário com métricas e histórico."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    # Imóveis anunciados pelo usuário
+    imoveis = db.query(Imovel).filter(
+        Imovel.usuario_id == usuario.id
+    ).order_by(Imovel.criado_em.desc()).all()
+
+    # Métricas agregadas
+    total_imoveis = len(imoveis)
+    total_visualizacoes = sum(im.visualizacoes or 0 for im in imoveis)
+
+    # Interesses recebidos nos imóveis pertencentes ao usuário
+    imoveis_ids = [im.id for im in imoveis]
+    interesses_recebidos = []
+    if imoveis_ids:
+        interesses_recebidos = db.query(Interesse).filter(
+            Interesse.imovel_id.in_(imoveis_ids)
+        ).order_by(Interesse.criado_em.desc()).all()
+
+    # Interesses demonstrados pelo próprio usuário (enviados)
+    meus_interesses = db.query(Interesse).filter(
+        Interesse.usuario_id == usuario.id
+    ).order_by(Interesse.criado_em.desc()).all()
+
+    return templates.TemplateResponse(
+        request=request,
+        name="perfil.html",
+        context={
+            "usuario": usuario,
+            "imoveis": imoveis,
+            "total_imoveis": total_imoveis,
+            "total_visualizacoes": total_visualizacoes,
+            "interesses_recebidos": interesses_recebidos,
+            "meus_interesses": meus_interesses,
+        },
+    )
 
 
 @router.get("/cadastro")

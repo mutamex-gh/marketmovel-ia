@@ -37,10 +37,12 @@ class Imovel(Base):
     preco = Column(Float, nullable=False)
     cidade = Column(String(100), nullable=False)
     bairro = Column(String(100), nullable=False)
+    localizacao = Column(String(255), nullable=True)  # Endereço exato / localização detalhada
     quartos = Column(Integer, default=1)
     area = Column(Float, nullable=True)  # metros quadrados
     tipo_imovel = Column(String(50), nullable=False)  # apartamento, casa, cobertura, terreno, comercial
     embedding = Column(Text, nullable=True)  # JSON serializado do vetor de embedding
+    visualizacoes = Column(Integer, default=0)  # Contador de acessos ao imóvel
     criado_em = Column(DateTime, default=datetime.utcnow)
 
     # Relacionamentos

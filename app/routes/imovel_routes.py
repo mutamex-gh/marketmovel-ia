@@ -79,6 +79,7 @@ async def criar_imovel(
     preco: float = Form(...),
     cidade: str = Form(...),
     bairro: str = Form(...),
+    localizacao: str = Form(None),
     quartos: int = Form(1),
     area: float = Form(None),
     tipo_imovel: str = Form("apartamento"),
@@ -98,6 +99,7 @@ async def criar_imovel(
         preco=preco,
         cidade=cidade,
         bairro=bairro,
+        localizacao=localizacao.strip() if localizacao else None,
         quartos=quartos,
         area=area if area and area > 0 else None,
         tipo_imovel=tipo_imovel,
@@ -139,6 +141,10 @@ async def detalhe_imovel(
     imovel = db.query(Imovel).filter(Imovel.id == imovel_id).first()
     if not imovel:
         raise HTTPException(status_code=404, detail="Imóvel não encontrado")
+
+    # Incrementar contador de visualizações
+    imovel.visualizacoes = (imovel.visualizacoes or 0) + 1
+    db.commit()
 
     # Verifica se o usuário já demonstrou interesse
     ja_interessado = False
@@ -263,6 +269,7 @@ async def atualizar_imovel(
     preco: float = Form(...),
     cidade: str = Form(...),
     bairro: str = Form(...),
+    localizacao: str = Form(None),
     quartos: int = Form(1),
     area: float = Form(None),
     tipo_imovel: str = Form("apartamento"),
@@ -284,6 +291,7 @@ async def atualizar_imovel(
     imovel.preco = preco
     imovel.cidade = cidade
     imovel.bairro = bairro
+    imovel.localizacao = localizacao.strip() if localizacao else None
     imovel.quartos = quartos
     imovel.area = area if area and area > 0 else None
     imovel.tipo_imovel = tipo_imovel

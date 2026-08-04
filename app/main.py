@@ -10,12 +10,29 @@ from app.database import engine, Base
 from app.routes import auth_routes, imovel_routes, busca_routes
 
 
+from sqlalchemy import text
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """
-    Evento de startup: cria tabelas no banco se não existirem.
+    Evento de startup: cria tabelas no banco se não existirem e atualiza schema.
     """
     Base.metadata.create_all(bind=engine)
+    
+    # Migração SQLite automática para colunas recentes
+    try:
+        with engine.connect() as conn:
+            result = conn.execute(text("PRAGMA table_info(imoveis)")).fetchall()
+            colunas = [row[1] for row in result]
+            if "localizacao" not in colunas:
+                conn.execute(text("ALTER TABLE imoveis ADD COLUMN localizacao VARCHAR(255)"))
+            if "visualizacoes" not in colunas:
+                conn.execute(text("ALTER TABLE imoveis ADD COLUMN visualizacoes INTEGER DEFAULT 0"))
+            conn.commit()
+    except Exception as e:
+        print(f"Aviso na migração de banco: {e}")
+
     print("✅ Banco de dados inicializado!")
     yield
 

@@ -1,0 +1,321 @@
+{% extends "base.html" %}
+{% block titulo %}Meu Perfil — Dashboard — ImóvelIA{% endblock %}
+
+{% block conteudo %}
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+
+    <!-- Header do Perfil -->
+    <div class="bg-gradient-to-r from-slate-900 via-primary-950 to-slate-900 rounded-3xl p-6 sm:p-8 text-white shadow-xl mb-8 border border-slate-800">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+            <div class="flex items-center gap-5">
+                <div class="w-16 h-16 sm:w-20 sm:h-20 bg-gradient-to-br from-primary-500 to-primary-700 rounded-2xl flex items-center justify-center text-2xl sm:text-3xl font-extrabold text-white shadow-lg shadow-primary-500/30">
+                    {{ usuario.nome[0]|upper }}
+                </div>
+                <div>
+                    <div class="flex items-center gap-3 flex-wrap">
+                        <h1 class="text-2xl sm:text-3xl font-bold">{{ usuario.nome }}</h1>
+                        <span class="bg-primary-500/20 text-primary-300 text-xs font-semibold px-3 py-1 rounded-full border border-primary-500/30 capitalize">
+                            {{ usuario.tipo_usuario }}
+                        </span>
+                    </div>
+                    <p class="text-slate-300 text-sm mt-1 flex items-center gap-2">
+                        <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        {{ usuario.email }}
+                    </p>
+                    <p class="text-slate-400 text-xs mt-1.5 flex items-center gap-1.5">
+                        <svg class="w-3.5 h-3.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        Membro desde {{ usuario.criado_em.strftime('%d/%m/%Y') }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="flex gap-3 w-full sm:w-auto">
+                <a href="/imoveis/novo"
+                   class="flex-1 sm:flex-none px-5 py-3 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 text-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Novo Anúncio
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cards de Métricas / Estatísticas (KPIs) -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        <!-- Metric 1: Imóveis Anunciados -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Publicações</span>
+                <div class="w-10 h-10 bg-primary-50 rounded-xl flex items-center justify-center text-primary-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-800">{{ total_imoveis }}</p>
+            <p class="text-xs text-slate-500 mt-1">Imóvel{{ 's' if total_imoveis != 1 }} no marketplace</p>
+        </div>
+
+        <!-- Metric 2: Total de Visualizações -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Visualizações</span>
+                <div class="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-800">{{ total_visualizacoes }}</p>
+            <p class="text-xs text-slate-500 mt-1">Visitas acumuladas nos anúncios</p>
+        </div>
+
+        <!-- Metric 3: Interesses Recebidos -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Leads Recebidos</span>
+                <div class="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center text-emerald-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-800">{{ interesses_recebidos|length }}</p>
+            <p class="text-xs text-slate-500 mt-1">Contatos de pessoas interessadas</p>
+        </div>
+
+        <!-- Metric 4: Interesses Enviados -->
+        <div class="bg-white rounded-2xl border border-slate-100 p-6 shadow-sm hover:shadow-md transition-shadow">
+            <div class="flex items-center justify-between mb-3">
+                <span class="text-xs font-semibold uppercase tracking-wider text-slate-400">Seus Interesses</span>
+                <div class="w-10 h-10 bg-purple-50 rounded-xl flex items-center justify-center text-purple-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </div>
+            </div>
+            <p class="text-3xl font-extrabold text-slate-800">{{ meus_interesses|length }}</p>
+            <p class="text-xs text-slate-500 mt-1">Imóveis em que você solicitou contato</p>
+        </div>
+    </div>
+
+    <!-- Navegação por Abas / Seções do Dashboard -->
+    <div class="space-y-8">
+
+        <!-- Seção 1: Meus Anúncios -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100 flex items-center justify-between flex-wrap gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        Meus Imóveis Publicados
+                    </h2>
+                    <p class="text-xs text-slate-400 mt-0.5">Gerencie os imóveis que você anunciou no plataforma</p>
+                </div>
+                <a href="/imoveis/novo" class="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors">
+                    + Adicionar Imóvel
+                </a>
+            </div>
+
+            {% if imoveis|length > 0 %}
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-slate-600">
+                    <thead class="bg-slate-50 text-slate-500 text-xs font-semibold uppercase tracking-wider border-b border-slate-100">
+                        <tr>
+                            <th class="px-6 py-3.5">Imóvel</th>
+                            <th class="px-6 py-3.5">Cidade / Bairro</th>
+                            <th class="px-6 py-3.5">Preço</th>
+                            <th class="px-6 py-3.5 text-center">Visualizações</th>
+                            <th class="px-6 py-3.5 text-center">Leads</th>
+                            <th class="px-6 py-3.5 text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100">
+                        {% for imovel in imoveis %}
+                        <tr class="hover:bg-slate-50/80 transition-colors">
+                            <td class="px-6 py-4">
+                                <div class="flex items-center gap-3">
+                                    {% if imovel.imagens|length > 0 %}
+                                    <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                                         class="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0">
+                                    {% else %}
+                                    <div class="w-12 h-12 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0">
+                                        🏠
+                                    </div>
+                                    {% endif %}
+                                    <div>
+                                        <a href="/imoveis/{{ imovel.id }}" class="font-semibold text-slate-800 hover:text-primary-600 line-clamp-1 transition-colors">
+                                            {{ imovel.titulo }}
+                                        </a>
+                                        <span class="text-xs text-slate-400 capitalize block mt-0.5">
+                                            {{ imovel.tipo_imovel }} • {{ imovel.quartos }} Q.
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap">
+                                <span class="font-medium text-slate-700 block">{{ imovel.bairro }}</span>
+                                <span class="text-xs text-slate-400">{{ imovel.cidade }}</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap font-bold text-slate-800">
+                                R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="inline-flex items-center gap-1 bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full text-xs font-semibold">
+                                    👀 {{ imovel.visualizacoes or 0 }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-center">
+                                <span class="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-semibold">
+                                    💬 {{ imovel.interesses|length }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right space-x-2">
+                                <a href="/imoveis/{{ imovel.id }}"
+                                   class="px-2.5 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-medium transition-colors">
+                                    Ver
+                                </a>
+                                <a href="/imoveis/{{ imovel.id }}/editar"
+                                   class="px-2.5 py-1.5 bg-primary-50 hover:bg-primary-100 text-primary-700 rounded-lg text-xs font-medium transition-colors">
+                                    Editar
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="p-10 text-center text-slate-400">
+                <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                </svg>
+                <p class="font-medium text-slate-600 mb-1">Nenhum imóvel anunciado ainda</p>
+                <p class="text-xs text-slate-400 mb-4">Cadastre seu primeiro imóvel para receber contatos de compradores.</p>
+                <a href="/imoveis/novo" class="inline-flex items-center gap-1.5 px-4 py-2 bg-primary-600 text-white rounded-lg text-sm font-medium hover:bg-primary-700 transition-colors">
+                    + Anunciar Primeiro Imóvel
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Seção 2: Interesses Recebidos -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                    </svg>
+                    Mensagens & Interesses Recebidos
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">Compradores e interessados que deixaram contato nos seus imóveis</p>
+            </div>
+
+            {% if interesses_recebidos|length > 0 %}
+            <div class="divide-y divide-slate-100">
+                {% for interesse in interesses_recebidos %}
+                <div class="p-6 hover:bg-slate-50/80 transition-colors">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-2">
+                        <div class="flex items-center gap-3">
+                            <div class="w-9 h-9 bg-emerald-100 text-emerald-800 font-bold rounded-full flex items-center justify-center text-sm">
+                                {{ interesse.usuario.nome[0]|upper }}
+                            </div>
+                            <div>
+                                <h3 class="font-semibold text-slate-800 text-sm">{{ interesse.usuario.nome }}</h3>
+                                <p class="text-xs text-slate-500">{{ interesse.usuario.email }}</p>
+                            </div>
+                        </div>
+                        <div class="text-xs text-slate-400">
+                            {{ interesse.criado_em.strftime('%d/%m/%Y às %H:%M') }}
+                        </div>
+                    </div>
+                    <div class="bg-slate-50 rounded-xl p-3 border border-slate-100 text-slate-700 text-sm mt-3">
+                        <span class="text-xs font-semibold text-slate-400 block mb-1">
+                            Imóvel de Interesse: <a href="/imoveis/{{ interesse.imovel.id }}" class="text-primary-600 hover:underline font-medium">{{ interesse.imovel.titulo }}</a>
+                        </span>
+                        {% if interesse.mensagem %}
+                        <p class="italic text-slate-600">"{{ interesse.mensagem }}"</p>
+                        {% else %}
+                        <p class="text-slate-400 italic">Nenhuma mensagem adicional escrita.</p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-10 text-center text-slate-400">
+                <svg class="w-12 h-12 mx-auto mb-3 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"/>
+                </svg>
+                <p class="font-medium text-slate-600 mb-1">Nenhum interesse recebido ainda</p>
+                <p class="text-xs text-slate-400">Assim que um comprador manifestar interesse, as informações de contato aparecerão aqui.</p>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Seção 3: Interesses Enviados / Meus Interesses -->
+        <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="p-6 border-b border-slate-100">
+                <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+                    <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    Imóveis que Tenho Interesse
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5">Imóveis de outros anunciantes nos quais você demonstrou interesse</p>
+            </div>
+
+            {% if meus_interesses|length > 0 %}
+            <div class="divide-y divide-slate-100">
+                {% for interesse in meus_interesses %}
+                <div class="p-5 flex items-center justify-between gap-4 hover:bg-slate-50/80 transition-colors">
+                    <div class="flex items-center gap-4">
+                        {% if interesse.imovel.imagens|length > 0 %}
+                        <img src="/static/uploads/{{ interesse.imovel.imagens[0].caminho }}" alt="{{ interesse.imovel.titulo }}"
+                             class="w-14 h-14 rounded-xl object-cover border border-slate-200 shrink-0">
+                        {% else %}
+                        <div class="w-14 h-14 rounded-xl bg-slate-100 flex items-center justify-center text-slate-400 shrink-0 text-xl">
+                            🏠
+                        </div>
+                        {% endif %}
+                        <div>
+                            <a href="/imoveis/{{ interesse.imovel.id }}" class="font-bold text-slate-800 hover:text-primary-600 transition-colors text-sm">
+                                {{ interesse.imovel.titulo }}
+                            </a>
+                            <p class="text-xs text-slate-500 mt-0.5">
+                                {{ interesse.imovel.bairro }}, {{ interesse.imovel.cidade }} • <strong class="text-primary-600">R$ {{ "{:,.0f}".format(interesse.imovel.preco).replace(",", ".") }}</strong>
+                            </p>
+                            <p class="text-xs text-slate-400 mt-1">
+                                Anunciado por {{ interesse.imovel.proprietario.nome }} • Solicitado em {{ interesse.criado_em.strftime('%d/%m/%Y') }}
+                            </p>
+                        </div>
+                    </div>
+                    <a href="/imoveis/{{ interesse.imovel.id }}" class="px-3 py-2 bg-primary-50 text-primary-700 hover:bg-primary-100 rounded-lg text-xs font-semibold transition-colors shrink-0">
+                        Ver Imóvel →
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="p-10 text-center text-slate-400">
+                <p class="font-medium text-slate-600 mb-1">Você ainda não demonstrou interesse em nenhum imóvel</p>
+                <p class="text-xs text-slate-400 mb-4">Navegue pelas ofertas e clique em "Tenho Interesse" nos imóveis de seu agrado.</p>
+                <a href="/" class="inline-flex items-center gap-1.5 px-4 py-2 bg-slate-800 text-white rounded-lg text-sm font-medium hover:bg-slate-900 transition-colors">
+                    🔍 Buscar Imóveis
+                </a>
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

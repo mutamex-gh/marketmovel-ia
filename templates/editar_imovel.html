@@ -86,6 +86,20 @@
                            class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
                 </div>
             </div>
+
+            <div>
+                <label for="localizacao" class="block text-sm font-medium text-slate-700 mb-1.5">
+                    Endereço exato / Localização
+                    <span class="text-xs text-amber-600 bg-amber-50 px-2 py-0.5 rounded-md font-normal inline-flex items-center gap-1 border border-amber-200">
+                        🔒 Visível apenas para usuários logados
+                    </span>
+                </label>
+                <input type="text" id="localizacao" name="localizacao" maxlength="255"
+                       value="{{ imovel.localizacao or '' }}"
+                       placeholder="Ex: Av. Paulista, 1500 - Ap. 82 - Bloco B"
+                       class="w-full px-4 py-3 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white">
+                <p class="text-xs text-slate-400 mt-1">Por questões de privacidade, visitantes anônimos verão apenas Cidade/Bairro.</p>
+            </div>
         </div>
 
         <!-- Imagens atuais + novas -->
