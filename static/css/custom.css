@@ -105,3 +105,15 @@ html {
 ::-webkit-scrollbar-thumb:hover {
     background: #64748b;
 }
+
+/* Botão de remoção de foto visível apenas ao passar o mouse */
+.img-preview-card .btn-remover-foto {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.2s ease, transform 0.2s ease !important;
+}
+.img-preview-card:hover .btn-remover-foto {
+    opacity: 1 !important;
+    pointer-events: auto !important;
+}
+

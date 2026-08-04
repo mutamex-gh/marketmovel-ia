@@ -343,3 +343,37 @@ async def excluir_imovel(
     db.commit()
 
     return RedirectResponse(url="/meus-imoveis", status_code=303)
+
+
+@router.post("/imoveis/{imovel_id}/imagens/{imagem_id}/excluir")
+async def excluir_imagem(
+    imovel_id: int,
+    imagem_id: int,
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Remove uma imagem específica de um imóvel (somente dono)."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    imovel = db.query(Imovel).filter(Imovel.id == imovel_id).first()
+    if not imovel or imovel.usuario_id != usuario.id:
+        raise HTTPException(status_code=403, detail="Acesso negado")
+
+    imagem = db.query(Imagem).filter(
+        Imagem.id == imagem_id,
+        Imagem.imovel_id == imovel_id
+    ).first()
+
+    if imagem:
+        caminho = UPLOAD_DIR / imagem.caminho
+        if caminho.exists():
+            try:
+                os.remove(caminho)
+            except Exception:
+                pass
+        db.delete(imagem)
+        db.commit()
+
+    return RedirectResponse(url=f"/imoveis/{imovel_id}/editar", status_code=303)
+

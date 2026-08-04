@@ -22,29 +22,31 @@
         <form action="/buscar" method="get" class="max-w-3xl mx-auto">
             <div class="glass-search rounded-2xl p-2 flex flex-col sm:flex-row gap-2">
                 <div class="flex-1 relative">
-                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400" fill="none"
+                        stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    <input type="text"
-                           name="q"
-                           id="busca-principal"
-                           value="{{ query }}"
-                           placeholder="Ex: apartamento tranquilo perto de parque, bom pra home office..."
-                           class="w-full pl-12 pr-4 py-3.5 bg-white/10 text-white placeholder-slate-400 rounded-xl border border-white/10 focus:border-primary-400 focus:bg-white/15 transition-all text-sm">
+                    <input type="text" name="q" id="busca-principal" value="{{ query }}"
+                        placeholder="Ex: apartamento tranquilo perto de parque, bom pra home office..."
+                        class="w-full pl-12 pr-4 py-3.5 bg-white/10 text-white placeholder-slate-400 rounded-xl border border-white/10 focus:border-primary-400 focus:bg-white/15 transition-all text-sm">
                 </div>
                 <button type="submit"
-                        class="px-8 py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 whitespace-nowrap">
+                    class="px-8 py-3.5 bg-primary-600 hover:bg-primary-500 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/30 flex items-center justify-center gap-2 whitespace-nowrap">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     Buscar com IA
                 </button>
             </div>
 
             <!-- Toggle filtros -->
-            <button type="button" onclick="toggleFiltros()" class="mt-4 text-sm text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1">
+            <button type="button" onclick="toggleFiltros()"
+                class="mt-4 text-sm text-slate-400 hover:text-white transition-colors inline-flex items-center gap-1">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
                 Filtros avançados
             </button>
@@ -55,37 +57,43 @@
                     <div>
                         <label class="text-xs text-slate-400 mb-1 block">Cidade</label>
                         <input type="text" name="cidade" value="{{ filtros.get('cidade', '') }}"
-                               placeholder="Ex: São Paulo"
-                               class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
+                            placeholder="Ex: São Paulo"
+                            class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 mb-1 block">Tipo</label>
-                        <select name="tipo_imovel" class="w-full px-3 py-2 bg-white/10 text-white rounded-lg border border-white/10 text-sm">
+                        <select name="tipo_imovel"
+                            class="w-full px-3 py-2 bg-white/10 text-white rounded-lg border border-white/10 text-sm">
                             <option value="" class="text-slate-800">Todos</option>
-                            <option value="apartamento" {% if filtros.get('tipo_imovel') == 'apartamento' %}selected{% endif %} class="text-slate-800">Apartamento</option>
-                            <option value="casa" {% if filtros.get('tipo_imovel') == 'casa' %}selected{% endif %} class="text-slate-800">Casa</option>
-                            <option value="cobertura" {% if filtros.get('tipo_imovel') == 'cobertura' %}selected{% endif %} class="text-slate-800">Cobertura</option>
-                            <option value="terreno" {% if filtros.get('tipo_imovel') == 'terreno' %}selected{% endif %} class="text-slate-800">Terreno</option>
-                            <option value="comercial" {% if filtros.get('tipo_imovel') == 'comercial' %}selected{% endif %} class="text-slate-800">Comercial</option>
+                            <option value="apartamento" {% if filtros.get('tipo_imovel')=='apartamento' %}selected{%
+                                endif %} class="text-slate-800">Apartamento</option>
+                            <option value="casa" {% if filtros.get('tipo_imovel')=='casa' %}selected{% endif %}
+                                class="text-slate-800">Casa</option>
+                            <option value="cobertura" {% if filtros.get('tipo_imovel')=='cobertura' %}selected{% endif
+                                %} class="text-slate-800">Cobertura</option>
+                            <option value="terreno" {% if filtros.get('tipo_imovel')=='terreno' %}selected{% endif %}
+                                class="text-slate-800">Terreno</option>
+                            <option value="comercial" {% if filtros.get('tipo_imovel')=='comercial' %}selected{% endif
+                                %} class="text-slate-800">Comercial</option>
                         </select>
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 mb-1 block">Quartos (mín.)</label>
                         <input type="number" name="quartos_min" value="{{ filtros.get('quartos_min', '') }}" min="0"
-                               placeholder="Ex: 2"
-                               class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
+                            step="1" placeholder="Ex: 2"
+                            class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 mb-1 block">Preço mín.</label>
                         <input type="number" name="preco_min" value="{{ filtros.get('preco_min', '') }}" min="0"
-                               placeholder="R$ 0"
-                               class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
+                            step="any" placeholder="R$ 0"
+                            class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
                     </div>
                     <div>
                         <label class="text-xs text-slate-400 mb-1 block">Preço máx.</label>
                         <input type="number" name="preco_max" value="{{ filtros.get('preco_max', '') }}" min="0"
-                               placeholder="R$ ∞"
-                               class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
+                            step="any" placeholder="R$ ∞"
+                            class="w-full px-3 py-2 bg-white/10 text-white placeholder-slate-500 rounded-lg border border-white/10 text-sm">
                     </div>
                 </div>
             </div>
@@ -104,7 +112,8 @@
         <div>
             <h2 class="text-2xl font-bold text-slate-800">Resultados da busca</h2>
             <p class="text-slate-500 mt-1">
-                {{ resultados|length }} imóve{{ 'l' if resultados|length == 1 else 'is' }} encontrado{{ 's' if resultados|length != 1 }}
+                {{ resultados|length }} imóve{{ 'l' if resultados|length == 1 else 'is' }} encontrado{{ 's' if
+                resultados|length != 1 }}
                 {% if query %} para "<em class="text-primary-600">{{ query }}</em>"{% endif %}
             </p>
         </div>
@@ -116,7 +125,8 @@
     {% if resultados|length == 0 %}
     <div class="text-center py-16">
         <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
         </svg>
         <p class="text-slate-500 text-lg">Nenhum imóvel encontrado com esses critérios.</p>
         <p class="text-slate-400 mt-2">Tente termos mais amplos ou remova alguns filtros.</p>
@@ -125,20 +135,26 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for item in resultados %}
         {% set imovel = item.imovel %}
-        <a href="/imoveis/{{ imovel.id }}" class="card-imovel bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 animate-fade-in opacity-0 block" style="animation-delay: {{ loop.index0 * 0.05 }}s">
+        <a href="/imoveis/{{ imovel.id }}"
+            class="card-imovel bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 animate-fade-in opacity-0 block"
+            style="animation-delay: {{ loop.index0 * 0.05 }}">
             <!-- Imagem -->
             <div class="relative h-48 bg-slate-200 overflow-hidden">
                 {% if imovel.imagens|length > 0 %}
-                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}" class="w-full h-full object-cover">
+                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                    class="w-full h-full object-cover">
                 {% else %}
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                <div
+                    class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
                     <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                 </div>
                 {% endif %}
                 <!-- Badge tipo -->
-                <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-slate-700 px-2.5 py-1 rounded-full capitalize">
+                <span
+                    class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-slate-700 px-2.5 py-1 rounded-full capitalize">
                     {{ imovel.tipo_imovel }}
                 </span>
                 <!-- Badge score -->
@@ -153,8 +169,10 @@
                 <h3 class="font-semibold text-slate-800 mb-1 line-clamp-1">{{ imovel.titulo }}</h3>
                 <p class="text-sm text-slate-500 mb-3 flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     {{ imovel.bairro }}, {{ imovel.cidade }}
                 </p>
@@ -165,7 +183,8 @@
                     <div class="flex items-center gap-3 text-xs text-slate-400">
                         <span class="flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                             </svg>
                             {{ imovel.quartos }}q
                         </span>
@@ -189,19 +208,25 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {% for imovel in imoveis %}
-        <a href="/imoveis/{{ imovel.id }}" class="card-imovel bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 animate-fade-in opacity-0 block" style="animation-delay: {{ loop.index0 * 0.05 }}s">
+        <a href="/imoveis/{{ imovel.id }}"
+            class="card-imovel bg-white rounded-2xl overflow-hidden shadow-sm border border-slate-100 animate-fade-in opacity-0 block"
+            style="animation-delay: {{ loop.index0 * 0.05 }}">
             <!-- Imagem -->
             <div class="relative h-48 bg-slate-200 overflow-hidden">
                 {% if imovel.imagens|length > 0 %}
-                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}" class="w-full h-full object-cover">
+                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                    class="w-full h-full object-cover">
                 {% else %}
-                <div class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                <div
+                    class="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
                     <svg class="w-12 h-12 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                 </div>
                 {% endif %}
-                <span class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-slate-700 px-2.5 py-1 rounded-full capitalize">
+                <span
+                    class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-semibold text-slate-700 px-2.5 py-1 rounded-full capitalize">
                     {{ imovel.tipo_imovel }}
                 </span>
             </div>
@@ -210,8 +235,10 @@
                 <h3 class="font-semibold text-slate-800 mb-1 line-clamp-1">{{ imovel.titulo }}</h3>
                 <p class="text-sm text-slate-500 mb-3 flex items-center gap-1">
                     <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                     </svg>
                     {{ imovel.bairro }}, {{ imovel.cidade }}
                 </p>
@@ -222,7 +249,8 @@
                     <div class="flex items-center gap-3 text-xs text-slate-400">
                         <span class="flex items-center gap-1">
                             <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
                             </svg>
                             {{ imovel.quartos }}q
                         </span>
@@ -240,11 +268,13 @@
     <!-- Nenhum imóvel cadastrado -->
     <div class="text-center py-16">
         <svg class="w-16 h-16 text-slate-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
         </svg>
         <p class="text-slate-500 text-lg">Nenhum imóvel cadastrado ainda.</p>
         <p class="text-slate-400 mt-2">Seja o primeiro a anunciar!</p>
-        <a href="/imoveis/novo" class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium shadow-lg shadow-primary-600/25">
+        <a href="/imoveis/novo"
+            class="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-primary-600 text-white rounded-xl hover:bg-primary-700 transition-colors font-medium shadow-lg shadow-primary-600/25">
             Anunciar Imóvel
         </a>
     </div>
@@ -266,29 +296,35 @@
             <div class="p-6">
                 <div class="w-14 h-14 bg-primary-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <svg class="w-7 h-7 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-800 mb-2">1. Descreva</h3>
-                <p class="text-sm text-slate-500">Escreva o que procura com suas próprias palavras, como se estivesse falando com um amigo.</p>
+                <p class="text-sm text-slate-500">Escreva o que procura com suas próprias palavras, como se estivesse
+                    falando com um amigo.</p>
             </div>
             <div class="p-6">
                 <div class="w-14 h-14 bg-accent-500/10 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <svg class="w-7 h-7 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-800 mb-2">2. IA analisa</h3>
-                <p class="text-sm text-slate-500">Nosso modelo de IA transforma sua busca em vetores semânticos e compara com cada imóvel cadastrado.</p>
+                <p class="text-sm text-slate-500">Nosso modelo de IA transforma sua busca em vetores semânticos e
+                    compara com cada imóvel cadastrado.</p>
             </div>
             <div class="p-6">
                 <div class="w-14 h-14 bg-violet-100 rounded-2xl flex items-center justify-center mx-auto mb-4">
                     <svg class="w-7 h-7 text-violet-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                 </div>
                 <h3 class="font-semibold text-slate-800 mb-2">3. Resultados</h3>
-                <p class="text-sm text-slate-500">Você recebe os imóveis mais compatíveis, ordenados por relevância semântica com score de match.</p>
+                <p class="text-sm text-slate-500">Você recebe os imóveis mais compatíveis, ordenados por relevância
+                    semântica com score de match.</p>
             </div>
         </div>
     </div>

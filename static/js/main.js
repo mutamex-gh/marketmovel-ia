@@ -2,31 +2,104 @@
  * Scripts auxiliares do marketplace.
  */
 
-// Preview de imagens antes do upload
+// Gerenciador de arquivos selecionados para upload
+let dtUpload = new DataTransfer();
+
 function previewImagens(input) {
+    const container = document.getElementById('preview-container');
+    if (!container) return;
+
+    if (input.files && input.files.length > 0) {
+        for (let file of input.files) {
+            let existe = false;
+            for (let f of dtUpload.files) {
+                if (f.name === file.name && f.size === file.size) {
+                    existe = true;
+                    break;
+                }
+            }
+            if (!existe) {
+                dtUpload.items.add(file);
+            }
+        }
+        input.files = dtUpload.files;
+    }
+
+    renderizarPreviews();
+}
+
+function removerImagemDoUpload(index) {
+    const input = document.getElementById('imagens');
+    const novoDt = new DataTransfer();
+
+    for (let i = 0; i < dtUpload.files.length; i++) {
+        if (i !== index) {
+            novoDt.items.add(dtUpload.files[i]);
+        }
+    }
+
+    dtUpload = novoDt;
+    if (input) {
+        input.files = dtUpload.files;
+    }
+    renderizarPreviews();
+}
+
+function limparTodasImagens() {
+    dtUpload = new DataTransfer();
+    const input = document.getElementById('imagens');
+    if (input) {
+        input.files = dtUpload.files;
+    }
+    renderizarPreviews();
+}
+
+function renderizarPreviews() {
     const container = document.getElementById('preview-container');
     if (!container) return;
     container.innerHTML = '';
 
-    if (input.files) {
-        Array.from(input.files).forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                const div = document.createElement('div');
-                div.className = 'relative group';
-                div.innerHTML = `
-                    <img src="${e.target.result}"
-                         class="w-24 h-24 object-cover rounded-lg border-2 border-slate-200"
-                         alt="Preview ${index + 1}">
-                    <span class="absolute bottom-1 right-1 bg-black/60 text-white text-xs px-1 rounded">
-                        ${index + 1}
-                    </span>
-                `;
-                container.appendChild(div);
-            };
-            reader.readAsDataURL(file);
-        });
-    }
+    const files = dtUpload.files;
+    if (files.length === 0) return;
+
+    // Header de ações rápidas
+    const infoHeader = document.createElement('div');
+    infoHeader.className = 'w-full flex items-center justify-between text-xs text-slate-500 mb-2';
+    infoHeader.innerHTML = `
+        <span><strong>${files.length}</strong> foto(s) selecionada(s)</span>
+        <button type="button" onclick="limparTodasImagens()" class="text-red-600 hover:text-red-700 font-semibold">
+            Remover todas
+        </button>
+    `;
+    container.appendChild(infoHeader);
+
+    const grid = document.createElement('div');
+    grid.className = 'flex gap-3 flex-wrap w-full';
+    container.appendChild(grid);
+
+    Array.from(files).forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'img-preview-card relative group w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm shrink-0 bg-slate-100';
+            div.style.cssText = 'position: relative; display: inline-block; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0;';
+            div.innerHTML = `
+                <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" alt="${file.name}">
+                <button type="button"
+                        onclick="removerImagemDoUpload(${index})"
+                        title="Remover esta foto"
+                        class="btn-remover-foto"
+                        style="position: absolute; top: 4px; right: 4px; z-index: 50; background-color: #dc2626; color: #ffffff; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
+                    ✕
+                </button>
+                <span style="position: absolute; bottom: 4px; left: 4px; z-index: 40; background-color: rgba(0,0,0,0.65); color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                    ${index + 1}
+                </span>
+            `;
+            grid.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    });
 }
 
 // Galeria de imagens no detalhe do imóvel
