@@ -1,16 +1,5 @@
-baixar_fotos.py
-popular_banco.py
-seed_data.py
-atualizar_embeddings_banco.py
-
-requirements.txt
-
 .env
-.env.example
-
+marketplace.db
 app/__pycache__
 app/routes/__pycache__
-
-marketplace.db
-
 static/uploads
