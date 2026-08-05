@@ -92,6 +92,27 @@ async def criar_imovel(
     if not usuario:
         return RedirectResponse(url="/login", status_code=303)
 
+    # Validação OBRIGATÓRIA: Envio de pelo menos 1 foto para publicar o imóvel
+    imagens_validas = [img for img in imagens if img and img.filename and img.filename.strip() and img.size > 0]
+    if not imagens_validas:
+        return templates.TemplateResponse(
+            request=request,
+            name="novo_imovel.html",
+            context={
+                "usuario": usuario,
+                "erro": "É obrigatório enviar pelo menos 1 foto para publicar o anúncio.",
+                "titulo": titulo,
+                "descricao": descricao,
+                "preco": preco,
+                "cidade": cidade,
+                "bairro": bairro,
+                "localizacao": localizacao,
+                "quartos": quartos,
+                "area": area,
+                "tipo_imovel": tipo_imovel,
+            },
+        )
+
     # Cria imóvel
     novo_imovel = Imovel(
         usuario_id=usuario.id,

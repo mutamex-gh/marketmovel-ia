@@ -9,6 +9,16 @@
         <p style="color: var(--apple-text-tertiary); font-size: 0.875rem; margin-top: 6px;">Quanto mais detalhada a descrição, melhor será a busca por IA.</p>
     </div>
 
+    <!-- Mensagem de Erro -->
+    {% if erro %}
+    <div style="padding: 12px 16px; background: rgba(255, 59, 48, 0.1); color: #ff3b30; border: 1px solid rgba(255, 59, 48, 0.25); border-radius: 14px; font-size: 0.875rem; font-weight: 600; display: flex; align-items: center; gap: 8px; margin-bottom: 24px;">
+        <svg style="width: 18px; height: 18px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        {{ erro }}
+    </div>
+    {% endif %}
+
     <!-- Formulário -->
     <form action="/imoveis/novo" method="post" enctype="multipart/form-data" class="space-y-6">
 
@@ -124,10 +134,10 @@
             </h2>
 
             <div>
-                <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Upload de imagens <span style="font-weight: 400; color: var(--apple-text-tertiary);">opcional</span></label>
-                <input type="file" id="imagens" name="imagens" multiple accept="image/*" onchange="previewImagens(this)"
+                <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Upload de imagens</label>
+                <input type="file" id="imagens" name="imagens" multiple accept="image/*" required onchange="previewImagens(this)"
                     class="input-apple" style="padding: 10px;">
-                <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 4px;">Aceita JPG, PNG ou WebP. Múltiplas fotos permitidas.</p>
+                <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 4px;">Aceita JPG, PNG ou WebP.</p>
             </div>
 
             <!-- Preview das imagens -->
