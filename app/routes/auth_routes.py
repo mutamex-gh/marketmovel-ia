@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import get_db
-from app.models import Usuario, Imovel, Interesse
+from app.models import Usuario, Imovel, Interesse, TipoUsuario
 from app.auth import hash_senha, verificar_senha, criar_token_jwt, obter_usuario_logado
 
 router = APIRouter(tags=["autenticação"])
@@ -88,15 +88,19 @@ async def pagina_perfil(
 async def pagina_cadastro(
     request: Request,
     usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
 ):
     """Renderiza formulário de cadastro de usuário."""
     if usuario:
         return RedirectResponse(url="/", status_code=303)
+
+    tipos_usuario = db.query(TipoUsuario).order_by(TipoUsuario.nome.asc()).all()
     return templates.TemplateResponse(
         request=request,
         name="cadastro.html",
         context={
             "usuario": usuario,
+            "tipos_usuario": tipos_usuario,
         },
     )
 

@@ -7,7 +7,7 @@ from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 
 from app.database import engine, Base
-from app.routes import auth_routes, imovel_routes, busca_routes
+from app.routes import auth_routes, imovel_routes, busca_routes, admin_routes
 
 
 from sqlalchemy import text
@@ -40,6 +40,43 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"Aviso na migração de banco: {e}")
 
+    # Seed de tipos de usuário e usuário Admin padrão
+    try:
+        from sqlalchemy.orm import Session
+        from app.models import Usuario, TipoUsuario
+        from app.auth import hash_senha
+
+        with Session(engine) as db:
+            # Seed tipos de usuário
+            if db.query(TipoUsuario).count() == 0:
+                tipos_padrao = [
+                    TipoUsuario(nome="Proprietário", slug="proprietario"),
+                    TipoUsuario(nome="Corretor", slug="corretor"),
+                    TipoUsuario(nome="Imobiliária", slug="imobiliaria"),
+                ]
+                db.add_all(tipos_padrao)
+                db.commit()
+
+            # Seed Admin
+            admin_email = "admin@marketmovel.com.br"
+            admin_usr = db.query(Usuario).filter(Usuario.email == admin_email).first()
+            if not admin_usr:
+                admin_usr = Usuario(
+                    nome="Administrador",
+                    email=admin_email,
+                    senha_hash=hash_senha("admin"),
+                    tipo_usuario="admin",
+                    telefone="(49) 9 9999-9999",
+                    documento="000.000.000-00",
+                )
+                db.add(admin_usr)
+                db.commit()
+            elif admin_usr.tipo_usuario != "admin":
+                admin_usr.tipo_usuario = "admin"
+                db.commit()
+    except Exception as e:
+        print(f"Aviso no seed inicial de admin/tipos: {e}")
+
     # Pre-carrega o modelo neural de IA na memória no startup
     try:
         from app.embeddings import obter_modelo_ia
@@ -66,6 +103,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 app.include_router(busca_routes.router)
 app.include_router(auth_routes.router)
 app.include_router(imovel_routes.router)
+app.include_router(admin_routes.router)
 
 
 # ---------------------------------------------------------------------------

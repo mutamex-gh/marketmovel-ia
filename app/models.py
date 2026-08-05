@@ -29,6 +29,16 @@ class Usuario(Base):
     favoritos = relationship("Favorito", back_populates="usuario", cascade="all, delete-orphan")
 
 
+class TipoUsuario(Base):
+    """Tipos/Categorias de Usuários do sistema (ex: Proprietário, Corretor, Imobiliária, Construtora)."""
+    __tablename__ = "tipos_usuario"
+
+    id = Column(Integer, primary_key=True, index=True)
+    nome = Column(String(100), nullable=False, unique=True)
+    slug = Column(String(100), nullable=False, unique=True)
+    criado_em = Column(DateTime, default=datetime.utcnow)
+
+
 class Imovel(Base):
     """Imóvel cadastrado no marketplace."""
     __tablename__ = "imoveis"

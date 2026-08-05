@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block titulo %}Painel do Administrador — ImóvelIA{% endblock %}
+
+{% block conteudo %}
+<div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
+
+    <!-- Header do Admin -->
+    <div style="background: linear-gradient(135deg, #1c1c1e 0%, #2c2c2e 100%); border-radius: 20px; padding: 28px 32px; color: #ffffff; margin-bottom: 32px; box-shadow: 0 10px 30px rgba(0,0,0,0.15);" class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: rgba(0, 113, 227, 0.2); color: #2997ff; padding: 4px 12px; border-radius: 980px; font-size: 0.75rem; font-weight: 700; margin-bottom: 8px; border: 1px solid rgba(41, 151, 255, 0.3);">
+                <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                </svg>
+                Painel Administrativo Exclusivo
+            </div>
+            <h1 style="font-size: 1.75rem; font-weight: 800; letter-spacing: -0.03em;">Central de Controle do Sistema</h1>
+            <p style="color: rgba(255, 255, 255, 0.7); font-size: 0.875rem; margin-top: 4px;">Gerencie cadastros, tipos de contas e usuários da plataforma.</p>
+        </div>
+        <div class="flex items-center gap-3">
+            <a href="/admin/usuarios" class="btn-filled" style="background: var(--apple-blue); font-size: 0.8125rem; padding: 10px 18px; border-radius: 12px;">
+                Gerenciar Usuários
+            </a>
+            <a href="/admin/tipos-usuario" class="btn-outlined" style="background: rgba(255,255,255,0.1); color: #fff; border-color: rgba(255,255,255,0.2); font-size: 0.8125rem; padding: 10px 18px; border-radius: 12px;">
+                Tipos de Contas
+            </a>
+        </div>
+    </div>
+
+    <!-- Métricas KPIs do Sistema -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-10">
+        
+        <!-- Total Usuários -->
+        <div class="section-card p-6" style="border-radius: 18px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-2">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Usuários Cadastrados</span>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.1); color: var(--apple-blue); display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 43a8 8 0 100-16 8 8 0 000 16zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/></svg>
+                </div>
+            </div>
+            <p style="font-size: 2.25rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">{{ total_usuarios }}</p>
+            <a href="/admin/usuarios" style="font-size: 0.75rem; color: var(--apple-blue); font-weight: 600; margin-top: 4px; display: inline-block;">Ver todos os usuários →</a>
+        </div>
+
+        <!-- Total Imóveis -->
+        <div class="section-card p-6" style="border-radius: 18px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-2">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Imóveis Anunciados</span>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(52, 199, 89, 0.1); color: var(--apple-green); display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+                </div>
+            </div>
+            <p style="font-size: 2.25rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">{{ total_imoveis }}</p>
+            <span style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 4px; display: inline-block;">Publicações ativas</span>
+        </div>
+
+        <!-- Total Propostas / Leads -->
+        <div class="section-card p-6" style="border-radius: 18px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-2">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Propostas & Leads</span>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 149, 0, 0.1); color: var(--apple-orange); display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                </div>
+            </div>
+            <p style="font-size: 2.25rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">{{ total_interesses }}</p>
+            <span style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 4px; display: inline-block;">Interesses demonstrados</span>
+        </div>
+
+        <!-- Tipos de Contas -->
+        <div class="section-card p-6" style="border-radius: 18px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-2">
+                <span style="font-size: 0.75rem; font-weight: 700; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em;">Tipos de Conta</span>
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(175, 82, 222, 0.1); color: var(--apple-purple); display: flex; align-items: center; justify-content: center;">
+                    <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+                </div>
+            </div>
+            <p style="font-size: 2.25rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">{{ total_tipos }}</p>
+            <a href="/admin/tipos-usuario" style="font-size: 0.75rem; color: var(--apple-purple); font-weight: 600; margin-top: 4px; display: inline-block;">Gerenciar categorias →</a>
+        </div>
+
+    </div>
+
+    <!-- Duas colunas com Resumo Recente -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        <!-- Últimos Usuários -->
+        <div class="section-card p-6" style="border-radius: 20px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-6 pb-4" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+                <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">Usuários Mais Recentes</h2>
+                <a href="/admin/usuarios" style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-blue);">Ver Todos →</a>
+            </div>
+            <div class="space-y-4">
+                {% for u in ultimos_usuarios %}
+                <div class="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 transition-colors" style="border: 1px solid rgba(0,0,0,0.03);">
+                    <div class="flex items-center gap-3">
+                        <div style="width: 38px; height: 38px; border-radius: 50%; background: var(--apple-blue-light); color: var(--apple-blue); font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 0.875rem;">
+                            {{ u.nome[0]|upper }}
+                        </div>
+                        <div>
+                            <h3 style="font-size: 0.875rem; font-weight: 700; color: var(--apple-text-primary);">{{ u.nome }}</h3>
+                            <p style="font-size: 0.75rem; color: var(--apple-text-tertiary);">{{ u.email }}</p>
+                        </div>
+                    </div>
+                    <span style="font-size: 0.6875rem; font-weight: 600; padding: 4px 10px; border-radius: 980px; background: rgba(0,0,0,0.04); color: var(--apple-text-secondary); text-transform: capitalize;">
+                        {{ u.tipo_usuario }}
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Tipos de Cadastro Ativos -->
+        <div class="section-card p-6" style="border-radius: 20px; background: #ffffff;">
+            <div class="flex items-center justify-between mb-6 pb-4" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
+                <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">Tipos de Conta Cadastrados</h2>
+                <a href="/admin/tipos-usuario" style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-blue);">+ Adicionar Novo</a>
+            </div>
+            <div class="space-y-3">
+                {% for tipo in tipos_usuario %}
+                <div class="flex items-center justify-between p-4 rounded-xl" style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.04);">
+                    <div class="flex items-center gap-3">
+                        <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">{{ tipo.nome }}</span>
+                    </div>
+                    <code style="font-size: 0.75rem; color: var(--apple-text-tertiary); background: #ffffff; padding: 2px 8px; border-radius: 6px; border: 1px solid rgba(0,0,0,0.06);">{{ tipo.slug }}</code>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}

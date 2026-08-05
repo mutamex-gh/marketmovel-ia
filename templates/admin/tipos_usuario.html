@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% block titulo %}Tipos de Conta — Admin — ImóvelIA{% endblock %}
+
+{% block conteudo %}
+<div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
+
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--apple-blue); margin-bottom: 4px;">
+                <a href="/admin" style="text-decoration: none; color: inherit;">← Painel Admin</a>
+            </div>
+            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">
+                Tipos de Contas e Cadastros
+            </h1>
+            <p style="color: var(--apple-text-tertiary); font-size: 0.875rem; margin-top: 2px;">
+                Gerencie as opções que aparecem na tela de cadastro do site para os novos usuários escolherem.
+            </p>
+        </div>
+    </div>
+
+    <!-- Mensagens de Alerta -->
+    {% if sucesso %}
+    <div style="background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.25); color: #1b7a38; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
+        ✓ {{ sucesso }}
+    </div>
+    {% endif %}
+
+    {% if erro %}
+    <div style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.25); color: #ff3b30; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
+        ⚠️ {{ erro }}
+    </div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Formulário para Criar Novo Tipo -->
+        <div class="section-card p-6" style="border-radius: 20px; background: #ffffff; height: fit-content;">
+            <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary); margin-bottom: 6px;">+ Cadastrar Novo Tipo</h2>
+            <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 20px;">
+                Exemplos: Construtora, Investidor, Agente Financeiro, Engenheiro, Avaliador.
+            </p>
+
+            <form action="/admin/tipos-usuario/novo" method="post" class="space-y-4">
+                <div>
+                    <label for="nome" style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome da Categoria</label>
+                    <input type="text" id="nome" name="nome" required placeholder="Ex: Construtora ou Investidor" class="input-apple w-full">
+                </div>
+
+                <button type="submit" class="btn-filled w-full" style="padding: 10px; font-size: 0.8125rem; border-radius: 10px; font-weight: 600;">
+                    Adicionar Categoria ao Site
+                </button>
+            </form>
+        </div>
+
+        <!-- Tabela de Tipos Existentes -->
+        <div class="lg:col-span-2 section-card p-6" style="border-radius: 20px; background: #ffffff;">
+            <h2 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary); margin-bottom: 16px;">Categorias de Cadastro Ativas</h2>
+            
+            <div class="space-y-3">
+                {% for tipo in tipos_usuario %}
+                <div class="flex items-center justify-between p-4 rounded-xl" style="background: rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.04);">
+                    <div>
+                        <span style="font-size: 1rem; font-weight: 700; color: var(--apple-text-primary); display: block;">{{ tipo.nome }}</span>
+                        <span style="font-size: 0.6875rem; color: var(--apple-text-tertiary);">Slug identificador: <code>{{ tipo.slug }}</code></span>
+                    </div>
+
+                    <div class="flex items-center gap-3">
+                        <form id="form-del-tipo-{{ tipo.id }}" action="/admin/tipos-usuario/{{ tipo.id }}/excluir" method="post">
+                            <button type="button" onclick="if(confirm('Tem certeza que deseja excluir a categoria {{ tipo.nome }}?')) document.getElementById('form-del-tipo-{{ tipo.id }}').submit();"
+                                    class="btn-danger" style="padding: 6px 14px; font-size: 0.75rem; font-weight: 600; border-radius: 8px;">
+                                Excluir
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+
+    </div>
+
+</div>
+{% endblock %}
