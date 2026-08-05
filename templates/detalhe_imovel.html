@@ -2,187 +2,188 @@
 {% block titulo %}{{ imovel.titulo }} — ImóvelIA{% endblock %}
 
 {% block conteudo %}
-<div class="max-w-6xl mx-auto px-4 sm:px-6 py-10">
+<div class="max-w-5xl mx-auto px-4 sm:px-6 py-8 animate-fade-in">
     <!-- Breadcrumb -->
-    <nav class="mb-6 text-sm text-slate-500">
-        <a href="/" class="hover:text-primary-600 transition-colors">Home</a>
-        <span class="mx-2">›</span>
-        <span class="text-slate-700">{{ imovel.titulo }}</span>
+    <nav style="margin-bottom: 20px; font-size: 0.8125rem; color: var(--apple-text-tertiary);">
+        <a href="/" style="color: var(--apple-blue); text-decoration: none;">Home</a>
+        <span style="margin: 0 8px; color: var(--apple-border-strong);">›</span>
+        <span style="color: var(--apple-text-secondary);">{{ imovel.titulo }}</span>
     </nav>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Coluna principal (2/3) -->
-        <div class="lg:col-span-2 space-y-6">
+        <div class="lg:col-span-2 space-y-5">
             <!-- Galeria de imagens -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+            <div class="section-card overflow-hidden">
                 {% if imovel.imagens|length > 0 %}
                 <div class="relative">
                     <img id="imagem-principal"
                          src="/static/uploads/{{ imovel.imagens[0].caminho }}"
                          alt="{{ imovel.titulo }}"
-                         class="w-full h-[400px] object-cover">
+                         style="width: 100%; height: 380px; object-fit: cover; display: block;">
                 </div>
                 {% if imovel.imagens|length > 1 %}
-                <div class="p-3 flex gap-2 overflow-x-auto">
+                <div style="padding: 12px; display: flex; gap: 8px; overflow-x: auto;">
                     {% for img in imovel.imagens %}
                     <img src="/static/uploads/{{ img.caminho }}"
                          alt="Foto {{ loop.index }}"
-                         class="thumbnail-img w-20 h-20 object-cover rounded-lg border-2 border-transparent cursor-pointer hover:opacity-100 {{ 'thumbnail-active' if loop.index == 1 else 'opacity-60' }} transition-all"
+                         class="thumbnail-img {{ 'thumbnail-active' if loop.index == 1 else 'opacity-60' }}"
+                         style="width: 68px; height: 68px; object-fit: cover; border-radius: 10px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; flex-shrink: 0;"
                          onclick="trocarImagemPrincipal('/static/uploads/{{ img.caminho }}', this)">
                     {% endfor %}
                 </div>
                 {% endif %}
                 {% else %}
-                <div class="h-[300px] flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                <div style="height: 280px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
                     <div class="text-center">
-                        <svg class="w-16 h-16 text-slate-300 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg style="width: 48px; height: 48px; color: rgba(0,0,0,0.1); margin: 0 auto 8px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        <p class="text-slate-400 text-sm">Sem fotos disponíveis</p>
+                        <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem;">Sem fotos disponíveis</p>
                     </div>
                 </div>
                 {% endif %}
             </div>
 
             <!-- Descrição -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6">
-                <h2 class="text-lg font-semibold text-slate-800 mb-4">Descrição</h2>
-                <div class="text-slate-600 leading-relaxed whitespace-pre-line">{{ imovel.descricao }}</div>
+            <div class="section-card p-6">
+                <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); margin-bottom: 12px;">Descrição</h2>
+                <div style="color: var(--apple-text-secondary); line-height: 1.65; white-space: pre-line; font-size: 0.875rem;">{{ imovel.descricao }}</div>
             </div>
         </div>
 
         <!-- Sidebar (1/3) -->
-        <div class="space-y-6">
+        <div class="space-y-5">
             <!-- Card de info principal -->
-            <div class="bg-white rounded-2xl border border-slate-100 shadow-sm p-6 sticky top-24">
+            <div class="section-card p-6 sticky top-16">
                 <!-- Badge tipo -->
-                <span class="inline-block bg-primary-100 text-primary-700 text-xs font-semibold px-3 py-1 rounded-full capitalize mb-4">
+                <span class="badge-apple capitalize" style="background: var(--apple-blue-light); color: var(--apple-blue); margin-bottom: 14px;">
                     {{ imovel.tipo_imovel }}
                 </span>
 
-                <h1 class="text-2xl font-bold text-slate-800 mb-2">{{ imovel.titulo }}</h1>
+                <h1 style="font-size: 1.25rem; font-weight: 700; color: var(--apple-text-primary); letter-spacing: -0.02em; margin-bottom: 8px;">{{ imovel.titulo }}</h1>
 
-                <!-- Localização (Cidade / Bairro) -->
-                <p class="text-slate-500 flex items-center gap-1.5 mb-3">
-                    <svg class="w-4 h-4 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <!-- Localização -->
+                <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; display: flex; align-items: center; gap: 5px; margin-bottom: 12px;">
+                    <svg style="width: 14px; height: 14px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
                     {{ imovel.bairro }}, {{ imovel.cidade }}
                 </p>
 
-                <!-- Bloco de Localização Exata com Proteção por Autenticação -->
-                <div class="mb-5 p-3.5 rounded-xl border text-sm transition-all">
+                <!-- Localização Exata -->
+                <div style="margin-bottom: 20px; border-radius: 12px; overflow: hidden;">
                     {% if usuario %}
-                    <div class="flex items-start gap-2.5 text-slate-700 bg-primary-50/60 border-primary-100 p-3 rounded-lg border">
-                        <svg class="w-5 h-5 text-primary-600 shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                        </svg>
-                        <div>
-                            <span class="font-semibold text-slate-800 block text-xs uppercase tracking-wider text-primary-700 mb-0.5">Localização Exata</span>
-                            <span class="text-slate-800 font-medium">
-                                {% if imovel.localizacao %}
-                                {{ imovel.localizacao }}
-                                {% else %}
-                                {{ imovel.bairro }}, {{ imovel.cidade }} (endereço numérico não especificado)
-                                {% endif %}
-                            </span>
+                    <div style="background: var(--apple-blue-light); border: 1px solid rgba(0,113,227,0.1); padding: 12px 14px; border-radius: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 10px;">
+                            <svg style="width: 16px; height: 16px; color: var(--apple-blue); flex-shrink: 0; margin-top: 2px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                            </svg>
+                            <div>
+                                <span style="display: block; font-size: 0.6875rem; font-weight: 600; color: var(--apple-blue); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 2px;">Localização Exata</span>
+                                <span style="font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary);">
+                                    {% if imovel.localizacao %}
+                                    {{ imovel.localizacao }}
+                                    {% else %}
+                                    {{ imovel.bairro }}, {{ imovel.cidade }}
+                                    {% endif %}
+                                </span>
+                            </div>
                         </div>
                     </div>
                     {% else %}
-                    <div class="bg-amber-50/80 border-amber-200/80 p-3.5 rounded-lg border text-amber-900 flex flex-col gap-2">
-                        <div class="flex items-center gap-2 font-medium text-amber-800 text-xs uppercase tracking-wider">
-                            <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div style="background: rgba(255, 149, 0, 0.06); border: 1px solid rgba(255, 149, 0, 0.12); padding: 12px 14px; border-radius: 12px;">
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.6875rem; font-weight: 600; color: var(--apple-orange); text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 6px;">
+                            <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
                             </svg>
-                            Localização Exata Restrita
+                            Localização Restrita
                         </div>
-                        <p class="text-xs text-amber-800 leading-relaxed">
-                            Apenas usuários cadastrados e logados podem ver a localização exata do imóvel.
-                        </p>
-                        <a href="/login" class="inline-flex items-center justify-center gap-1 mt-1 text-xs font-semibold text-white bg-amber-600 hover:bg-amber-700 py-1.5 px-3 rounded-md transition-colors w-full text-center shadow-sm">
-                            🔑 Faça login para ver a localização
+                        <p style="font-size: 0.75rem; color: #8a6d3b; line-height: 1.4; margin-bottom: 8px;">Faça login para ver a localização exata.</p>
+                        <a href="/login" class="btn-filled w-full" style="padding: 8px; font-size: 0.75rem; background: var(--apple-orange); border-radius: 8px; text-align: center;"
+                            onmouseover="this.style.background='#e68600'" onmouseout="this.style.background='var(--apple-orange)'">
+                            <svg style="width: 13px; height: 13px; display: inline-block; vertical-align: -1px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z"/></svg>
+                            Fazer login
                         </a>
                     </div>
                     {% endif %}
                 </div>
 
                 <!-- Preço -->
-                <div class="text-3xl font-extrabold text-primary-600 mb-6">
+                <div style="font-size: 1.75rem; font-weight: 800; color: var(--apple-blue); letter-spacing: -0.03em; margin-bottom: 20px;">
                     R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
                 </div>
 
                 <!-- Características -->
-                <div class="grid grid-cols-2 gap-3 mb-6">
-                    <div class="bg-slate-50 rounded-xl p-3 text-center">
-                        <p class="text-lg font-bold text-slate-800">{{ imovel.quartos }}</p>
-                        <p class="text-xs text-slate-500">Quarto{{ 's' if imovel.quartos != 1 }}</p>
+                <div class="grid grid-cols-2 gap-3" style="margin-bottom: 20px;">
+                    <div style="background: var(--apple-bg); border-radius: 12px; padding: 14px; text-align: center;">
+                        <p style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">{{ imovel.quartos }}</p>
+                        <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary);">Quarto{{ 's' if imovel.quartos != 1 }}</p>
                     </div>
                     {% if imovel.area %}
-                    <div class="bg-slate-50 rounded-xl p-3 text-center">
-                        <p class="text-lg font-bold text-slate-800">{{ imovel.area|int }}</p>
-                        <p class="text-xs text-slate-500">m²</p>
+                    <div style="background: var(--apple-bg); border-radius: 12px; padding: 14px; text-align: center;">
+                        <p style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">{{ imovel.area|int }}</p>
+                        <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary);">m²</p>
                     </div>
                     {% endif %}
                 </div>
 
                 <!-- Anunciante -->
-                <div class="border-t border-slate-100 pt-4 mb-6">
-                    <p class="text-xs text-slate-400 mb-1">Anunciado por</p>
-                    <p class="font-medium text-slate-700">{{ imovel.proprietario.nome }}</p>
-                    <p class="text-sm text-slate-500 capitalize">{{ imovel.proprietario.tipo_usuario }}</p>
+                <div class="divider-apple" style="margin-bottom: 16px;"></div>
+                <div style="margin-bottom: 20px;">
+                    <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-bottom: 4px;">Anunciado por</p>
+                    <p style="font-size: 0.875rem; font-weight: 600; color: var(--apple-text-primary);">{{ imovel.proprietario.nome }}</p>
+                    <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); text-transform: capitalize;">{{ imovel.proprietario.tipo_usuario }}</p>
                 </div>
 
                 <!-- Botão de interesse -->
                 {% if usuario %}
                     {% if usuario.id == imovel.usuario_id %}
-                    <!-- É o dono -->
                     <div class="flex gap-2">
-                        <a href="/imoveis/{{ imovel.id }}/editar"
-                           class="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors text-center text-sm">
-                            ✏️ Editar
-                        </a>
+                        <a href="/imoveis/{{ imovel.id }}/editar" class="btn-outlined flex-1" style="text-align: center; font-size: 0.8125rem;"><svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg> Editar</a>
                         <form id="form-excluir-{{ imovel.id }}" action="/imoveis/{{ imovel.id }}/excluir" method="post" class="flex-1">
                             <button type="button" onclick="confirmarExclusao('form-excluir-{{ imovel.id }}')"
-                                    class="w-full py-3 bg-red-50 hover:bg-red-100 text-red-600 font-medium rounded-xl transition-colors text-sm">
-                                🗑️ Excluir
+                                    class="btn-danger w-full" style="font-size: 0.8125rem;">
+                                <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg> Excluir
                             </button>
                         </form>
                     </div>
                     {% elif ja_interessado %}
-                    <div class="py-3 bg-accent-50 text-accent-700 font-medium rounded-xl text-center text-sm">
-                        ✅ Você já demonstrou interesse
+                    <div style="padding: 12px; background: var(--apple-green-light); color: #1b7a38; font-weight: 500; border-radius: 12px; text-align: center; font-size: 0.8125rem; border: 1px solid rgba(52,199,89,0.15); display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <svg style="width: 16px; height: 16px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                        Você já demonstrou interesse
                     </div>
                     {% else %}
                     <form action="/imoveis/{{ imovel.id }}/interesse" method="post" class="space-y-3">
                         <textarea name="mensagem" rows="2"
-                                  placeholder="Deixe uma mensagem para o anunciante (opcional)"
-                                  class="w-full px-4 py-2.5 border border-slate-200 rounded-xl text-sm focus:border-primary-500 transition-colors bg-slate-50 focus:bg-white resize-none"></textarea>
-                        <button type="submit"
-                                class="w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/25">
-                            💬 Tenho Interesse
+                                  placeholder="Mensagem para o anunciante (opcional)"
+                                  class="input-apple" style="resize: none;"></textarea>
+                        <button type="submit" class="btn-filled w-full" style="padding: 12px; border-radius: 12px;">
+                            <svg style="width: 16px; height: 16px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/></svg>
+                            Tenho Interesse
                         </button>
                     </form>
                     {% endif %}
                 {% else %}
-                <a href="/login"
-                   class="block w-full py-3 bg-primary-600 hover:bg-primary-700 text-white font-semibold rounded-xl transition-colors shadow-lg shadow-primary-600/25 text-center">
+                <a href="/login" class="btn-filled block w-full" style="padding: 12px; border-radius: 12px; text-align: center;">
                     Faça login para demonstrar interesse
                 </a>
                 {% endif %}
 
                 <!-- Métricas -->
-                <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-                    <span class="flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="divider-apple" style="margin-top: 16px;"></div>
+                <div style="padding-top: 12px; display: flex; align-items: center; justify-content: space-between; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                         </svg>
                         <strong>{{ imovel.visualizacoes or 0 }}</strong> visualizações
                     </span>
-                    <span class="flex items-center gap-1">
-                        <svg class="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <span style="display: flex; align-items: center; gap: 4px;">
+                        <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                         </svg>
                         <strong>{{ imovel.interesses|length }}</strong> interessados

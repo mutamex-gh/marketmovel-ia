@@ -82,17 +82,17 @@ function renderizarPreviews() {
         reader.onload = (e) => {
             const div = document.createElement('div');
             div.className = 'img-preview-card relative group w-24 h-24 rounded-xl overflow-hidden border-2 border-slate-200 shadow-sm shrink-0 bg-slate-100';
-            div.style.cssText = 'position: relative; display: inline-block; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 2px solid #e2e8f0;';
+            div.style.cssText = 'position: relative; display: inline-block; width: 96px; height: 96px; border-radius: 12px; overflow: hidden; border: 2px solid rgba(0,0,0,0.06);';
             div.innerHTML = `
                 <img src="${e.target.result}" style="width: 100%; height: 100%; object-fit: cover;" alt="${file.name}">
                 <button type="button"
                         onclick="removerImagemDoUpload(${index})"
                         title="Remover esta foto"
                         class="btn-remover-foto"
-                        style="position: absolute; top: 4px; right: 4px; z-index: 50; background-color: #dc2626; color: #ffffff; border: none; border-radius: 50%; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.4);">
-                    ✕
+                        style="position: absolute; top: 4px; right: 4px; z-index: 50; background-color: #ff3b30; color: #ffffff; border: none; border-radius: 50%; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);">
+                    <svg style="width: 10px; height: 10px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M6 18L18 6M6 6l12 12"/></svg>
                 </button>
-                <span style="position: absolute; bottom: 4px; left: 4px; z-index: 40; background-color: rgba(0,0,0,0.65); color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
+                <span style="position: absolute; bottom: 4px; left: 4px; z-index: 40; background-color: rgba(0,0,0,0.55); color: #ffffff; font-size: 10px; padding: 2px 6px; border-radius: 4px; font-weight: 600;">
                     ${index + 1}
                 </span>
             `;
