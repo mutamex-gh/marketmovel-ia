@@ -107,7 +107,7 @@
 <!-- ===================================================================== -->
 <!-- RESULTADOS / IMÓVEIS RECENTES                                         -->
 <!-- ===================================================================== -->
-<section class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+<section class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-12">
 
     {% if resultados is not none %}
     <!-- Resultados da busca -->
@@ -135,7 +135,7 @@
         <p class="empty-desc">Tente termos mais amplos ou remova alguns filtros.</p>
     </div>
     {% else %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for item in resultados %}
         {% set imovel = item.imovel %}
         <a href="/imoveis/{{ imovel.id }}"
@@ -195,7 +195,7 @@
         <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">Confira os últimos anúncios publicados</p>
     </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for imovel in imoveis %}
         <a href="/imoveis/{{ imovel.id }}"
             class="card-imovel animate-fade-in opacity-0 block"
