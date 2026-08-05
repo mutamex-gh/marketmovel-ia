@@ -2,25 +2,27 @@
 {% block titulo %}Criar Conta — ImóvelIA{% endblock %}
 
 {% block conteudo %}
-<div class="min-h-[calc(100vh-200px)] flex items-center justify-center px-4 py-12">
-    <div class="w-full max-w-sm animate-scale-in">
-        <!-- Card -->
-        <div class="section-card p-8">
+<div class="w-full flex items-center justify-center px-4" style="height: calc(100vh - 48px); background: #0c0c10; overflow: hidden;">
+    <div class="w-full max-w-[390px] animate-scale-in">
+        
+        <!-- Clean Dark Card -->
+        <div style="background: #141419; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6); padding: 28px 26px;">
+            
             <!-- Header -->
-            <div class="text-center mb-8">
-                <div style="width: 52px; height: 52px; background: linear-gradient(145deg, var(--apple-green), #30b350); border-radius: 16px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; box-shadow: 0 4px 16px rgba(52, 199, 89, 0.2);">
-                    <svg style="width: 26px; height: 26px; color: #fff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div class="text-center mb-5">
+                <div style="width: 46px; height: 46px; background: #0071e3; border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
+                    <svg style="width: 22px; height: 22px; color: #fff;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
                     </svg>
                 </div>
-                <h1 style="font-size: 1.375rem; font-weight: 700; color: var(--apple-text-primary); letter-spacing: -0.03em;">Criar sua conta</h1>
-                <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">Cadastre-se para anunciar ou buscar imóveis</p>
+                <h1 style="font-size: 1.375rem; font-weight: 700; color: #f5f5f7; letter-spacing: -0.03em; margin-bottom: 2px;">Criar sua conta</h1>
+                <p style="color: rgba(255, 255, 255, 0.45); font-size: 0.75rem;">Cadastre-se para anunciar ou buscar imóveis</p>
             </div>
 
-            <!-- Erro -->
+            <!-- Mensagem de Erro -->
             {% if erro %}
-            <div class="alert-apple error mb-6">
-                <svg style="width: 18px; height: 18px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div style="padding: 8px 12px; background: rgba(255, 59, 48, 0.1); color: #ff453a; border: 1px solid rgba(255, 59, 48, 0.2); border-radius: 10px; font-size: 0.75rem; font-weight: 500; display: flex; align-items: center; gap: 6px; margin-bottom: 14px;">
+                <svg style="width: 15px; height: 15px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
                 {{ erro }}
@@ -28,45 +30,66 @@
             {% endif %}
 
             <!-- Formulário -->
-            <form action="/cadastro" method="post" class="space-y-4">
+            <form action="/cadastro" method="post" class="space-y-3.5">
                 <div>
-                    <label for="nome" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Nome completo</label>
+                    <label for="nome" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Nome Completo</label>
                     <input type="text" id="nome" name="nome" required minlength="2"
-                           placeholder="Seu nome"
-                           class="input-apple">
+                           placeholder="Seu nome completo"
+                           style="width: 100%; padding: 9px 12px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                           onfocus="this.style.borderColor='#0071e3'"
+                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
                 </div>
+
                 <div>
-                    <label for="email" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Email</label>
+                    <label for="email" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Endereço de Email</label>
                     <input type="email" id="email" name="email" required
                            placeholder="seu@email.com"
-                           class="input-apple">
+                           style="width: 100%; padding: 9px 12px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                           onfocus="this.style.borderColor='#0071e3'"
+                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
                 </div>
+
                 <div>
-                    <label for="senha" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Senha</label>
+                    <label for="senha" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Senha de Acesso</label>
                     <input type="password" id="senha" name="senha" required minlength="6"
                            placeholder="Mínimo 6 caracteres"
-                           class="input-apple">
+                           style="width: 100%; padding: 9px 12px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                           onfocus="this.style.borderColor='#0071e3'"
+                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
                 </div>
+
                 <div>
-                    <label for="tipo_usuario" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de conta</label>
-                    <select id="tipo_usuario" name="tipo_usuario" class="input-apple">
-                        <option value="proprietario">Proprietário direto</option>
-                        <option value="corretor">Corretor</option>
-                        <option value="imobiliaria">Imobiliária</option>
+                    <label for="tipo_usuario" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Tipo de Conta</label>
+                    <select id="tipo_usuario" name="tipo_usuario"
+                            style="width: 100%; padding: 9px 12px; background: #1c1c22; color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                            onfocus="this.style.borderColor='#0071e3'"
+                            onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+                        <option value="proprietario" style="background: #1c1c22; color: #fff;">Proprietário direto</option>
+                        <option value="corretor" style="background: #1c1c22; color: #fff;">Corretor de Imóveis</option>
+                        <option value="imobiliaria" style="background: #1c1c22; color: #fff;">Imobiliária</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-filled w-full" style="padding: 12px; border-radius: 12px; font-size: 0.9375rem; background: var(--apple-green);"
-                    onmouseover="this.style.background='#30b350'" onmouseout="this.style.background='var(--apple-green)'">
-                    Criar Conta
+
+                <button type="submit"
+                    style="width: 100%; padding: 11px; margin-top: 4px; background: #0071e3; color: #fff; font-weight: 600; font-size: 0.875rem; border-radius: 10px; border: none; cursor: pointer; transition: background 0.15s;"
+                    onmouseover="this.style.background='#0077ed'"
+                    onmouseout="this.style.background='#0071e3'">
+                    Criar Minha Conta
                 </button>
             </form>
 
-            <!-- Link para login -->
-            <p style="text-align: center; font-size: 0.8125rem; color: var(--apple-text-tertiary); margin-top: 24px;">
-                Já tem conta?
-                <a href="/login" style="color: var(--apple-blue); font-weight: 500; text-decoration: none;">Fazer login</a>
+            <!-- Footer Link -->
+            <p style="text-align: center; font-size: 0.75rem; color: rgba(255, 255, 255, 0.45); margin-top: 16px;">
+                Já possui uma conta criada?
+                <a href="/login" style="color: #2997ff; font-weight: 500; text-decoration: none; margin-left: 3px;"
+                   onmouseover="this.style.textDecoration='underline'"
+                   onmouseout="this.style.textDecoration='none'">Fazer login</a>
             </p>
+
         </div>
+
     </div>
 </div>
 {% endblock %}
+
+{% block footer %}{% endblock %}

@@ -176,11 +176,11 @@ async def detalhe_imovel(
 async def registrar_interesse(
     imovel_id: int,
     request: Request,
-    mensagem: str = Form(""),
+    mensagem: str = Form(...),
     usuario: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db),
 ):
-    """Registra interesse do usuário em um imóvel."""
+    """Registra interesse do usuário em um imóvel com mensagem obrigatória."""
     if not usuario:
         return RedirectResponse(url="/login", status_code=303)
 
@@ -188,6 +188,10 @@ async def registrar_interesse(
     imovel = db.query(Imovel).filter(Imovel.id == imovel_id).first()
     if not imovel:
         raise HTTPException(status_code=404, detail="Imóvel não encontrado")
+
+    msg_texto = mensagem.strip() if mensagem else ""
+    if not msg_texto:
+        msg_texto = "Olá! Demonstrei interesse no seu imóvel e gostaria de entrar em contato."
 
     # Evita duplicidade
     existente = db.query(Interesse).filter(
@@ -198,7 +202,7 @@ async def registrar_interesse(
         interesse = Interesse(
             imovel_id=imovel_id,
             usuario_id=usuario.id,
-            mensagem=mensagem if mensagem else None,
+            mensagem=msg_texto,
         )
         db.add(interesse)
         db.commit()
