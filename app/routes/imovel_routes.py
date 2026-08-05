@@ -152,6 +152,7 @@ async def detalhe_imovel(
     # Verifica status de favorito e interesse do usuário
     eh_favorito = False
     ja_interessado = False
+    dados_completos = False
     if usuario:
         eh_favorito = db.query(Favorito).filter(
             Favorito.imovel_id == imovel_id,
@@ -162,6 +163,8 @@ async def detalhe_imovel(
             Interesse.imovel_id == imovel_id,
             Interesse.usuario_id == usuario.id,
         ).first() is not None
+
+        dados_completos = bool(usuario.telefone and usuario.documento)
 
     # Busca imóveis similares recomendados por IA
     todos_imoveis = db.query(Imovel).all()
@@ -175,6 +178,8 @@ async def detalhe_imovel(
             "imovel": imovel,
             "ja_interessado": ja_interessado,
             "eh_favorito": eh_favorito,
+            "dados_completos": dados_completos,
+            "erro_dados": request.query_params.get("erro_dados") == "1",
             "similares": similares,
         },
     )
@@ -252,6 +257,10 @@ async def registrar_interesse(
     """Registra interesse do usuário em um imóvel com mensagem obrigatória."""
     if not usuario:
         return RedirectResponse(url="/login", status_code=303)
+
+    # Requisito OBRIGATÓRIO: Para registrar interesse, precisa ter Telefone (WhatsApp) e Documento (CPF/CNPJ)!
+    if not usuario.telefone or not usuario.documento:
+        return RedirectResponse(url=f"/imoveis/{imovel_id}?erro_dados=1", status_code=303)
 
     # Verifica se imóvel existe
     imovel = db.query(Imovel).filter(Imovel.id == imovel_id).first()

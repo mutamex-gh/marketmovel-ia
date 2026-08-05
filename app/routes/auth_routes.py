@@ -13,6 +13,29 @@ from app.auth import hash_senha, verificar_senha, criar_token_jwt, obter_usuario
 router = APIRouter(tags=["autenticação"])
 templates = Jinja2Templates(directory="templates")
 
+def formatar_telefone_filter(val):
+    if not val:
+        return ""
+    nums = "".join([c for c in str(val) if c.isdigit()])
+    if len(nums) == 11:
+        return f"({nums[:2]}) {nums[2]} {nums[3:7]}-{nums[7:]}"
+    elif len(nums) == 10:
+        return f"({nums[:2]}) {nums[2:6]}-{nums[6:]}"
+    return val
+
+def formatar_documento_filter(val):
+    if not val:
+        return ""
+    nums = "".join([c for c in str(val) if c.isdigit()])
+    if len(nums) == 11:
+        return f"{nums[:3]}.{nums[3:6]}.{nums[6:9]}-{nums[9:]}"
+    elif len(nums) == 14:
+        return f"{nums[:2]}.{nums[2:5]}.{nums[5:8]}/{nums[8:12]}-{nums[12:]}"
+    return val
+
+templates.env.filters["formatar_telefone"] = formatar_telefone_filter
+templates.env.filters["formatar_documento"] = formatar_documento_filter
+
 
 @router.get("/perfil")
 @router.get("/dashboard")
@@ -84,10 +107,23 @@ async def criar_conta(
     nome: str = Form(...),
     email: str = Form(...),
     senha: str = Form(...),
+    telefone: str = Form(...),
+    documento: str = Form(None),
     tipo_usuario: str = Form("proprietario"),
     db: Session = Depends(get_db),
 ):
     """Cria nova conta de usuário."""
+    # Validação do Telefone/WhatsApp (Obrigatório)
+    if not telefone or not telefone.strip():
+        return templates.TemplateResponse(
+            request=request,
+            name="cadastro.html",
+            context={
+                "usuario": None,
+                "erro": "O campo Telefone (WhatsApp) é obrigatório.",
+            },
+        )
+
     # Verifica se email já existe
     existente = db.query(Usuario).filter(Usuario.email == email).first()
     if existente:
@@ -116,12 +152,35 @@ async def criar_conta(
         nome=nome,
         email=email,
         senha_hash=hash_senha(senha),
+        telefone=telefone.strip() if telefone else None,
+        documento=documento.strip() if documento else None,
         tipo_usuario=tipo_usuario,
     )
     db.add(novo_usuario)
     db.commit()
 
     return RedirectResponse(url="/login?cadastro=ok", status_code=303)
+
+
+@router.post("/perfil/editar")
+async def editar_perfil(
+    request: Request,
+    nome: str = Form(...),
+    telefone: str = Form(...),
+    documento: str = Form(None),
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Atualiza dados do perfil do usuário."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    usuario.nome = nome.strip()
+    usuario.telefone = telefone.strip() if telefone else None
+    usuario.documento = documento.strip() if documento else None
+    db.commit()
+
+    return RedirectResponse(url="/perfil?salvo=ok", status_code=303)
 
 
 @router.get("/login")

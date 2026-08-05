@@ -29,6 +29,13 @@ async def lifespan(app: FastAPI):
                 conn.execute(text("ALTER TABLE imoveis ADD COLUMN localizacao VARCHAR(255)"))
             if "visualizacoes" not in colunas:
                 conn.execute(text("ALTER TABLE imoveis ADD COLUMN visualizacoes INTEGER DEFAULT 0"))
+
+            res_usr = conn.execute(text("PRAGMA table_info(usuarios)")).fetchall()
+            colunas_usr = [row[1] for row in res_usr]
+            if "telefone" not in colunas_usr:
+                conn.execute(text("ALTER TABLE usuarios ADD COLUMN telefone VARCHAR(50)"))
+            if "documento" not in colunas_usr:
+                conn.execute(text("ALTER TABLE usuarios ADD COLUMN documento VARCHAR(50)"))
             conn.commit()
     except Exception as e:
         print(f"Aviso na migração de banco: {e}")

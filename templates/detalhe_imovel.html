@@ -273,6 +273,22 @@
                         <svg style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                         Proposta Enviada com Sucesso
                     </div>
+                    {% elif not dados_completos %}
+                    <div style="background: rgba(255, 149, 0, 0.08); border: 1px solid rgba(255, 149, 0, 0.2); padding: 14px; border-radius: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 8px;">
+                            <svg style="width: 18px; height: 18px; color: var(--apple-orange); flex-shrink: 0; margin-top: 2px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <div>
+                                <span style="font-size: 0.8125rem; font-weight: 700; color: var(--apple-orange); display: block; margin-bottom: 2px;">Perfil Incompleto</span>
+                                <p style="font-size: 0.75rem; color: var(--apple-text-secondary); line-height: 1.35; margin-bottom: 8px;">Para demonstrar interesse, é obrigatório cadastrar seu <strong>Telefone (WhatsApp)</strong> e seu <strong>Documento (CPF/CNPJ)</strong>.</p>
+                                <a href="/perfil" class="btn-filled block text-center" style="font-size: 0.75rem; padding: 7px 12px; background: var(--apple-orange); border-radius: 8px; font-weight: 600;"
+                                   onmouseover="this.style.background='#e68600'" onmouseout="this.style.background='var(--apple-orange)'">
+                                    Completar Perfil →
+                                </a>
+                            </div>
+                        </div>
+                    </div>
                     {% else %}
                     <form action="/imoveis/{{ imovel.id }}/interesse" method="post" class="space-y-3">
                         <textarea name="mensagem" rows="3" required minlength="3"

@@ -50,6 +50,24 @@
                 </div>
 
                 <div>
+                    <label for="telefone" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Telefone (WhatsApp) <span style="color: #0071e3;">*</span></label>
+                    <input type="text" id="telefone" name="telefone" required
+                           placeholder="(49) 9 8837-9201" oninput="mascaraTelefone(this)"
+                           style="width: 100%; padding: 9px 12px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                           onfocus="this.style.borderColor='#0071e3'"
+                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+                </div>
+
+                <div>
+                    <label for="documento" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Documento — CPF ou CNPJ <span style="color: rgba(255, 255, 255, 0.4); font-size: 0.6875rem;">(Opcional)</span></label>
+                    <input type="text" id="documento" name="documento" oninput="mascaraDocumento(this)"
+                           placeholder="000.000.000-00"
+                           style="width: 100%; padding: 9px 12px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                           onfocus="this.style.borderColor='#0071e3'"
+                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+                </div>
+
+                <div>
                     <label for="senha" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 4px;">Senha de Acesso</label>
                     <input type="password" id="senha" name="senha" required minlength="6"
                            placeholder="Mínimo 6 caracteres"

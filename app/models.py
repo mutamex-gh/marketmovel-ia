@@ -18,6 +18,8 @@ class Usuario(Base):
     nome = Column(String(150), nullable=False)
     email = Column(String(255), unique=True, nullable=False, index=True)
     senha_hash = Column(String(255), nullable=False)
+    telefone = Column(String(50), nullable=True)  # WhatsApp
+    documento = Column(String(50), nullable=True)  # CPF ou CNPJ
     tipo_usuario = Column(String(50), default="proprietario")  # proprietario, corretor, imobiliaria
     criado_em = Column(DateTime, default=datetime.utcnow)
 

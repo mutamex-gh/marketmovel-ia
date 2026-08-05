@@ -105,6 +105,90 @@
     <!-- Dashboard Sections -->
     <div class="space-y-6">
 
+        <!-- Seção 0: Dados Cadastrais & Contato -->
+        <div class="section-card p-6 sm:p-8">
+            <div class="flex items-center justify-between gap-4" style="margin-bottom: 16px;">
+                <div>
+                    <h2 style="font-size: 1rem; font-weight: 700; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                        <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Dados Cadastrais & Contato
+                    </h2>
+                    <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-top: 2px;">
+                        Informações necessárias para negociar imóveis na plataforma.
+                    </p>
+                </div>
+                <button id="btn-toggle-editar" onclick="toggleFormEditar()" class="btn-outlined" style="padding: 7px 14px; font-size: 0.75rem; font-weight: 600; border-radius: 10px;">
+                    <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                    </svg>
+                    Editar Dados
+                </button>
+            </div>
+
+            <!-- VISUALIZAÇÃO APENAS LEITURA (Padrão) -->
+            <div id="view-dados-perfil" class="grid grid-cols-1 sm:grid-cols-3 gap-4" style="background: rgba(0,0,0,0.02); padding: 16px; border-radius: 14px; border: 1px solid rgba(0,0,0,0.04);">
+                <div>
+                    <span style="display: block; font-size: 0.6875rem; font-weight: 600; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Nome Completo</span>
+                    <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">{{ usuario.nome }}</span>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 0.6875rem; font-weight: 600; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Telefone (WhatsApp)</span>
+                    <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">
+                        {% if usuario.telefone %}{{ usuario.telefone|formatar_telefone }}{% else %}<span style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">Não informado</span>{% endif %}
+                    </span>
+                </div>
+                <div>
+                    <span style="display: block; font-size: 0.6875rem; font-weight: 600; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 2px;">Documento (CPF / CNPJ)</span>
+                    <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">
+                        {% if usuario.documento %}{{ usuario.documento|formatar_documento }}{% else %}<span style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">Não informado</span>{% endif %}
+                    </span>
+                </div>
+            </div>
+
+            <!-- FORMULÁRIO DE EDIÇÃO (Invisível até clicar no botão) -->
+            <form id="form-editar-perfil" action="/perfil/editar" method="post" style="display: none; margin-top: 16px;" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="nome_perfil" style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome Completo</label>
+                    <input type="text" id="nome_perfil" name="nome" value="{{ usuario.nome }}" required class="input-apple" style="width: 100%;">
+                </div>
+                <div>
+                    <label for="telefone_perfil" style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Telefone (WhatsApp) <span style="color: var(--apple-blue);">*</span></label>
+                    <input type="text" id="telefone_perfil" name="telefone" value="{{ usuario.telefone|formatar_telefone or '' }}" required placeholder="(49) 9 8837-9201" oninput="mascaraTelefone(this)" class="input-apple" style="width: 100%;">
+                </div>
+                <div>
+                    <label for="documento_perfil" style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Documento — CPF ou CNPJ <span style="color: var(--apple-blue);">*</span></label>
+                    <input type="text" id="documento_perfil" name="documento" value="{{ usuario.documento|formatar_documento or '' }}" placeholder="000.000.000-00" oninput="mascaraDocumento(this)" class="input-apple" style="width: 100%;">
+                </div>
+                <div class="md:col-span-3 flex justify-end gap-3">
+                    <button type="button" onclick="toggleFormEditar()" class="btn-outlined" style="padding: 9px 18px; font-size: 0.8125rem; font-weight: 600;">
+                        Cancelar
+                    </button>
+                    <button type="submit" class="btn-filled" style="padding: 9px 20px; font-size: 0.8125rem; font-weight: 600;">
+                        Salvar Alterações
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <script>
+            function toggleFormEditar() {
+                const form = document.getElementById('form-editar-perfil');
+                const view = document.getElementById('view-dados-perfil');
+                const btn = document.getElementById('btn-toggle-editar');
+                if (form.style.display === 'none') {
+                    form.style.display = 'grid';
+                    view.style.display = 'none';
+                    btn.innerHTML = '<svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg> Cancelar Edição';
+                } else {
+                    form.style.display = 'none';
+                    view.style.display = 'grid';
+                    btn.innerHTML = '<svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Editar Dados';
+                }
+            }
+        </script>
+
         <!-- Seção 1: Meus Anúncios -->
         <div class="section-card overflow-hidden">
             <div style="padding: 20px 24px; border-bottom: 0.5px solid var(--apple-border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
@@ -236,15 +320,40 @@
                             {{ interesse.criado_em.strftime('%d/%m/%Y às %H:%M') }}
                         </span>
                     </div>
-                    <div style="background: var(--apple-bg); border-radius: 10px; padding: 10px 14px; border: 0.5px solid var(--apple-border); font-size: 0.8125rem;">
-                        <span style="font-size: 0.6875rem; font-weight: 600; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">
-                            Imóvel: <a href="/imoveis/{{ interesse.imovel.id }}" style="color: var(--apple-blue); text-decoration: none; font-weight: 500;">{{ interesse.imovel.titulo }}</a>
-                        </span>
-                        {% if interesse.mensagem %}
-                        <p style="color: var(--apple-text-secondary); font-style: italic;">"{{ interesse.mensagem }}"</p>
-                        {% else %}
-                        <p style="color: var(--apple-text-tertiary); font-style: italic;">Nenhuma mensagem adicional.</p>
-                        {% endif %}
+                    <div style="background: var(--apple-bg); border-radius: 12px; padding: 12px 16px; border: 0.5px solid var(--apple-border); font-size: 0.8125rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+                        <div>
+                            <span style="font-size: 0.6875rem; font-weight: 600; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">
+                                Imóvel: <a href="/imoveis/{{ interesse.imovel.id }}" style="color: var(--apple-blue); text-decoration: none; font-weight: 500;">{{ interesse.imovel.titulo }}</a>
+                            </span>
+                            {% if interesse.mensagem %}
+                            <p style="color: var(--apple-text-secondary); font-style: italic;">"{{ interesse.mensagem }}"</p>
+                            {% else %}
+                            <p style="color: var(--apple-text-tertiary); font-style: italic;">Nenhuma mensagem adicional.</p>
+                            {% endif %}
+                        </div>
+
+                        <!-- Ícones de Contato (Apenas Ícones: WhatsApp logo & Envelope Email) -->
+                        <div style="display: flex; align-items: center; gap: 8px; flex-shrink: 0;">
+                            {% if interesse.usuario.telefone %}
+                            <a href="https://wa.me/55{{ interesse.usuario.telefone|replace('(', '')|replace(')', '')|replace(' ', '')|replace('-', '') }}?text=Ol%C3%A1%20{{ interesse.usuario.nome }}!%20Vi%20seu%20interesse%20no%20meu%20im%C3%B3vel%20{{ interesse.imovel.titulo }}."
+                               target="_blank" title="WhatsApp: {{ interesse.usuario.telefone|formatar_telefone }}"
+                               style="width: 38px; height: 38px; background: #25D366; color: #ffffff; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(37, 211, 102, 0.25); transition: transform 0.2s;"
+                               onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                                <svg style="width: 20px; height: 20px; fill: currentColor;" viewBox="0 0 24 24">
+                                    <path d="M12.012 2c-5.506 0-9.989 4.478-9.99 9.984 0 1.762.459 3.48 1.334 5.003L2 22l5.127-1.34a9.96 9.96 0 004.882 1.28h.004c5.503 0 9.987-4.479 9.988-9.985 0-2.667-1.037-5.176-2.924-7.062A9.92 9.92 0 0012.012 2zm5.836 14.18c-.244.688-1.42 1.314-1.956 1.396-.536.082-1.228.118-3.57-.803-2.997-1.18-4.93-4.223-5.079-4.422-.15-.198-1.214-1.616-1.214-3.083 0-1.467.768-2.189 1.04-2.483.272-.294.595-.368.793-.368.198 0 .396.002.57.01.184.009.432-.07.676.516.244.586.833 2.036.906 2.184.073.148.122.321.024.517-.098.196-.147.321-.294.492-.147.171-.31.382-.443.513-.148.146-.303.306-.13.603.173.297.771 1.274 1.656 2.062 1.137 1.012 2.096 1.326 2.393 1.474.297.148.47.124.643-.074.173-.198.742-.865.94-1.162.198-.297.396-.247.668-.148.272.099 1.73.816 2.027.964.297.148.495.223.569.347.074.124.074.717-.17 1.405z"/>
+                                </svg>
+                            </a>
+                            {% endif %}
+
+                            <a href="mailto:{{ interesse.usuario.email }}?subject=Interesse%20no%20im%C3%B3vel%20{{ interesse.imovel.titulo }}&body=Ol%C3%A1%20{{ interesse.usuario.nome }}!%20Recebi%20seu%20interesse%20no%20im%C3%B3vel%20{{ interesse.imovel.titulo }}."
+                               title="Email: {{ interesse.usuario.email }}"
+                               style="width: 38px; height: 38px; background: var(--apple-blue); color: #ffffff; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; box-shadow: 0 2px 8px rgba(0, 113, 227, 0.25); transition: transform 0.2s;"
+                               onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                                <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}
