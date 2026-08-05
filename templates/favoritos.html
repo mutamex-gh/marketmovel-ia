@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block titulo %}Meus Favoritos — ImóvelIA{% endblock %}
+
+{% block conteudo %}
+<div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
+    
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+        <div>
+            <div class="flex items-center gap-2 mb-1">
+                <span style="background: rgba(255, 59, 48, 0.08); color: var(--apple-red); font-size: 0.6875rem; font-weight: 700; padding: 3px 10px; border-radius: 980px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 4px;">
+                    <svg style="width: 12px; height: 12px;" fill="currentColor" viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                    Sua Lista Salva
+                </span>
+            </div>
+            <h1 style="font-size: 2rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">
+                Imóveis Favoritos
+            </h1>
+            <p style="color: var(--apple-text-tertiary); font-size: 0.875rem; margin-top: 4px;">
+                Acesse facilmente os imóveis que você salvou para comparar ou entrar em contato.
+            </p>
+        </div>
+
+        <a href="/" class="btn-outlined" style="font-size: 0.8125rem; padding: 8px 16px;">
+            ← Continuar Buscando
+        </a>
+    </div>
+
+    {% if imoveis|length == 0 %}
+    <!-- State Vazio -->
+    <div class="section-card p-12 text-center" style="border-radius: 20px; background: #ffffff; max-w-xl mx-auto my-12;">
+        <div style="width: 64px; height: 64px; background: rgba(255, 59, 48, 0.08); border-radius: 20px; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px; color: var(--apple-red);">
+            <svg style="width: 32px; height: 32px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+        </div>
+        <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--apple-text-primary); margin-bottom: 8px;">
+            Nenhum imóvel salvo nos favoritos
+        </h2>
+        <p style="color: var(--apple-text-tertiary); font-size: 0.875rem; max-width: 380px; margin: 0 auto 20px;">
+            Quando você encontrar um imóvel interessante, clique no ícone de coração para salvá-lo nesta lista.
+        </p>
+        <a href="/" class="btn-filled" style="padding: 10px 24px; border-radius: 12px; font-weight: 600;">
+            Explorar Imóveis
+        </a>
+    </div>
+    {% else %}
+    <!-- Grid de Imóveis Favoritados -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {% for imovel in imoveis %}
+        <div class="card-imovel animate-fade-in relative group"
+             style="border-radius: 18px; overflow: hidden; background: #ffffff; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.03); transition: all 0.2s;">
+            
+            <!-- Botão de Remover dos Favoritos -->
+            <form action="/imoveis/{{ imovel.id }}/favoritar" method="post" class="absolute top-3 right-3 z-20">
+                <button type="submit" title="Remover dos Favoritos"
+                        style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--apple-red); box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: transform 0.2s;"
+                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                    <svg style="width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 24 24">
+                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                    </svg>
+                </button>
+            </form>
+
+            <a href="/imoveis/{{ imovel.id }}" style="text-decoration: none; color: inherit;" class="block">
+                <!-- Imagem -->
+                <div class="relative h-48 overflow-hidden" style="background: #f5f5f7;">
+                    {% if imovel.imagens|length > 0 %}
+                    <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                        class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
+                        <svg class="w-10 h-10" style="color: rgba(0,0,0,0.15);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <span class="badge-tipo absolute top-3 left-3 capitalize">{{ imovel.tipo_imovel }}</span>
+                </div>
+                <!-- Info -->
+                <div class="p-4">
+                    <h3 style="font-weight: 700; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
+                    <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+                        <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {{ imovel.bairro }}, {{ imovel.cidade }}
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span style="font-size: 1.125rem; font-weight: 800; color: var(--apple-blue);">
+                            R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.6875rem; color: var(--apple-text-tertiary); font-weight: 500;">
+                            <span>{{ imovel.quartos }}q</span>
+                            {% if imovel.area %}
+                            <span>{{ imovel.area|int }}m²</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% endblock %}

@@ -4,8 +4,8 @@
 {% block conteudo %}
 <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-8 animate-fade-in">
     
-    <!-- Breadcrumb & Top Bar -->
-    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+    <!-- Top Bar: Breadcrumb + Badge + Heart Icon-Only Button -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <nav style="font-size: 0.8125rem; color: var(--apple-text-tertiary);">
             <a href="/" style="color: var(--apple-blue); text-decoration: none;">Home</a>
             <span style="margin: 0 8px; color: var(--apple-border-strong);">›</span>
@@ -14,39 +14,34 @@
             <span style="color: var(--apple-text-secondary);">{{ imovel.titulo }}</span>
         </nav>
         
-        <div class="flex items-center gap-3">
-            <span class="badge-apple capitalize" style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue); font-size: 0.8125rem; padding: 6px 14px; border-radius: 980px;">
-                <svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+        <div class="flex items-center gap-2">
+            <span style="font-size: 0.8125rem; color: var(--apple-text-secondary); font-weight: 500; display: inline-flex; align-items: center; gap: 5px; text-transform: capitalize;">
+                <svg style="width: 15px; height: 15px; color: var(--apple-text-secondary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                </svg>
                 {{ imovel.tipo_imovel }}
             </span>
-            <span style="font-size: 0.75rem; color: var(--apple-text-tertiary);">
+
+            <span style="color: var(--apple-border-strong); opacity: 0.4; font-size: 0.8125rem; margin: 0 4px;">|</span>
+
+            <span style="font-size: 0.8125rem; color: var(--apple-text-tertiary); display: inline-flex; align-items: center; gap: 4px;">
+                <svg style="width: 14px; height: 14px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                </svg>
                 {{ imovel.visualizacoes or 0 }} visualizações
             </span>
         </div>
-    </div>
-
-    <!-- Title Row -->
-    <div class="mb-8">
-        <h1 style="font-size: 2.25rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em; line-height: 1.2; margin-bottom: 8px;">
-            {{ imovel.titulo }}
-        </h1>
-        <p style="color: var(--apple-text-secondary); font-size: 1rem; display: flex; align-items: center; gap: 6px;">
-            <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-            </svg>
-            {{ imovel.bairro }}, {{ imovel.cidade }}
-        </p>
     </div>
 
     <!-- Main Grid (Wide Layout) -->
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         <!-- Coluna Principal (8 cols) -->
-        <div class="lg:col-span-8 space-y-8">
+        <div class="lg:col-span-8 space-y-6">
             
-            <!-- Galeria de Imagens Expandida -->
-            <div class="section-card overflow-hidden" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <!-- 1. Galeria de Imagens (NO TOPO) -->
+            <div class="section-card overflow-hidden" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);">
                 {% if imovel.imagens|length > 0 %}
                 <div class="relative">
                     <img id="imagem-principal"
@@ -77,8 +72,24 @@
                 {% endif %}
             </div>
 
-            <!-- SECÇÃO DETALHES (Grid de Specs Limpo & Claro) -->
-            <div class="section-card p-6 sm:p-8" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <!-- 2. TÍTULO DO IMÓVEL E LOCALIZAÇÃO (DENTRO DO EMBED BRANCO COM DESTAQUE) -->
+            <div class="section-card p-6 sm:p-8" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);">
+                <div style="border-left: 4px solid var(--apple-blue); padding-left: 16px;">
+                    <h1 style="font-size: 2rem; font-weight: 800; color: #000000; letter-spacing: -0.03em; line-height: 1.25; margin-bottom: 8px;">
+                        {{ imovel.titulo }}
+                    </h1>
+                    <p style="color: var(--apple-text-secondary); font-size: 0.9375rem; display: flex; align-items: center; gap: 6px; font-weight: 500;">
+                        <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        {{ imovel.bairro }}, {{ imovel.cidade }}
+                    </p>
+                </div>
+            </div>
+
+            <!-- 3. SECÇÃO DETALHES (Grid de Specs) -->
+            <div class="section-card p-6 sm:p-8" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);">
                 <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--apple-text-primary); letter-spacing: -0.02em; margin-bottom: 24px; display: flex; align-items: center; gap: 8px;">
                     Detalhes do Imóvel
                 </h2>
@@ -86,7 +97,7 @@
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     
                     <!-- Categoria -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         </div>
@@ -97,7 +108,7 @@
                     </div>
 
                     <!-- Tipo do Imóvel -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
                         </div>
@@ -108,7 +119,7 @@
                     </div>
 
                     <!-- Quartos -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/></svg>
                         </div>
@@ -119,7 +130,7 @@
                     </div>
 
                     <!-- Área -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-2V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/></svg>
                         </div>
@@ -132,7 +143,7 @@
                     </div>
 
                     <!-- Bairro -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0v-4a1 1 0 011-1h2a1 1 0 011 1v4m-4 0h4"/></svg>
                         </div>
@@ -143,7 +154,7 @@
                     </div>
 
                     <!-- Cidade -->
-                    <div style="background: #f5f5f7; border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;" class="flex items-start gap-3">
                         <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
                             <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         </div>
@@ -156,8 +167,8 @@
                 </div>
             </div>
 
-            <!-- Descrição Completa -->
-            <div class="section-card p-6 sm:p-8" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <!-- 4. Descrição Completa -->
+            <div class="section-card p-6 sm:p-8" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);">
                 <h2 style="font-size: 1.25rem; font-weight: 700; color: var(--apple-text-primary); letter-spacing: -0.02em; margin-bottom: 16px;">
                     Descrição Completa
                 </h2>
@@ -171,15 +182,28 @@
         <!-- Sidebar Direita (4 cols - CARD ESTÁTICO / NÃO FIXO AO ROLAR) -->
         <div class="lg:col-span-4 space-y-6">
             
-            <!-- Card Principal de Valor e Proposta (SEM STICKY / NÃO DESCE JUNTO) -->
-            <div class="section-card p-6" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 20px rgba(0,0,0,0.03);">
+            <!-- Card Principal de Valor e Proposta -->
+            <div class="section-card p-6" style="border-radius: 20px; background: #ffffff; border: 1px solid rgba(0, 0, 0, 0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.02);">
                 
-                <!-- PREÇO NO CARD À DIREITA -->
-                <div style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.06);">
-                    <span style="font-size: 0.75rem; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; margin-bottom: 4px;">Valor do Imóvel</span>
-                    <span style="font-size: 2.25rem; font-weight: 800; color: var(--apple-blue); letter-spacing: -0.03em;">
-                        R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
-                    </span>
+                <!-- PREÇO NO CARD À DIREITA + BOTÃO CORAÇÃO NO CANTO SUPERIOR DIREITO -->
+                <div class="flex items-start justify-between" style="margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid rgba(0, 0, 0, 0.06);">
+                    <div>
+                        <span style="font-size: 0.75rem; color: var(--apple-text-tertiary); text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; display: block; margin-bottom: 4px;">Valor do Imóvel</span>
+                        <span style="font-size: 2.25rem; font-weight: 800; color: #000000; letter-spacing: -0.03em;">
+                            R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
+                        </span>
+                    </div>
+
+                    <!-- Botão Coração Favoritos (Canto superior direito do card à direita das fotos) -->
+                    <form action="/imoveis/{{ imovel.id }}/favoritar" method="post" style="display: inline-block;">
+                        <button type="submit" title="{{ 'Remover dos Favoritos' if eh_favorito else 'Adicionar aos Favoritos' }}"
+                                style="width: 40px; height: 40px; border-radius: 50%; border: 1px solid rgba(0,0,0,0.08); background: #f5f5f7; display: flex; align-items: center; justify-content: center; cursor: pointer; color: {{ 'var(--apple-red)' if eh_favorito else 'var(--apple-text-tertiary)' }}; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s;"
+                                onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+                            <svg style="width: 20px; height: 20px; fill: {{ 'var(--apple-red)' if eh_favorito else 'none' }};" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
+                    </form>
                 </div>
 
                 <h3 style="font-size: 1.0625rem; font-weight: 700; color: var(--apple-text-primary); margin-bottom: 16px;">
@@ -284,6 +308,77 @@
         </div>
 
     </div>
+
+    <!-- ===================================================================== -->
+    <!-- IMÓVEIS SIMILARES RECOMENDADOS POR IA                                -->
+    <!-- ===================================================================== -->
+    {% if similares and similares|length > 0 %}
+    <div style="margin-top: 56px; border-top: 1px solid rgba(0,0,0,0.06); padding-top: 40px;">
+        <div class="flex items-center justify-between mb-6">
+            <div>
+                <div class="flex items-center gap-2 mb-1">
+                    <span style="background: rgba(0, 113, 227, 0.08); color: var(--apple-blue); font-size: 0.6875rem; font-weight: 700; padding: 3px 10px; border-radius: 980px; text-transform: uppercase; letter-spacing: 0.05em; display: inline-flex; align-items: center; gap: 4px;">
+                        <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/></svg>
+                        Recomendados por IA
+                    </span>
+                </div>
+                <h2 style="font-size: 1.5rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">
+                    Imóveis similares que você pode gostar
+                </h2>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+            {% for sim in similares %}
+            <a href="/imoveis/{{ sim.id }}"
+                class="card-imovel animate-fade-in block"
+                style="text-decoration: none; border-radius: 16px; overflow: hidden; background: #ffffff; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.03); transition: all 0.2s;"
+                onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 12px 28px rgba(0,0,0,0.08)'"
+                onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 16px rgba(0,0,0,0.03)'">
+                <!-- Imagem -->
+                <div class="relative h-44 overflow-hidden" style="background: #f5f5f7;">
+                    {% if sim.imagens|length > 0 %}
+                    <img src="/static/uploads/{{ sim.imagens[0].caminho }}" alt="{{ sim.titulo }}"
+                        class="w-full h-full object-cover">
+                    {% else %}
+                    <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
+                        <svg class="w-10 h-10" style="color: rgba(0,0,0,0.15);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                    </div>
+                    {% endif %}
+                    <span class="badge-tipo absolute top-3 left-3 capitalize">{{ sim.tipo_imovel }}</span>
+                </div>
+                <!-- Info -->
+                <div class="p-4">
+                    <h3 style="font-weight: 700; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ sim.titulo }}</h3>
+                    <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+                        <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {{ sim.bairro }}, {{ sim.cidade }}
+                    </p>
+                    <div class="flex items-center justify-between">
+                        <span style="font-size: 1rem; font-weight: 800; color: var(--apple-blue);">
+                            R$ {{ "{:,.0f}".format(sim.preco).replace(",", ".") }}
+                        </span>
+                        <div style="display: flex; align-items: center; gap: 8px; font-size: 0.6875rem; color: var(--apple-text-tertiary); font-weight: 500;">
+                            <span>{{ sim.quartos }}q</span>
+                            {% if sim.area %}
+                            <span>{{ sim.area|int }}m²</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
 </div>
 {% endblock %}

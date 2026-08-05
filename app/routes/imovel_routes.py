@@ -12,10 +12,10 @@ from sqlalchemy.orm import Session
 from PIL import Image as PILImage
 
 from app.database import get_db
-from app.models import Usuario, Imovel, Imagem, Interesse
+from app.models import Usuario, Imovel, Imagem, Interesse, Favorito
 from app.auth import obter_usuario_logado
 from app.config import UPLOAD_DIR, MAX_IMAGE_WIDTH
-from app.embeddings import montar_texto_imovel, gerar_embedding, embedding_para_json
+from app.embeddings import montar_texto_imovel, gerar_embedding, embedding_para_json, buscar_imoveis_similares_por_imovel
 
 
 router = APIRouter(tags=["imóveis"])
@@ -149,13 +149,23 @@ async def detalhe_imovel(
     imovel.visualizacoes = (imovel.visualizacoes or 0) + 1
     db.commit()
 
-    # Verifica se o usuário já demonstrou interesse
+    # Verifica status de favorito e interesse do usuário
+    eh_favorito = False
     ja_interessado = False
     if usuario:
+        eh_favorito = db.query(Favorito).filter(
+            Favorito.imovel_id == imovel_id,
+            Favorito.usuario_id == usuario.id,
+        ).first() is not None
+
         ja_interessado = db.query(Interesse).filter(
             Interesse.imovel_id == imovel_id,
             Interesse.usuario_id == usuario.id,
         ).first() is not None
+
+    # Busca imóveis similares recomendados por IA
+    todos_imoveis = db.query(Imovel).all()
+    similares = buscar_imoveis_similares_por_imovel(imovel, todos_imoveis, top_k=4)
 
     return templates.TemplateResponse(
         request=request,
@@ -164,6 +174,65 @@ async def detalhe_imovel(
             "usuario": usuario,
             "imovel": imovel,
             "ja_interessado": ja_interessado,
+            "eh_favorito": eh_favorito,
+            "similares": similares,
+        },
+    )
+
+
+# ---------------------------------------------------------------------------
+# Favoritos
+# ---------------------------------------------------------------------------
+
+@router.post("/imoveis/{imovel_id}/favoritar")
+async def favoritar_imovel(
+    imovel_id: int,
+    request: Request,
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Alterna o status de favorito de um imóvel."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    fav = db.query(Favorito).filter(
+        Favorito.imovel_id == imovel_id,
+        Favorito.usuario_id == usuario.id
+    ).first()
+
+    if fav:
+        db.delete(fav)
+        db.commit()
+    else:
+        novo_fav = Favorito(imovel_id=imovel_id, usuario_id=usuario.id)
+        db.add(novo_fav)
+        db.commit()
+
+    referer = request.headers.get("referer")
+    if referer:
+        return RedirectResponse(url=referer, status_code=303)
+    return RedirectResponse(url=f"/imoveis/{imovel_id}", status_code=303)
+
+
+@router.get("/favoritos")
+async def listar_favoritos(
+    request: Request,
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Lista todos os imóveis favoritados pelo usuário logado."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    favs = db.query(Favorito).filter(Favorito.usuario_id == usuario.id).order_by(Favorito.criado_em.desc()).all()
+    imoveis = [f.imovel for f in favs if f.imovel]
+
+    return templates.TemplateResponse(
+        request=request,
+        name="favoritos.html",
+        context={
+            "usuario": usuario,
+            "imoveis": imoveis,
         },
     )
 

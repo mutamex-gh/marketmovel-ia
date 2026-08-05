@@ -33,10 +33,10 @@
         rel="stylesheet">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/custom.css?v=10">
+    <link rel="stylesheet" href="/static/css/custom.css?v=19">
 </head>
 
-<body class="bg-slate-50 font-sans text-slate-800 min-h-screen flex flex-col">
+<body class="bg-white font-sans text-slate-800 min-h-screen flex flex-col" style="background: #ffffff !important;">
 
     <!-- ================================================================= -->
     <!-- NAVBAR — macOS Frosted Glass                                       -->
@@ -59,6 +59,7 @@
                 <div class="hidden md:flex items-center gap-0.5">
                     <a href="/" class="nav-link">Buscar</a>
                     {% if usuario %}
+                    <a href="/favoritos" class="nav-link">Favoritos</a>
                     <a href="/imoveis/novo" class="nav-link">Anunciar</a>
                     <a href="/meus-imoveis" class="nav-link">Meus Imóveis</a>
                     <a href="/perfil" class="nav-link">Perfil</a>

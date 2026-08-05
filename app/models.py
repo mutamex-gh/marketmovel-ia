@@ -24,6 +24,7 @@ class Usuario(Base):
     # Relacionamentos
     imoveis = relationship("Imovel", back_populates="proprietario", cascade="all, delete-orphan")
     interesses = relationship("Interesse", back_populates="usuario", cascade="all, delete-orphan")
+    favoritos = relationship("Favorito", back_populates="usuario", cascade="all, delete-orphan")
 
 
 class Imovel(Base):
@@ -49,6 +50,7 @@ class Imovel(Base):
     proprietario = relationship("Usuario", back_populates="imoveis")
     imagens = relationship("Imagem", back_populates="imovel", cascade="all, delete-orphan")
     interesses = relationship("Interesse", back_populates="imovel", cascade="all, delete-orphan")
+    favoritos = relationship("Favorito", back_populates="imovel", cascade="all, delete-orphan")
 
 
 class Imagem(Base):
@@ -77,3 +79,18 @@ class Interesse(Base):
     # Relacionamentos
     imovel = relationship("Imovel", back_populates="interesses")
     usuario = relationship("Usuario", back_populates="interesses")
+
+
+class Favorito(Base):
+    """Favoritos salvos pelos usuários."""
+    __tablename__ = "favoritos"
+
+    id = Column(Integer, primary_key=True, index=True)
+    imovel_id = Column(Integer, ForeignKey("imoveis.id"), nullable=False)
+    usuario_id = Column(Integer, ForeignKey("usuarios.id"), nullable=False)
+    criado_em = Column(DateTime, default=datetime.utcnow)
+
+    # Relacionamentos
+    imovel = relationship("Imovel", back_populates="favoritos")
+    usuario = relationship("Usuario", back_populates="favoritos")
+

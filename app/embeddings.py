@@ -205,3 +205,55 @@ def buscar_similares(
     resultados.sort(key=lambda x: x[1], reverse=True)
 
     return resultados[:top_k]
+
+
+def buscar_imoveis_similares_por_imovel(imovel_alvo: Imovel, imoveis: List[Imovel], top_k: int = 4) -> List[Imovel]:
+    """
+    Encontra imóveis mais semelhantes ao 'imovel_alvo' com base nos vetores de IA (embeddings)
+    e heurísticas de tipo de imóvel, cidade e especificações similares.
+    """
+    # Filtra o próprio imóvel alvo
+    outros_imoveis = [i for i in imoveis if i.id != imovel_alvo.id]
+    if not outros_imoveis:
+        return []
+
+    # Tenta usar os vetores de embedding já salvos
+    vetor_alvo = embedding_do_json(imovel_alvo.embedding) if imovel_alvo.embedding else None
+
+    # Se não tiver vetor salvo no alvo, gera dinamicamente
+    if not vetor_alvo:
+        vetor_alvo = gerar_embedding(montar_texto_imovel(imovel_alvo))
+
+    cand_com_vetor = []
+    for cand in outros_imoveis:
+        vetor_cand = embedding_do_json(cand.embedding) if cand.embedding else None
+        if not vetor_cand:
+            vetor_cand = gerar_embedding(montar_texto_imovel(cand))
+        cand_com_vetor.append((cand, vetor_cand))
+
+    scores = []
+    for cand, v_cand in cand_com_vetor:
+        if vetor_alvo and v_cand:
+            try:
+                sim = float(cosine_similarity([vetor_alvo], [v_cand])[0][0])
+            except Exception:
+                sim = 0.5
+        else:
+            sim = 0.5  # base
+
+        # Boost de mesma cidade (+0.25)
+        if cand.cidade and imovel_alvo.cidade and cand.cidade.lower() == imovel_alvo.cidade.lower():
+            sim += 0.25
+        # Boost de mesmo tipo de imóvel (+0.20)
+        if cand.tipo_imovel and imovel_alvo.tipo_imovel and cand.tipo_imovel.lower() == imovel_alvo.tipo_imovel.lower():
+            sim += 0.20
+        # Boost de quantidade de quartos similar (+0.10)
+        if cand.quartos and imovel_alvo.quartos and abs(cand.quartos - imovel_alvo.quartos) <= 1:
+            sim += 0.10
+
+        scores.append((cand, sim))
+
+    # Ordena por similaridade decrescente
+    scores.sort(key=lambda x: x[1], reverse=True)
+    return [item[0] for item in scores[:top_k]]
+
