@@ -15,6 +15,7 @@ from app.database import get_db
 from app.models import Usuario, Imovel, Imagem, Interesse
 from app.auth import obter_usuario_logado
 from app.config import UPLOAD_DIR, MAX_IMAGE_WIDTH
+from app.embeddings import montar_texto_imovel, gerar_embedding, embedding_para_json
 
 
 router = APIRouter(tags=["imóveis"])
@@ -118,8 +119,10 @@ async def criar_imovel(
             )
             db.add(img_db)
 
-    # Nota: No modelo TF-IDF, os vetores são calculados no momento da busca
-    # a partir do corpus completo, então não pré-computamos embeddings aqui.
+    # Gera embedding vetorial para busca semântica instantânea por IA
+    vetor = gerar_embedding(montar_texto_imovel(novo_imovel))
+    if vetor:
+        novo_imovel.embedding = embedding_para_json(vetor)
 
     db.commit()
 
@@ -308,7 +311,10 @@ async def atualizar_imovel(
             )
             db.add(img_db)
 
-    # Nota: No modelo TF-IDF, os vetores são recalculados na busca.
+    # Regenera o embedding vetorial do imóvel atualizado
+    vetor = gerar_embedding(montar_texto_imovel(imovel))
+    if vetor:
+        imovel.embedding = embedding_para_json(vetor)
 
     db.commit()
 

@@ -33,7 +33,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         print(f"Aviso na migração de banco: {e}")
 
-    print("✅ Banco de dados inicializado!")
+    # Pre-carrega o modelo neural de IA na memória no startup
+    try:
+        from app.embeddings import obter_modelo_ia
+        obter_modelo_ia()
+    except Exception as e:
+        print(f"Aviso no carregamento da IA: {e}")
+
+    print("[OK] Banco de dados e Modelo de IA prontos!")
     yield
 
 
