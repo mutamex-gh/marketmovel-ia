@@ -141,3 +141,63 @@ function confirmarExclusao(formId) {
         document.getElementById(formId).submit();
     }
 }
+
+// Alterna o favorito via AJAX sem recarregar a página
+async function toggleFavorito(event, imovelId, btnElement) {
+    if (event) event.preventDefault();
+
+    const form = btnElement.tagName === 'FORM' ? btnElement : btnElement.closest('form');
+    const button = btnElement.tagName === 'BUTTON' ? btnElement : form ? form.querySelector('button') : btnElement;
+    if (!button) return;
+
+    const svg = button.querySelector('svg');
+
+    // Feedback tátil instantâneo
+    button.style.transform = 'scale(1.25)';
+    setTimeout(() => { button.style.transform = 'scale(1)'; }, 150);
+
+    try {
+        const response = await fetch(`/imoveis/${imovelId}/favoritar`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json'
+            }
+        });
+
+        if (response.status === 401) {
+            window.location.href = '/login';
+            return;
+        }
+
+        const data = await response.json();
+        if (data.sucesso) {
+            if (data.favoritado) {
+                button.style.color = 'var(--apple-red)';
+                if (svg) svg.style.fill = 'var(--apple-red)';
+                button.title = 'Remover dos Favoritos';
+            } else {
+                button.style.color = 'var(--apple-text-tertiary)';
+                if (svg) svg.style.fill = 'none';
+                button.title = 'Adicionar aos Favoritos';
+
+                // Se estiver na lista de favoritos, remove o elemento do DOM com animação suave
+                const cardParent = button.closest('.card-imovel');
+                if (cardParent && window.location.pathname.includes('/favoritos')) {
+                    cardParent.style.transition = 'all 0.3s ease';
+                    cardParent.style.opacity = '0';
+                    cardParent.style.transform = 'scale(0.9)';
+                    setTimeout(() => {
+                        cardParent.remove();
+                        const grid = document.querySelector('.grid');
+                        if (grid && grid.children.length === 0) {
+                            window.location.reload();
+                        }
+                    }, 300);
+                }
+            }
+        }
+    } catch (err) {
+        console.error('Erro ao favoritar imóvel:', err);
+    }
+}

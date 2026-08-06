@@ -138,11 +138,11 @@
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for item in resultados %}
         {% set imovel = item.imovel %}
-        <a href="/imoveis/{{ imovel.id }}"
-            class="card-imovel animate-fade-in opacity-0 block"
-            style="animation-delay: {{ loop.index0 * 0.06 }}s; text-decoration: none;">
+        <div class="card-imovel animate-fade-in opacity-0 block relative"
+            style="animation-delay: {{ loop.index0 * 0.06 }}s;">
             <!-- Imagem -->
             <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
+                <a href="/imoveis/{{ imovel.id }}">
                 {% if imovel.imagens|length > 0 %}
                 <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
                     class="w-full h-full object-cover">
@@ -154,13 +154,24 @@
                     </svg>
                 </div>
                 {% endif %}
-                <span class="badge-tipo absolute top-3 left-3 capitalize">{{ imovel.tipo_imovel }}</span>
+                </a>
+
                 {% if item.score is not none %}
-                <span class="badge-score absolute top-3 right-3">{{ item.score }}% match</span>
+                <span class="badge-score absolute top-3 left-3 z-10">{{ item.score }}% match</span>
                 {% endif %}
+
+                <!-- Botão Coração Favoritar (Canto superior direito top-3 right-3) -->
+                <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
+                    title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
+                    class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
+                    style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
+                    <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </button>
             </div>
             <!-- Info -->
-            <div class="p-4">
+            <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
                 <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
                 <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
                     <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -182,8 +193,8 @@
                         {% endif %}
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
         {% endfor %}
     </div>
     {% endif %}
@@ -197,11 +208,11 @@
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
         {% for imovel in imoveis %}
-        <a href="/imoveis/{{ imovel.id }}"
-            class="card-imovel animate-fade-in opacity-0 block"
-            style="animation-delay: {{ loop.index0 * 0.06 }}s; text-decoration: none;">
+        <div class="card-imovel animate-fade-in opacity-0 block relative"
+            style="animation-delay: {{ loop.index0 * 0.06 }}s;">
             <!-- Imagem -->
             <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
+                <a href="/imoveis/{{ imovel.id }}">
                 {% if imovel.imagens|length > 0 %}
                 <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
                     class="w-full h-full object-cover">
@@ -213,10 +224,20 @@
                     </svg>
                 </div>
                 {% endif %}
-                <span class="badge-tipo absolute top-3 left-3 capitalize">{{ imovel.tipo_imovel }}</span>
+                </a>
+
+                <!-- Botão Coração Favoritar (Canto superior direito top-3 right-3) -->
+                <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
+                    title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
+                    class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
+                    style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
+                    <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                </button>
             </div>
             <!-- Info -->
-            <div class="p-4">
+            <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
                 <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
                 <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
                     <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -238,8 +259,8 @@
                         {% endif %}
                     </div>
                 </div>
-            </div>
-        </a>
+            </a>
+        </div>
         {% endfor %}
     </div>
 

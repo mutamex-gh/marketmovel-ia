@@ -218,7 +218,12 @@ async def favoritar_imovel(
     db: Session = Depends(get_db),
 ):
     """Alterna o status de favorito de um imóvel."""
+    is_ajax = request.headers.get("x-requested-with") == "XMLHttpRequest" or "application/json" in request.headers.get("accept", "")
+
     if not usuario:
+        if is_ajax:
+            from fastapi.responses import JSONResponse
+            return JSONResponse(status_code=401, content={"erro": "Login necessário", "redirect": "/login"})
         return RedirectResponse(url="/login", status_code=303)
 
     fav = db.query(Favorito).filter(
@@ -229,10 +234,16 @@ async def favoritar_imovel(
     if fav:
         db.delete(fav)
         db.commit()
+        favoritado = False
     else:
         novo_fav = Favorito(imovel_id=imovel_id, usuario_id=usuario.id)
         db.add(novo_fav)
         db.commit()
+        favoritado = True
+
+    if is_ajax:
+        from fastapi.responses import JSONResponse
+        return JSONResponse(content={"sucesso": True, "favoritado": favoritado, "imovel_id": imovel_id})
 
     referer = request.headers.get("referer")
     if referer:

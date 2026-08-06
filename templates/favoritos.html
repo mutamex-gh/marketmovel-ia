@@ -51,17 +51,6 @@
         <div class="card-imovel animate-fade-in relative group"
              style="border-radius: 18px; overflow: hidden; background: #ffffff; border: 1px solid rgba(0,0,0,0.06); box-shadow: 0 4px 16px rgba(0,0,0,0.03); transition: all 0.2s;">
             
-            <!-- Botão de Remover dos Favoritos -->
-            <form action="/imoveis/{{ imovel.id }}/favoritar" method="post" class="absolute top-3 right-3 z-20">
-                <button type="submit" title="Remover dos Favoritos"
-                        style="width: 36px; height: 36px; border-radius: 50%; background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(8px); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--apple-red); box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: transform 0.2s;"
-                        onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
-                    <svg style="width: 18px; height: 18px;" fill="currentColor" viewBox="0 0 24 24">
-                        <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-                    </svg>
-                </button>
-            </form>
-
             <a href="/imoveis/{{ imovel.id }}" style="text-decoration: none; color: inherit;" class="block">
                 <!-- Imagem -->
                 <div class="relative h-48 overflow-hidden" style="background: #f5f5f7;">
@@ -76,7 +65,16 @@
                         </svg>
                     </div>
                     {% endif %}
-                    <span class="badge-tipo absolute top-3 left-3 capitalize">{{ imovel.tipo_imovel }}</span>
+
+                    <!-- Botão de Remover dos Favoritos (Canto superior direito) -->
+                    <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" title="Remover dos Favoritos"
+                            class="absolute top-3 right-3 z-20"
+                            style="width: 34px; height: 34px; border-radius: 50%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--apple-red); box-shadow: 0 2px 8px rgba(0,0,0,0.12); transition: transform 0.2s;"
+                            onmouseover="this.style.transform='scale(1.15)'; this.style.background='#ffffff'" onmouseout="this.style.transform='scale(1)'; this.style.background='rgba(255, 255, 255, 0.85)'">
+                        <svg style="width: 18px; height: 18px; fill: var(--apple-red); transition: fill 0.2s;" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
                 </div>
                 <!-- Info -->
                 <div class="p-4">

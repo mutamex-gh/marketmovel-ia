@@ -160,7 +160,6 @@ async def editar_usuario_admin(
     id_usr: int,
     request: Request,
     nome: str = Form(...),
-    email: str = Form(...),
     telefone: Optional[str] = Form(None),
     documento: Optional[str] = Form(None),
     tipo_usuario: str = Form(...),
@@ -168,18 +167,12 @@ async def editar_usuario_admin(
     admin: Usuario = Depends(exigir_admin),
     db: Session = Depends(get_db),
 ):
-    """Atualiza qualquer usuário no sistema."""
+    """Atualiza usuário no sistema (sem permitir alterar o e-mail)."""
     usr = db.query(Usuario).filter(Usuario.id == id_usr).first()
     if not usr:
         raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
-    # Verifica duplicidade de email
-    existente = db.query(Usuario).filter(Usuario.email == email.strip(), Usuario.id != id_usr).first()
-    if existente:
-        return RedirectResponse(url="/admin/usuarios?erro=Email+ja+em+uso+por+outro+usuario", status_code=303)
-
     usr.nome = nome.strip()
-    usr.email = email.strip()
     usr.telefone = telefone.strip() if telefone else None
     usr.documento = documento.strip() if documento else None
     usr.tipo_usuario = tipo_usuario.strip()

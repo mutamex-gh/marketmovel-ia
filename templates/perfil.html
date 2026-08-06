@@ -401,7 +401,7 @@
                                 {{ interesse.imovel.titulo }}
                             </a>
                             <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 2px;">
-                                {{ interesse.imovel.bairro }}, {{ interesse.imovel.cidade }} • <strong style="color: var(--apple-blue);">R$ {{ "{:,.0f}".format(interesse.imovel.preco).replace(",", ".") }}</strong>
+                                {{ interesse.imovel.bairro }}, {{ interesse.imovel.cidade }} • <strong style="color: #000000;">R$ {{ "{:,.0f}".format(interesse.imovel.preco).replace(",", ".") }}</strong>
                             </p>
                             <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 2px;">
                                 Por {{ interesse.imovel.proprietario.nome }} • {{ interesse.criado_em.strftime('%d/%m/%Y') }}
