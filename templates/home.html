@@ -61,8 +61,11 @@
 <!-- ===================================================================== -->
 <section class="max-w-[1800px] mx-auto px-3 sm:px-6 lg:px-8 py-10">
 
+    {% set tem_imoveis = (resultados is not none) or (imoveis and imoveis|length > 0) %}
+
     <div style="display: flex; gap: 24px; align-items: flex-start;">
 
+        {% if tem_imoveis %}
         <!-- ============================================================= -->
         <!-- SIDEBAR DE FILTROS (à esquerda)                                -->
         <!-- ============================================================= -->
@@ -203,6 +206,7 @@
         <!-- Overlay mobile -->
         <div id="sidebar-overlay" onclick="toggleSidebarMobile()" 
             style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 40; backdrop-filter: blur(2px);"></div>
+        {% endif %}
 
         <!-- ============================================================= -->
         <!-- CONTEÚDO PRINCIPAL (à direita)                                  -->
@@ -437,6 +441,7 @@
 function ajustarSidebar() {
     const sidebar = document.getElementById('sidebar-filtros');
     const btnMobile = document.getElementById('btn-filtros-mobile');
+    if (!sidebar || !btnMobile) return;
     if (window.innerWidth >= 1024) {
         sidebar.style.display = 'block';
         sidebar.style.position = 'relative';
@@ -447,7 +452,8 @@ function ajustarSidebar() {
         sidebar.style.borderRadius = '8px';
         sidebar.style.maxHeight = 'none';
         btnMobile.style.display = 'none';
-        document.getElementById('sidebar-overlay').style.display = 'none';
+        const overlay = document.getElementById('sidebar-overlay');
+        if (overlay) overlay.style.display = 'none';
     } else {
         if (!sidebar.classList.contains('mobile-open')) {
             sidebar.style.display = 'none';
@@ -462,6 +468,7 @@ window.addEventListener('resize', ajustarSidebar);
 function toggleSidebarMobile() {
     const sidebar = document.getElementById('sidebar-filtros');
     const overlay = document.getElementById('sidebar-overlay');
+    if (!sidebar || !overlay) return;
     const isOpen = sidebar.classList.contains('mobile-open');
     if (isOpen) {
         sidebar.classList.remove('mobile-open');
