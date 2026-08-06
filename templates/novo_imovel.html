@@ -20,7 +20,7 @@
     {% endif %}
 
     <!-- Formulário -->
-    <form action="/imoveis/novo" method="post" enctype="multipart/form-data" class="space-y-6">
+    <form action="/imoveis/novo" method="post" enctype="multipart/form-data" class="space-y-6" onsubmit="prepararEnvioForm(this)">
 
         <!-- Informações principais -->
         <div class="section-card p-6 space-y-5">
@@ -62,9 +62,10 @@
                     </select>
                 </div>
                 <div>
-                    <label for="preco" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
-                    <input type="number" id="preco" name="preco" required min="1" step="any" placeholder="Ex: 350000"
-                        class="input-apple">
+                    <label for="preco_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
+                    <input type="text" id="preco_display" inputmode="numeric" required placeholder="Ex: 350.000"
+                        oninput="formatarMoedaInput(this)" class="input-apple">
+                    <input type="hidden" id="preco" name="preco">
                 </div>
             </div>
 
@@ -155,4 +156,23 @@
         </div>
     </form>
 </div>
+
+<script>
+function formatarMoedaInput(el) {
+    let v = el.value.replace(/\D/g, '');
+    if (v === '') {
+        el.value = '';
+    } else {
+        el.value = parseInt(v, 10).toLocaleString('pt-BR');
+    }
+}
+
+function prepararEnvioForm(form) {
+    const inputDisplay = document.getElementById('preco_display');
+    const inputHidden = document.getElementById('preco');
+    if (inputDisplay && inputHidden) {
+        inputHidden.value = inputDisplay.value.replace(/\D/g, '');
+    }
+}
+</script>
 {% endblock %}

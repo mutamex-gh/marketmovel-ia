@@ -20,8 +20,8 @@
         </p>
 
         <!-- Barra de busca -->
-        <form action="/buscar" method="get" class="max-w-2xl mx-auto">
-            <div class="glass-search p-1.5 flex flex-col sm:flex-row gap-1.5" style="border-radius: 16px;">
+        <form id="form-busca-hero" action="/buscar" method="get" class="max-w-2xl mx-auto">
+            <div class="glass-search p-1.5 flex flex-col sm:flex-row gap-1.5" style="border-radius: 10px;">
                 <div class="flex-1 relative">
                     <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4.5 h-4.5" style="width: 18px; height: 18px; color: rgba(255,255,255,0.35);" fill="none"
                         stroke="currentColor" viewBox="0 0 24 24">
@@ -34,6 +34,12 @@
                         onfocus="this.style.background='rgba(255,255,255,0.1)'; this.style.borderColor='rgba(255,255,255,0.15)'"
                         onblur="this.style.background='rgba(255,255,255,0.06)'; this.style.borderColor='rgba(255,255,255,0.08)'"
                     >
+                    <!-- Hidden inputs para repassar filtros do sidebar -->
+                    <input type="hidden" name="cidade" id="hidden-cidade" value="{{ filtros.get('cidade', '') }}">
+                    <input type="hidden" name="tipo_imovel" id="hidden-tipo" value="{{ filtros.get('tipo_imovel', '') }}">
+                    <input type="hidden" name="quartos_min" id="hidden-quartos" value="{{ filtros.get('quartos_min', '') }}">
+                    <input type="hidden" name="preco_min" id="hidden-preco-min" value="{{ filtros.get('preco_min', '') }}">
+                    <input type="hidden" name="preco_max" id="hidden-preco-max" value="{{ filtros.get('preco_max', '') }}">
                 </div>
                 <button type="submit"
                     style="padding: 12px 28px; background: var(--apple-blue); color: #fff; font-weight: 600; font-size: 0.875rem; border-radius: 12px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;"
@@ -46,236 +52,334 @@
                     Buscar com IA
                 </button>
             </div>
-
-            <!-- Toggle filtros -->
-            <button type="button" onclick="toggleFiltros()"
-                style="margin-top: 16px; font-size: 0.8125rem; color: rgba(255,255,255,0.4); background: none; border: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: color 0.2s;"
-                onmouseover="this.style.color='rgba(255,255,255,0.7)'"
-                onmouseout="this.style.color='rgba(255,255,255,0.4)'">
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
-                </svg>
-                Filtros avançados
-            </button>
-
-            <!-- Filtros colapsáveis -->
-            <div id="filtros-container" class="{% if not filtros %}hidden{% endif %} mt-4 glass-search p-4" style="border-radius: 14px;">
-                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-                    <div>
-                        <label style="font-size: 0.6875rem; color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;">Cidade</label>
-                        <input type="text" name="cidade" value="{{ filtros.get('cidade', '') }}"
-                            placeholder="Ex: São Paulo"
-                            style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 0.8125rem;">
-                    </div>
-                    <div>
-                        <label style="font-size: 0.6875rem; color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;">Tipo</label>
-                        <select name="tipo_imovel"
-                            style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 0.8125rem;">
-                            <option value="" style="color: #1d1d1f;">Todos</option>
-                            <option value="apartamento" {% if filtros.get('tipo_imovel')=='apartamento' %}selected{% endif %} style="color: #1d1d1f;">Apartamento</option>
-                            <option value="casa" {% if filtros.get('tipo_imovel')=='casa' %}selected{% endif %} style="color: #1d1d1f;">Casa</option>
-                            <option value="cobertura" {% if filtros.get('tipo_imovel')=='cobertura' %}selected{% endif %} style="color: #1d1d1f;">Cobertura</option>
-                            <option value="terreno" {% if filtros.get('tipo_imovel')=='terreno' %}selected{% endif %} style="color: #1d1d1f;">Terreno</option>
-                            <option value="comercial" {% if filtros.get('tipo_imovel')=='comercial' %}selected{% endif %} style="color: #1d1d1f;">Comercial</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label style="font-size: 0.6875rem; color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;">Quartos (mín.)</label>
-                        <input type="number" name="quartos_min" value="{{ filtros.get('quartos_min', '') }}" min="0"
-                            step="1" placeholder="Ex: 2"
-                            style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 0.8125rem;">
-                    </div>
-                    <div>
-                        <label style="font-size: 0.6875rem; color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;">Preço mín.</label>
-                        <input type="number" name="preco_min" value="{{ filtros.get('preco_min', '') }}" min="0"
-                            step="any" placeholder="R$ 0"
-                            style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 0.8125rem;">
-                    </div>
-                    <div>
-                        <label style="font-size: 0.6875rem; color: rgba(255,255,255,0.4); display: block; margin-bottom: 4px;">Preço máx.</label>
-                        <input type="number" name="preco_max" value="{{ filtros.get('preco_max', '') }}" min="0"
-                            step="any" placeholder="R$ ∞"
-                            style="width: 100%; padding: 8px 12px; background: rgba(255,255,255,0.06); color: #fff; border: 0.5px solid rgba(255,255,255,0.08); border-radius: 8px; font-size: 0.8125rem;">
-                    </div>
-                </div>
-            </div>
         </form>
     </div>
 </section>
 
 <!-- ===================================================================== -->
-<!-- RESULTADOS / IMÓVEIS RECENTES                                         -->
+<!-- RESULTADOS / IMÓVEIS RECENTES  (com sidebar de filtros à esquerda)     -->
 <!-- ===================================================================== -->
-<section class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-12">
+<section class="max-w-[1800px] mx-auto px-3 sm:px-6 lg:px-8 py-10">
 
-    {% if resultados is not none %}
-    <!-- Resultados da busca -->
-    <div class="flex items-center justify-between mb-8">
-        <div>
-            <h2 class="text-xl font-bold" style="color: var(--apple-text-primary); letter-spacing: -0.02em;">Resultados da busca</h2>
-            <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">
-                {{ resultados|length }} imóve{{ 'l' if resultados|length == 1 else 'is' }} encontrado{{ 's' if
-                resultados|length != 1 }}
-                {% if query %} para "<span style="color: var(--apple-blue);">{{ query }}</span>"{% endif %}
-            </p>
-        </div>
-        <a href="/" style="font-size: 0.8125rem; color: var(--apple-blue); font-weight: 500; text-decoration: none;">
-            ← Limpar busca
-        </a>
-    </div>
+    <div style="display: flex; gap: 24px; align-items: flex-start;">
 
-    {% if resultados|length == 0 %}
-    <div class="empty-state section-card">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-        </svg>
-        <p class="empty-title">Nenhum imóvel encontrado</p>
-        <p class="empty-desc">Tente termos mais amplos ou remova alguns filtros.</p>
-    </div>
-    {% else %}
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {% for item in resultados %}
-        {% set imovel = item.imovel %}
-        <div class="card-imovel animate-fade-in opacity-0 block relative"
-            style="animation-delay: {{ loop.index0 * 0.06 }}s;">
-            <!-- Imagem -->
-            <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
-                <a href="/imoveis/{{ imovel.id }}">
-                {% if imovel.imagens|length > 0 %}
-                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
-                    class="w-full h-full object-cover">
-                {% else %}
-                <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
-                    <svg class="w-10 h-10" style="color: rgba(0,0,0,0.1);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+        <!-- ============================================================= -->
+        <!-- SIDEBAR DE FILTROS (à esquerda)                                -->
+        <!-- ============================================================= -->
+        <aside id="sidebar-filtros"
+            style="width: 250px; min-width: 250px; background: #ffffff; border: 1px solid rgba(0,0,0,0.06); border-radius: 8px; padding: 20px 16px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); position: relative; flex-shrink: 0; display: none;"
+            class="sidebar-filtros-desktop">
+
+            <!-- Título -->
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                <h3 style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary); letter-spacing: -0.01em; display: flex; align-items: center; gap: 8px;">
+                    <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                     </svg>
-                </div>
-                {% endif %}
-                </a>
-
-                {% if item.score is not none %}
-                <span class="badge-score absolute top-3 left-3 z-10">{{ item.score }}% match</span>
-                {% endif %}
-
-                <!-- Botão Coração Favoritar (Canto superior direito top-3 right-3) -->
-                <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
-                    title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
-                    class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
-                    style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
-                    <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
-                    </svg>
+                    FILTROS
+                </h3>
+                <button type="button" onclick="limparFiltros()" 
+                    style="font-size: 0.6875rem; color: var(--apple-blue); background: none; border: none; cursor: pointer; font-weight: 500;"
+                    onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+                    Limpar
                 </button>
             </div>
-            <!-- Info -->
-            <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
-                <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
-                <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
-                    <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {{ imovel.bairro }}, {{ imovel.cidade }}
-                </p>
-                <div class="flex items-center justify-between">
-                    <span style="font-size: 1rem; font-weight: 800; color: #000000;">
-                        R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
-                    </span>
-                    <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
-                        <span>{{ imovel.quartos }}q</span>
-                        {% if imovel.area %}
-                        <span>{{ imovel.area|int }}m²</span>
-                        {% endif %}
-                    </div>
-                </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
-    {% endif %}
 
-    {% elif imoveis %}
-    <!-- Imóveis recentes (home padrão) -->
-    <div class="mb-8">
-        <h2 class="text-xl font-bold" style="color: var(--apple-text-primary); letter-spacing: -0.02em;">Imóveis recentes</h2>
-        <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">Confira os últimos anúncios publicados</p>
-    </div>
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-        {% for imovel in imoveis %}
-        <div class="card-imovel animate-fade-in opacity-0 block relative"
-            style="animation-delay: {{ loop.index0 * 0.06 }}s;">
-            <!-- Imagem -->
-            <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
-                <a href="/imoveis/{{ imovel.id }}">
-                {% if imovel.imagens|length > 0 %}
-                <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
-                    class="w-full h-full object-cover">
-                {% else %}
-                <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
-                    <svg class="w-10 h-10" style="color: rgba(0,0,0,0.1);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                            d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-                    </svg>
-                </div>
-                {% endif %}
-                </a>
-
-                <!-- Botão Coração Favoritar (Canto superior direito top-3 right-3) -->
-                <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
-                    title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
-                    class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
-                    style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
-                    <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            <!-- Filtro: Preço -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Preço</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
-            </div>
-            <!-- Info -->
-            <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
-                <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
-                <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
-                    <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                    </svg>
-                    {{ imovel.bairro }}, {{ imovel.cidade }}
-                </p>
-                <div class="flex items-center justify-between">
-                    <span style="font-size: 1rem; font-weight: 800; color: #000000;">
-                        R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
-                    </span>
-                    <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
-                        <span>{{ imovel.quartos }}q</span>
-                        {% if imovel.area %}
-                        <span>{{ imovel.area|int }}m²</span>
-                        {% endif %}
+                <div class="filtro-body" style="display: flex; gap: 8px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.625rem; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">Mínimo</label>
+                        <input type="text" id="filtro-preco-min" inputmode="numeric"
+                            value="{% if filtros.get('preco_min') %}{{ '{:,.0f}'.format(filtros.get('preco_min')|float).replace(',', '.') }}{% endif %}"
+                            placeholder="R$ 0"
+                            oninput="formatarMoedaInput(this)"
+                            onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                            style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.625rem; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">Máximo</label>
+                        <input type="text" id="filtro-preco-max" inputmode="numeric"
+                            value="{% if filtros.get('preco_max') %}{{ '{:,.0f}'.format(filtros.get('preco_max')|float).replace(',', '.') }}{% endif %}"
+                            placeholder="R$ ∞"
+                            oninput="formatarMoedaInput(this)"
+                            onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                            style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
                     </div>
                 </div>
-            </a>
-        </div>
-        {% endfor %}
-    </div>
+            </div>
 
-    {% else %}
-    <!-- Nenhum imóvel cadastrado -->
-    <div class="empty-state section-card">
-        <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
-        </svg>
-        <p class="empty-title">Nenhum imóvel cadastrado ainda</p>
-        <p class="empty-desc">Seja o primeiro a anunciar!</p>
-        <a href="/imoveis/novo" class="btn-filled">Anunciar Imóvel</a>
-    </div>
-    {% endif %}
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Tipo de Imóvel -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Tipo de Imóvel</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body" style="display: flex; flex-direction: column; gap: 6px;">
+                    {% set tipos = ['apartamento', 'casa', 'cobertura', 'terreno', 'comercial'] %}
+                    {% for tipo in tipos %}
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                        <input type="checkbox" name="tipo_check" value="{{ tipo }}" 
+                            {% if filtros.get('tipo_imovel') == tipo %}checked{% endif %}
+                            onchange="aplicarFiltroTipo(this)"
+                            style="width: 16px; height: 16px; accent-color: var(--apple-blue); cursor: pointer; border-radius: 4px;">
+                        <span style="text-transform: capitalize;">{{ tipo }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Quartos -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Quartos (mín.)</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body">
+                    <input type="number" id="filtro-quartos" value="{{ filtros.get('quartos_min', '') }}" min="0" step="1" placeholder="Ex: 2"
+                        onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                        style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                        onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Cidade -->
+            <div class="filtro-section" style="margin-bottom: 12px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Cidade</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body">
+                    <div style="position: relative;">
+                        <svg style="position: absolute; left: 10px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; color: var(--apple-text-tertiary);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        </svg>
+                        <input type="text" id="filtro-cidade" value="{{ filtros.get('cidade', '') }}" placeholder="Buscar cidade..."
+                            onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                            style="width: 100%; padding: 7px 10px 7px 32px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Botão Mobile para abrir filtros -->
+        <button type="button" id="btn-filtros-mobile" onclick="toggleSidebarMobile()"
+            style="display: none; position: fixed; bottom: 24px; left: 24px; z-index: 50; width: 48px; height: 48px; border-radius: 50%; background: var(--apple-blue); color: #fff; border: none; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.15); align-items: center; justify-content: center; transition: transform 0.2s;"
+            onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+            <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
+            </svg>
+        </button>
+
+        <!-- Overlay mobile -->
+        <div id="sidebar-overlay" onclick="toggleSidebarMobile()" 
+            style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 40; backdrop-filter: blur(2px);"></div>
+
+        <!-- ============================================================= -->
+        <!-- CONTEÚDO PRINCIPAL (à direita)                                  -->
+        <!-- ============================================================= -->
+        <div style="flex: 1; min-width: 0;">
+
+            {% if resultados is not none %}
+            <!-- Resultados da busca -->
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-xl font-bold" style="color: var(--apple-text-primary); letter-spacing: -0.02em;">Resultados da busca</h2>
+                    <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">
+                        {{ resultados|length }} imóve{{ 'l' if resultados|length == 1 else 'is' }} encontrado{{ 's' if
+                        resultados|length != 1 }}
+                        {% if query %} para "<span style="color: var(--apple-blue);">{{ query }}</span>"{% endif %}
+                    </p>
+                </div>
+                <a href="/" style="font-size: 0.8125rem; color: var(--apple-blue); font-weight: 500; text-decoration: none;">
+                    ← Limpar busca
+                </a>
+            </div>
+
+            {% if resultados|length == 0 %}
+            <div class="empty-state section-card">
+                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+                <p class="empty-title">Nenhum imóvel encontrado</p>
+                <p class="empty-desc">Tente termos mais amplos ou remova alguns filtros.</p>
+            </div>
+            {% else %}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% for item in resultados %}
+                {% set imovel = item.imovel %}
+                <div class="card-imovel animate-fade-in opacity-0 block relative"
+                    style="animation-delay: {{ loop.index0 * 0.06 }}s;">
+                    <!-- Imagem -->
+                    <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
+                        <a href="/imoveis/{{ imovel.id }}">
+                        {% if imovel.imagens|length > 0 %}
+                        <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                            class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
+                            <svg class="w-10 h-10" style="color: rgba(0,0,0,0.1);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        {% endif %}
+                        </a>
+
+                        {% if item.score is not none %}
+                        <span class="badge-score absolute top-3 left-3 z-10">{{ item.score }}% match</span>
+                        {% endif %}
+
+                        <!-- Botão Coração Favoritar -->
+                        <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
+                            title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
+                            class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
+                            style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
+                            <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Info -->
+                    <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
+                        <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
+                        <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+                            <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {{ imovel.bairro }}, {{ imovel.cidade }}
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span style="font-size: 1rem; font-weight: 800; color: #000000;">
+                                R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
+                            </span>
+                            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
+                                <span>{{ imovel.quartos }}q</span>
+                                {% if imovel.area %}
+                                <span>{{ imovel.area|int }}m²</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            {% elif imoveis %}
+            <!-- Imóveis recentes (home padrão) -->
+            <div class="mb-8">
+                <h2 class="text-xl font-bold" style="color: var(--apple-text-primary); letter-spacing: -0.02em;">Imóveis recentes</h2>
+                <p style="color: var(--apple-text-tertiary); font-size: 0.8125rem; margin-top: 4px;">Confira os últimos anúncios publicados</p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                {% for imovel in imoveis %}
+                <div class="card-imovel animate-fade-in opacity-0 block relative"
+                    style="animation-delay: {{ loop.index0 * 0.06 }}s;">
+                    <!-- Imagem -->
+                    <div class="relative h-48 overflow-hidden" style="background: var(--apple-bg);">
+                        <a href="/imoveis/{{ imovel.id }}">
+                        {% if imovel.imagens|length > 0 %}
+                        <img src="/static/uploads/{{ imovel.imagens[0].caminho }}" alt="{{ imovel.titulo }}"
+                            class="w-full h-full object-cover">
+                        {% else %}
+                        <div class="w-full h-full flex items-center justify-center" style="background: linear-gradient(135deg, #f5f5f7, #e8e8ed);">
+                            <svg class="w-10 h-10" style="color: rgba(0,0,0,0.1);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                            </svg>
+                        </div>
+                        {% endif %}
+                        </a>
+
+                        <!-- Botão Coração Favoritar -->
+                        <button type="button" onclick="toggleFavorito(event, {{ imovel.id }}, this)" 
+                            title="{{ 'Remover dos Favoritos' if imovel.id in fav_ids else 'Adicionar aos Favoritos' }}"
+                            class="absolute top-3 right-3 p-1.5 rounded-full bg-white/85 backdrop-blur-md shadow-sm hover:scale-110 transition-all z-20"
+                            style="color: {{ 'var(--apple-red)' if imovel.id in fav_ids else 'rgba(0,0,0,0.4)' }};">
+                            <svg class="w-5 h-5" fill="{{ 'var(--apple-red)' if imovel.id in fav_ids else 'none' }}" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <!-- Info -->
+                    <a href="/imoveis/{{ imovel.id }}" class="p-4 block" style="text-decoration: none;">
+                        <h3 style="font-weight: 600; color: var(--apple-text-primary); font-size: 0.9375rem; margin-bottom: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">{{ imovel.titulo }}</h3>
+                        <p style="font-size: 0.75rem; color: var(--apple-text-tertiary); margin-bottom: 12px; display: flex; align-items: center; gap: 4px;">
+                            <svg style="width: 12px; height: 12px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            {{ imovel.bairro }}, {{ imovel.cidade }}
+                        </p>
+                        <div class="flex items-center justify-between">
+                            <span style="font-size: 1rem; font-weight: 800; color: #000000;">
+                                R$ {{ "{:,.0f}".format(imovel.preco).replace(",", ".") }}
+                            </span>
+                            <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
+                                <span>{{ imovel.quartos }}q</span>
+                                {% if imovel.area %}
+                                <span>{{ imovel.area|int }}m²</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% else %}
+            <!-- Nenhum imóvel cadastrado -->
+            <div class="empty-state section-card">
+                <svg class="empty-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                        d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                </svg>
+                <p class="empty-title">Nenhum imóvel cadastrado ainda</p>
+                <p class="empty-desc">Seja o primeiro a anunciar!</p>
+                <a href="/imoveis/novo" class="btn-filled">Anunciar Imóvel</a>
+            </div>
+            {% endif %}
+
+        </div><!-- fim conteúdo principal -->
+
+    </div><!-- fim flex container -->
 
 </section>
 
@@ -324,5 +428,124 @@
     </div>
 </section>
 {% endif %}
+
+<!-- ===================================================================== -->
+<!-- SCRIPT DOS FILTROS SIDEBAR                                             -->
+<!-- ===================================================================== -->
+<script>
+// Mostrar sidebar no desktop, botão mobile no mobile
+function ajustarSidebar() {
+    const sidebar = document.getElementById('sidebar-filtros');
+    const btnMobile = document.getElementById('btn-filtros-mobile');
+    if (window.innerWidth >= 1024) {
+        sidebar.style.display = 'block';
+        sidebar.style.position = 'relative';
+        sidebar.style.zIndex = '1';
+        sidebar.style.top = 'auto';
+        sidebar.style.left = '';
+        sidebar.style.bottom = '';
+        sidebar.style.borderRadius = '8px';
+        sidebar.style.maxHeight = 'none';
+        btnMobile.style.display = 'none';
+        document.getElementById('sidebar-overlay').style.display = 'none';
+    } else {
+        if (!sidebar.classList.contains('mobile-open')) {
+            sidebar.style.display = 'none';
+        }
+        btnMobile.style.display = 'flex';
+    }
+}
+ajustarSidebar();
+window.addEventListener('resize', ajustarSidebar);
+
+// Toggle sidebar mobile
+function toggleSidebarMobile() {
+    const sidebar = document.getElementById('sidebar-filtros');
+    const overlay = document.getElementById('sidebar-overlay');
+    const isOpen = sidebar.classList.contains('mobile-open');
+    if (isOpen) {
+        sidebar.classList.remove('mobile-open');
+        sidebar.style.display = 'none';
+        overlay.style.display = 'none';
+    } else {
+        sidebar.classList.add('mobile-open');
+        sidebar.style.display = 'block';
+        sidebar.style.position = 'fixed';
+        sidebar.style.top = '0';
+        sidebar.style.left = '0';
+        sidebar.style.bottom = '0';
+        sidebar.style.zIndex = '45';
+        sidebar.style.borderRadius = '0 8px 8px 0';
+        sidebar.style.maxHeight = '100vh';
+        overlay.style.display = 'block';
+    }
+}
+
+// Toggle seções colapsáveis (salva e restaura a propriedade display original)
+function toggleSection(btn) {
+    const body = btn.parentElement.querySelector('.filtro-body');
+    const chevron = btn.querySelector('.filtro-chevron');
+    if (body.style.display === 'none') {
+        body.style.display = body.dataset.origDisplay || 'flex';
+        chevron.style.transform = 'rotate(0deg)';
+    } else {
+        body.dataset.origDisplay = window.getComputedStyle(body).display || 'flex';
+        body.style.display = 'none';
+        chevron.style.transform = 'rotate(-90deg)';
+    }
+}
+
+// Formatar moeda em tempo real (ex: 100.000, 1.000.000)
+function formatarMoedaInput(el) {
+    let v = el.value.replace(/\D/g, '');
+    if (v === '') {
+        el.value = '';
+    } else {
+        el.value = parseInt(v, 10).toLocaleString('pt-BR');
+    }
+}
+
+// Filtro tipo (checkbox single select)
+function aplicarFiltroTipo(el) {
+    const checks = document.querySelectorAll('input[name="tipo_check"]');
+    if (el.checked) {
+        checks.forEach(c => { if (c !== el) c.checked = false; });
+    }
+    aplicarFiltros();
+}
+
+// Aplicar filtros -> submete o form da busca com hidden inputs
+function aplicarFiltros() {
+    const form = document.getElementById('form-busca-hero');
+    
+    // Preencher hidden inputs com valores do sidebar
+    document.getElementById('hidden-cidade').value = document.getElementById('filtro-cidade').value;
+    
+    const tipoChecked = document.querySelector('input[name="tipo_check"]:checked');
+    document.getElementById('hidden-tipo').value = tipoChecked ? tipoChecked.value : '';
+    
+    const inputQuartos = document.getElementById('filtro-quartos');
+    document.getElementById('hidden-quartos').value = inputQuartos ? inputQuartos.value.trim() : '';
+    
+    // Extrair apenas dígitos dos campos de preço formatados
+    const pMin = document.getElementById('filtro-preco-min').value.replace(/\D/g, '');
+    const pMax = document.getElementById('filtro-preco-max').value.replace(/\D/g, '');
+    document.getElementById('hidden-preco-min').value = pMin;
+    document.getElementById('hidden-preco-max').value = pMax;
+    
+    form.submit();
+}
+
+// Limpar filtros
+function limparFiltros() {
+    document.getElementById('filtro-cidade').value = '';
+    document.getElementById('filtro-preco-min').value = '';
+    document.getElementById('filtro-preco-max').value = '';
+    const inputQuartos = document.getElementById('filtro-quartos');
+    if (inputQuartos) inputQuartos.value = '';
+    document.querySelectorAll('input[name="tipo_check"]').forEach(c => c.checked = false);
+    window.location.href = '/';
+}
+</script>
 
 {% endblock %}
