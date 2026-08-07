@@ -15,9 +15,6 @@ from sqlalchemy import text
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Evento de startup: cria tabelas no banco se não existirem e atualiza schema.
-    """
     Base.metadata.create_all(bind=engine)
     
     # Migração SQLite automática para colunas recentes

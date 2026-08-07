@@ -18,6 +18,10 @@ ACCESS_TOKEN_EXPIRE_MINUTES = 60 * 24  # 24 horas
 # Banco de dados
 DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./marketplace.db")
 
+# Ajuste para compatibilidade do Render com SQLAlchemy 2.0
+if DATABASE_URL.startswith("postgres://"):
+    DATABASE_URL = DATABASE_URL.replace("postgres://", "postgresql://", 1)
+
 # Uploads
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)

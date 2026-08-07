@@ -7,10 +7,12 @@
     <!-- Header -->
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
         <div>
-            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--apple-blue); margin-bottom: 4px;">
+            <div
+                style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; color: var(--apple-blue); margin-bottom: 4px;">
                 <a href="/admin" style="text-decoration: none; color: inherit;">← Painel Admin</a>
             </div>
-            <h1 style="font-size: 1.75rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">
+            <h1
+                style="font-size: 1.75rem; font-weight: 800; color: var(--apple-text-primary); letter-spacing: -0.03em;">
                 Gerenciamento de Usuários
             </h1>
             <p style="color: var(--apple-text-tertiary); font-size: 0.875rem; margin-top: 2px;">
@@ -18,20 +20,23 @@
             </p>
         </div>
 
-        <button onclick="toggleModalNovoUsuario()" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem; font-weight: 600; border-radius: 12px;">
+        <button onclick="toggleModalNovoUsuario()" class="btn-filled"
+            style="padding: 10px 20px; font-size: 0.8125rem; font-weight: 600; border-radius: 12px;">
             + Cadastrar Novo Usuário
         </button>
     </div>
 
     <!-- Mensagens de Alerta -->
     {% if sucesso %}
-    <div style="background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.25); color: #1b7a38; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
+    <div
+        style="background: rgba(52, 199, 89, 0.1); border: 1px solid rgba(52, 199, 89, 0.25); color: #1b7a38; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
         ✓ {{ sucesso }}
     </div>
     {% endif %}
 
     {% if erro %}
-    <div style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.25); color: #ff3b30; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
+    <div
+        style="background: rgba(255, 59, 48, 0.1); border: 1px solid rgba(255, 59, 48, 0.25); color: #ff3b30; padding: 12px 16px; border-radius: 12px; font-size: 0.875rem; font-weight: 600; margin-bottom: 24px;">
         ⚠️ {{ erro }}
     </div>
     {% endif %}
@@ -39,10 +44,13 @@
     <!-- Busca -->
     <div class="section-card p-4 mb-6" style="border-radius: 16px; background: #ffffff;">
         <form action="/admin/usuarios" method="get" class="flex gap-3">
-            <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nome, email, telefone ou documento..." class="input-apple flex-1" style="border-radius: 10px;">
-            <button type="submit" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem; border-radius: 10px;">Buscar</button>
+            <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nome, email, telefone ou documento..."
+                class="input-apple flex-1" style="border-radius: 10px;">
+            <button type="submit" class="btn-filled"
+                style="padding: 10px 20px; font-size: 0.8125rem; border-radius: 10px;">Buscar</button>
             {% if q %}
-            <a href="/admin/usuarios" class="btn-outlined flex items-center justify-center" style="padding: 10px 16px; font-size: 0.8125rem; border-radius: 10px; text-decoration: none;">Limpar</a>
+            <a href="/admin/usuarios" class="btn-outlined flex items-center justify-center"
+                style="padding: 10px 16px; font-size: 0.8125rem; border-radius: 10px; text-decoration: none;">Limpar</a>
             {% endif %}
         </form>
     </div>
@@ -66,12 +74,16 @@
                     <tr style="border-bottom: 1px solid rgba(0,0,0,0.04);">
                         <td style="padding: 14px 20px;">
                             <div class="flex items-center gap-3">
-                                <div style="width: 34px; height: 34px; border-radius: 50%; background: var(--apple-blue-light); color: var(--apple-blue); font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; flex-shrink: 0;">
+                                <div
+                                    style="width: 34px; height: 34px; border-radius: 50%; background: var(--apple-blue-light); color: var(--apple-blue); font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 0.8125rem; flex-shrink: 0;">
                                     {{ u.nome[0]|upper }}
                                 </div>
                                 <div>
-                                    <span style="font-weight: 700; color: var(--apple-text-primary); font-size: 0.875rem; display: block;">{{ u.nome }}</span>
-                                    <span style="font-size: 0.6875rem; color: var(--apple-text-tertiary);">ID #{{ u.id }}</span>
+                                    <span
+                                        style="font-weight: 700; color: var(--apple-text-primary); font-size: 0.875rem; display: block;">{{
+                                        u.nome }}</span>
+                                    <span style="font-size: 0.6875rem; color: var(--apple-text-tertiary);">ID #{{ u.id
+                                        }}</span>
                                 </div>
                             </div>
                         </td>
@@ -79,13 +91,18 @@
                             {{ u.email }}
                         </td>
                         <td style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">
-                            {% if u.telefone %}{{ u.telefone|formatar_telefone }}{% else %}<span style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">—</span>{% endif %}
+                            {% if u.telefone %}{{ u.telefone|formatar_telefone }}{% else %}<span
+                                style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">—</span>{%
+                            endif %}
                         </td>
                         <td style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">
-                            {% if u.documento %}{{ u.documento|formatar_documento }}{% else %}<span style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">—</span>{% endif %}
+                            {% if u.documento %}{{ u.documento|formatar_documento }}{% else %}<span
+                                style="color: var(--apple-text-tertiary); font-weight: 400; font-style: italic;">—</span>{%
+                            endif %}
                         </td>
                         <td style="text-align: center;">
-                            <span style="display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 980px; text-transform: capitalize;
+                            <span
+                                style="display: inline-block; font-size: 0.75rem; font-weight: 700; padding: 4px 12px; border-radius: 980px; text-transform: capitalize;
                                 {% if u.tipo_usuario == 'admin' %}background: rgba(255,59,48,0.1); color: #ff3b30;
                                 {% elif u.tipo_usuario == 'corretor' %}background: rgba(0,113,227,0.1); color: #0071e3;
                                 {% elif u.tipo_usuario == 'imobiliaria' %}background: rgba(175,82,222,0.1); color: #af52de;
@@ -95,14 +112,19 @@
                         </td>
                         <td style="text-align: right; padding-right: 20px;">
                             <div class="flex items-center justify-end gap-2">
-                                <button onclick="abrirModalEditar('{{ u.id }}', '{{ u.nome|escape }}', '{{ u.email }}', '{{ u.telefone|formatar_telefone or '' }}', '{{ u.documento|formatar_documento or '' }}', '{{ u.tipo_usuario }}')"
-                                        class="btn-outlined" style="padding: 5px 12px; font-size: 0.75rem; font-weight: 600; border-radius: 8px;">
+                                <button
+                                    onclick="abrirModalEditar('{{ u.id }}', '{{ u.nome|escape }}', '{{ u.email }}', '{{ u.telefone|formatar_telefone or '' }}', '{{ u.documento|formatar_documento or '' }}', '{{ u.tipo_usuario }}')"
+                                    class="btn-outlined"
+                                    style="padding: 5px 12px; font-size: 0.75rem; font-weight: 600; border-radius: 8px;">
                                     Editar
                                 </button>
                                 {% if u.email != 'admin@marketmovel.com.br' and u.id != usuario.id %}
-                                <form id="form-del-{{ u.id }}" action="/admin/usuarios/{{ u.id }}/excluir" method="post" style="display: inline;">
-                                    <button type="button" onclick="if(confirm('Tem certeza que deseja excluir o usuário {{ u.nome }}?')) document.getElementById('form-del-{{ u.id }}').submit();"
-                                            class="btn-danger" style="padding: 5px 12px; font-size: 0.75rem; font-weight: 600; border-radius: 8px;">
+                                <form id="form-del-{{ u.id }}" action="/admin/usuarios/{{ u.id }}/excluir" method="post"
+                                    style="display: inline;">
+                                    <button type="button"
+                                        onclick="if(confirm('Tem certeza que deseja excluir o usuário {{ u.nome }}?')) document.getElementById('form-del-{{ u.id }}').submit();"
+                                        class="btn-danger"
+                                        style="padding: 5px 12px; font-size: 0.75rem; font-weight: 600; border-radius: 8px;">
                                         Excluir
                                     </button>
                                 </form>
@@ -119,38 +141,57 @@
 </div>
 
 <!-- MODAL NOVO USUÁRIO -->
-<div id="modal-novo-usuario" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100;" class="flex items-center justify-center p-4">
-    <div style="background: #ffffff; border-radius: 20px; max-width: 540px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+<div id="modal-novo-usuario"
+    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100;"
+    class="flex items-center justify-center p-4">
+    <div
+        style="background: #ffffff; border-radius: 20px; max-width: 540px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
         <div class="flex items-center justify-between mb-6 pb-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
-            <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">Cadastrar Novo Usuário</h3>
-            <button onclick="toggleModalNovoUsuario()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--apple-text-tertiary);">&times;</button>
+            <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">Cadastrar Novo Usuário
+            </h3>
+            <button onclick="toggleModalNovoUsuario()"
+                style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--apple-text-tertiary);">&times;</button>
         </div>
 
         <form action="/admin/usuarios/novo" method="post" class="space-y-4">
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome Completo</label>
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome
+                    Completo</label>
                 <input type="text" name="nome" required placeholder="Nome do usuário" class="input-apple w-full">
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Email</label>
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Email</label>
                 <input type="email" name="email" required placeholder="email@exemplo.com" class="input-apple w-full">
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Senha Provisória</label>
-                <input type="password" name="senha" required minlength="4" placeholder="Senha de acesso" class="input-apple w-full">
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Senha
+                    Provisória</label>
+                <input type="password" name="senha" required minlength="4" placeholder="Senha de acesso"
+                    class="input-apple w-full">
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Telefone (WhatsApp)</label>
-                    <input type="text" name="telefone" placeholder="(49) 9 8837-9201" oninput="mascaraTelefone(this)" class="input-apple w-full">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Telefone
+                        (WhatsApp)</label>
+                    <input type="text" name="telefone" placeholder="(DDD) 9 1234-5678" oninput="mascaraTelefone(this)"
+                        class="input-apple w-full">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">CPF / CNPJ</label>
-                    <input type="text" name="documento" placeholder="000.000.000-00" oninput="mascaraDocumento(this)" class="input-apple w-full">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">CPF
+                        / CNPJ</label>
+                    <input type="text" name="documento" placeholder="000.000.000-00" oninput="mascaraDocumento(this)"
+                        class="input-apple w-full">
                 </div>
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Tipo de Conta</label>
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Tipo
+                    de Conta</label>
                 <select name="tipo_usuario" class="input-apple w-full">
                     {% for t in tipos_usuario %}
                     <option value="{{ t.slug }}">{{ t.nome }} ({{ t.slug }})</option>
@@ -159,42 +200,61 @@
                 </select>
             </div>
             <div class="flex justify-end gap-3 pt-4">
-                <button type="button" onclick="toggleModalNovoUsuario()" class="btn-outlined" style="padding: 10px 18px; font-size: 0.8125rem;">Cancelar</button>
-                <button type="submit" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem;">Cadastrar Usuário</button>
+                <button type="button" onclick="toggleModalNovoUsuario()" class="btn-outlined"
+                    style="padding: 10px 18px; font-size: 0.8125rem;">Cancelar</button>
+                <button type="submit" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem;">Cadastrar
+                    Usuário</button>
             </div>
         </form>
     </div>
 </div>
 
 <!-- MODAL EDITAR USUÁRIO -->
-<div id="modal-editar-usuario" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100;" class="flex items-center justify-center p-4">
-    <div style="background: #ffffff; border-radius: 20px; max-width: 540px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
+<div id="modal-editar-usuario"
+    style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(4px); z-index: 100;"
+    class="flex items-center justify-center p-4">
+    <div
+        style="background: #ffffff; border-radius: 20px; max-width: 540px; width: 100%; padding: 28px; box-shadow: 0 20px 40px rgba(0,0,0,0.2);">
         <div class="flex items-center justify-between mb-6 pb-3" style="border-bottom: 1px solid rgba(0,0,0,0.06);">
             <h3 style="font-size: 1.125rem; font-weight: 700; color: var(--apple-text-primary);">Editar Usuário</h3>
-            <button onclick="fecharModalEditar()" style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--apple-text-tertiary);">&times;</button>
+            <button onclick="fecharModalEditar()"
+                style="background: none; border: none; font-size: 1.25rem; cursor: pointer; color: var(--apple-text-tertiary);">&times;</button>
         </div>
 
         <form id="form-editar-admin" action="" method="post" class="space-y-4">
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome Completo</label>
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nome
+                    Completo</label>
                 <input type="text" id="edit-nome" name="nome" required class="input-apple w-full">
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Email <span style="color: var(--apple-text-tertiary); font-weight: 400;">(Não editável)</span></label>
-                <input type="email" id="edit-email" disabled readonly class="input-apple w-full" style="background: rgba(0,0,0,0.04); cursor: not-allowed; opacity: 0.7; border-color: rgba(0,0,0,0.1);">
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Email
+                    <span style="color: var(--apple-text-tertiary); font-weight: 400;">(Não editável)</span></label>
+                <input type="email" id="edit-email" disabled readonly class="input-apple w-full"
+                    style="background: rgba(0,0,0,0.04); cursor: not-allowed; opacity: 0.7; border-color: rgba(0,0,0,0.1);">
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Telefone (WhatsApp)</label>
-                    <input type="text" id="edit-telefone" name="telefone" oninput="mascaraTelefone(this)" class="input-apple w-full">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Telefone
+                        (WhatsApp)</label>
+                    <input type="text" id="edit-telefone" name="telefone" oninput="mascaraTelefone(this)"
+                        class="input-apple w-full">
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">CPF / CNPJ</label>
-                    <input type="text" id="edit-documento" name="documento" oninput="mascaraDocumento(this)" class="input-apple w-full">
+                    <label
+                        style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">CPF
+                        / CNPJ</label>
+                    <input type="text" id="edit-documento" name="documento" oninput="mascaraDocumento(this)"
+                        class="input-apple w-full">
                 </div>
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Tipo de Conta</label>
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Tipo
+                    de Conta</label>
                 <select id="edit-tipo" name="tipo_usuario" class="input-apple w-full">
                     {% for t in tipos_usuario %}
                     <option value="{{ t.slug }}">{{ t.nome }} ({{ t.slug }})</option>
@@ -203,12 +263,18 @@
                 </select>
             </div>
             <div>
-                <label style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nova Senha <span style="color: var(--apple-text-tertiary); font-weight: 400;">(Deixe em branco para não alterar)</span></label>
-                <input type="password" name="nova_senha" placeholder="Digite uma nova senha caso queira redefinir" class="input-apple w-full">
+                <label
+                    style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Nova
+                    Senha <span style="color: var(--apple-text-tertiary); font-weight: 400;">(Deixe em branco para não
+                        alterar)</span></label>
+                <input type="password" name="nova_senha" placeholder="Digite uma nova senha caso queira redefinir"
+                    class="input-apple w-full">
             </div>
             <div class="flex justify-end gap-3 pt-4">
-                <button type="button" onclick="fecharModalEditar()" class="btn-outlined" style="padding: 10px 18px; font-size: 0.8125rem;">Cancelar</button>
-                <button type="submit" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem;">Salvar Alterações</button>
+                <button type="button" onclick="fecharModalEditar()" class="btn-outlined"
+                    style="padding: 10px 18px; font-size: 0.8125rem;">Cancelar</button>
+                <button type="submit" class="btn-filled" style="padding: 10px 20px; font-size: 0.8125rem;">Salvar
+                    Alterações</button>
             </div>
         </form>
     </div>
