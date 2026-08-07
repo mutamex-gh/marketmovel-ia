@@ -52,12 +52,46 @@
 
                 <div>
                     <label for="senha" style="display: block; font-size: 0.75rem; font-weight: 500; color: rgba(255, 255, 255, 0.7); margin-bottom: 6px;">Sua Senha</label>
-                    <input type="password" id="senha" name="senha" required
-                           placeholder="••••••••"
-                           style="width: 100%; padding: 10px 14px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
-                           onfocus="this.style.borderColor='#0071e3'"
-                           onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+                    <div style="position: relative;">
+                        <input type="password" id="senha" name="senha" required
+                               placeholder="••••••••"
+                               style="width: 100%; padding: 10px 42px 10px 14px; background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 10px; font-size: 0.8125rem; transition: border-color 0.15s; outline: none;"
+                               onfocus="this.style.borderColor='#0071e3'"
+                               onblur="this.style.borderColor='rgba(255, 255, 255, 0.1)'">
+                        
+                        <button type="button" onclick="toggleMostrarSenha('senha', this)" title="Exibir/Ocultar Senha"
+                                style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; color: rgba(255, 255, 255, 0.5); cursor: pointer; padding: 4px; display: flex; align-items: center; justify-content: center; transition: color 0.15s;"
+                                onmouseover="this.style.color='#ffffff'" onmouseout="this.style.color='rgba(255, 255, 255, 0.5)'">
+                            <!-- Ícone Olho Aberto -->
+                            <svg class="icone-olho-aberto" style="width: 18px; height: 18px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                            </svg>
+                            <!-- Ícone Olho Fechado (Cortado) -->
+                            <svg class="icone-olho-fechado" style="width: 18px; height: 18px; display: none;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858-5.908a10.018 10.018 0 013.682-.763c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m-4.09-4.09a3 3 0 00-4.243-4.243M3 3l18 18" />
+                            </svg>
+                        </button>
+                    </div>
                 </div>
+
+                <script>
+                    function toggleMostrarSenha(inputId, btn) {
+                        const input = document.getElementById(inputId);
+                        const olhoAberto = btn.querySelector('.icone-olho-aberto');
+                        const olhoFechado = btn.querySelector('.icone-olho-fechado');
+
+                        if (input.type === 'password') {
+                            input.type = 'text';
+                            olhoAberto.style.display = 'none';
+                            olhoFechado.style.display = 'block';
+                        } else {
+                            input.type = 'password';
+                            olhoAberto.style.display = 'block';
+                            olhoFechado.style.display = 'none';
+                        }
+                    }
+                </script>
 
                 <button type="submit"
                     style="width: 100%; padding: 12px; margin-top: 20px; background: #0071e3; color: #fff; font-weight: 600; font-size: 0.875rem; border-radius: 10px; border: none; cursor: pointer; transition: background 0.15s;"
