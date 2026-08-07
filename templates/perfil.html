@@ -2,16 +2,48 @@
 {% block titulo %}Meu Perfil — Dashboard — ImóvelIA{% endblock %}
 
 {% block conteudo %}
+<style>
+    .avatar-hover-container:hover .avatar-hover-overlay {
+        opacity: 1 !important;
+    }
+</style>
 <div class="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-10 py-10 animate-fade-in">
 
     <!-- Header do Perfil (macOS window-like) -->
     <div class="profile-header p-6 sm:p-8 text-white mb-8">
         <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 relative z-10">
             <div class="flex items-center gap-5">
-                <div
-                    style="width: 64px; height: 64px; background: linear-gradient(145deg, var(--apple-blue), #5856d6); border-radius: 18px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; font-weight: 800; color: #fff; box-shadow: 0 4px 16px rgba(0,113,227,0.25);">
-                    {{ usuario.nome[0]|upper }}
+                <!-- Avatar interativo com Hover de Câmera -->
+                <div class="relative group avatar-hover-container cursor-pointer" onclick="document.getElementById('input-foto-avatar').click();" title="Clique para alterar a foto de perfil"
+                    style="width: 72px; height: 72px; border-radius: 50%; overflow: hidden; position: relative; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0,0,0,0.3); border: 2.5px solid rgba(255,255,255,0.4); transition: transform 0.2s;"
+                    onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                    
+                    {% if usuario.foto_perfil %}
+                    <img src="/static/uploads/{{ usuario.foto_perfil }}" id="img-avatar-header" alt="{{ usuario.nome }}"
+                        style="width: 100%; height: 100%; object-fit: cover;">
+                    {% else %}
+                    <div id="img-avatar-header-fallback"
+                        style="width: 100%; height: 100%; background: linear-gradient(145deg, var(--apple-blue), #5856d6); color: #fff; font-weight: 800; font-size: 1.625rem; display: flex; align-items: center; justify-content: center;">
+                        {{ usuario.nome[0]|upper }}
+                    </div>
+                    {% endif %}
+
+                    <!-- Overlay com ícone de Câmera no Hover -->
+                    <div class="avatar-hover-overlay"
+                        style="position: absolute; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(2px); display: flex; flex-direction: column; align-items: center; justify-content: center; color: #ffffff; opacity: 0; transition: opacity 0.2s ease; border-radius: 50%;">
+                        <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        <span style="font-size: 0.5625rem; font-weight: 700; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.05em;">Alterar</span>
+                    </div>
                 </div>
+
+                <!-- Input oculto para seleção de foto -->
+                <input type="file" id="input-foto-avatar" accept="image/png, image/jpeg, image/webp" style="display: none;" onchange="uploadFotoAvatar(this)">
+
                 <div>
                     <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
                         <h1 style="font-size: 1.5rem; font-weight: 700; letter-spacing: -0.03em;">{{ usuario.nome }}
@@ -189,7 +221,7 @@
             </div>
 
             <!-- FORMULÁRIO DE EDIÇÃO (Invisível até clicar no botão) -->
-            <form id="form-editar-perfil" action="/perfil/editar" method="post" style="display: none; margin-top: 16px;"
+            <form id="form-editar-perfil" action="/perfil/editar" method="post" enctype="multipart/form-data" style="display: none; margin-top: 16px;"
                 class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                     <label for="nome_perfil"
@@ -209,11 +241,35 @@
                 <div>
                     <label for="documento_perfil"
                         style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 4px;">Documento
-                        — CPF ou CNPJ <span style="color: var(--apple-blue);">*</span></label>
+                        — CPF ou CNPJ</label>
                     <input type="text" id="documento_perfil" name="documento"
                         value="{{ usuario.documento|formatar_documento or '' }}" placeholder="000.000.000-00"
                         oninput="mascaraDocumento(this)" class="input-apple" style="width: 100%;">
                 </div>
+
+                <!-- Upload da Foto de Perfil -->
+                <div class="md:col-span-3" style="background: rgba(0,0,0,0.02); padding: 14px 16px; border-radius: 12px; border: 1px dashed rgba(0,0,0,0.12);">
+                    <label for="foto_perfil_input" style="display: block; font-size: 0.75rem; font-weight: 600; color: var(--apple-text-secondary); margin-bottom: 8px;">
+                        Foto de Perfil (Avatar / Logo)
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 14px;">
+                        {% if usuario.foto_perfil %}
+                        <img src="/static/uploads/{{ usuario.foto_perfil }}" id="avatar-preview" alt="Avatar" style="width: 48px; height: 48px; border-radius: 50%; object-fit: cover; border: 1px solid var(--apple-border); flex-shrink: 0;">
+                        {% else %}
+                        <div id="avatar-preview-fallback" style="width: 48px; height: 48px; border-radius: 50%; background: linear-gradient(145deg, var(--apple-blue), #5856d6); color: #fff; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.125rem; flex-shrink: 0;">
+                            {{ usuario.nome[0]|upper }}
+                        </div>
+                        {% endif %}
+                        <div style="flex: 1;">
+                            <input type="file" id="foto_perfil_input" name="foto" accept="image/png, image/jpeg, image/webp"
+                                class="input-apple" style="width: 100%; padding: 6px 10px; font-size: 0.8125rem;">
+                            <span style="display: block; font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 4px;">
+                                Formatos aceitos: JPG, PNG, WEBP (recomendado quadrado 300x300px)
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="md:col-span-3 flex justify-end gap-3">
                     <button type="button" onclick="toggleFormEditar()" class="btn-outlined"
                         style="padding: 9px 18px; font-size: 0.8125rem; font-weight: 600;">
@@ -240,6 +296,64 @@
                     form.style.display = 'none';
                     view.style.display = 'grid';
                     btn.innerHTML = '<svg style="width: 14px; height: 14px; display: inline-block; vertical-align: -2px; margin-right: 4px;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/></svg> Editar Dados';
+                }
+            }
+
+            async function uploadFotoAvatar(input) {
+                if (!input.files || !input.files[0]) return;
+
+                const file = input.files[0];
+                const formData = new FormData();
+                formData.append('foto', file);
+
+                const overlay = document.querySelector('.avatar-hover-overlay');
+                if (overlay) {
+                    overlay.style.opacity = '1';
+                    overlay.innerHTML = '<span style="font-size: 0.5625rem; font-weight: 700; color: #fff;">Enviando...</span>';
+                }
+
+                try {
+                    const resp = await fetch('/perfil/foto', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await resp.json();
+
+                    if (resp.ok && data.sucesso) {
+                        let img = document.getElementById('img-avatar-header');
+                        const fallback = document.getElementById('img-avatar-header-fallback');
+
+                        if (!img) {
+                            img = document.createElement('img');
+                            img.id = 'img-avatar-header';
+                            img.alt = 'Avatar';
+                            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+                            if (fallback) fallback.replaceWith(img);
+                        }
+                        img.src = data.foto_url + '?t=' + new Date().getTime();
+
+                        // Atualiza pré-visualização do formulário se visível
+                        const prevImg = document.getElementById('avatar-preview');
+                        if (prevImg) prevImg.src = data.foto_url + '?t=' + new Date().getTime();
+                    } else {
+                        alert(data.erro || 'Erro ao enviar foto.');
+                    }
+                } catch (e) {
+                    console.error('Erro ao enviar foto:', e);
+                    alert('Falha ao enviar a foto de perfil. Tente novamente.');
+                } finally {
+                    if (overlay) {
+                        overlay.style.opacity = '0';
+                        overlay.innerHTML = `
+                            <svg style="width: 22px; height: 22px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span style="font-size: 0.5625rem; font-weight: 700; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.05em;">Alterar</span>
+                        `;
+                    }
                 }
             }
         </script>

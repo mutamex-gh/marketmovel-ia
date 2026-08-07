@@ -1,17 +1,19 @@
-"""
-Rotas de autenticação — login, cadastro e logout.
-"""
-from fastapi import APIRouter, Request, Depends, Form
-from fastapi.responses import RedirectResponse
+import uuid
+from pathlib import Path
+from PIL import Image as PILImage
+from fastapi import APIRouter, Request, Depends, Form, UploadFile, File
+from fastapi.responses import RedirectResponse, JSONResponse
 from fastapi.templating import Jinja2Templates
 from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Usuario, Imovel, Interesse, TipoUsuario
 from app.auth import hash_senha, verificar_senha, criar_token_jwt, obter_usuario_logado
+from app.config import UPLOAD_DIR
 
 router = APIRouter(tags=["autenticação"])
 templates = Jinja2Templates(directory="templates")
+
 
 def formatar_telefone_filter(val):
     if not val:
@@ -23,6 +25,7 @@ def formatar_telefone_filter(val):
         return f"({nums[:2]}) {nums[2:6]}-{nums[6:]}"
     return val
 
+
 def formatar_documento_filter(val):
     if not val:
         return ""
@@ -33,8 +36,91 @@ def formatar_documento_filter(val):
         return f"{nums[:2]}.{nums[2:5]}.{nums[5:8]}/{nums[8:12]}-{nums[12:]}"
     return val
 
+
 templates.env.filters["formatar_telefone"] = formatar_telefone_filter
 templates.env.filters["formatar_documento"] = formatar_documento_filter
+
+
+def _salvar_foto_perfil(arquivo: UploadFile) -> str:
+    """Salva a foto de perfil recortada em 300x300px em static/uploads/perfil/."""
+    dir_perfil = UPLOAD_DIR / "perfil"
+    dir_perfil.mkdir(parents=True, exist_ok=True)
+
+    extensao = Path(arquivo.filename).suffix.lower() if arquivo.filename else ".jpg"
+    if extensao not in (".jpg", ".jpeg", ".png", ".webp"):
+        extensao = ".jpg"
+    nome_arquivo = f"perfil_{uuid.uuid4().hex[:10]}{extensao}"
+    caminho_completo = dir_perfil / nome_arquivo
+
+    img = PILImage.open(arquivo.file)
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
+    # Crop quadrado centralizado
+    w, h = img.size
+    min_dim = min(w, h)
+    left = (w - min_dim) / 2
+    top = (h - min_dim) / 2
+    right = (w + min_dim) / 2
+    bottom = (h + min_dim) / 2
+
+    img = img.crop((left, top, right, bottom))
+    img = img.resize((300, 300), PILImage.LANCZOS)
+    img.save(caminho_completo, quality=90)
+
+    return f"perfil/{nome_arquivo}"
+
+
+@router.post("/perfil/foto")
+async def atualizar_foto_perfil(
+    request: Request,
+    foto: UploadFile = File(...),
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Upload instantâneo de foto de perfil via AJAX (ao passar o mouse / clicar no avatar)."""
+    if not usuario:
+        return JSONResponse(status_code=401, content={"erro": "Não autorizado", "redirect": "/login"})
+
+    if not foto or not foto.filename or not foto.filename.strip() or foto.size == 0:
+        return JSONResponse(status_code=400, content={"erro": "Nenhuma imagem selecionada."})
+
+    caminho_rel = _salvar_foto_perfil(foto)
+    usuario.foto_perfil = caminho_rel
+    db.commit()
+
+    return JSONResponse(content={
+        "sucesso": True,
+        "foto_url": f"/static/uploads/{caminho_rel}"
+    })
+
+
+@router.post("/perfil/editar")
+async def editar_perfil(
+    request: Request,
+    nome: str = Form(...),
+    telefone: str = Form(...),
+    documento: str = Form(None),
+    foto: UploadFile = File(default=None),
+    usuario: Usuario = Depends(obter_usuario_logado),
+    db: Session = Depends(get_db),
+):
+    """Atualiza dados do perfil e foto de avatar do usuário."""
+    if not usuario:
+        return RedirectResponse(url="/login", status_code=303)
+
+    usuario.nome = nome.strip()
+    usuario.telefone = telefone.strip() if telefone else None
+    usuario.documento = documento.strip() if documento else None
+
+    # Salva foto se enviada
+    if foto and foto.filename and foto.filename.strip() and foto.size > 0:
+        caminho_rel = _salvar_foto_perfil(foto)
+        usuario.foto_perfil = caminho_rel
+
+    db.commit()
+
+    return RedirectResponse(url="/perfil?salvo=ok", status_code=303)
 
 
 @router.get("/perfil")
@@ -165,26 +251,6 @@ async def criar_conta(
 
     return RedirectResponse(url="/login?cadastro=ok", status_code=303)
 
-
-@router.post("/perfil/editar")
-async def editar_perfil(
-    request: Request,
-    nome: str = Form(...),
-    telefone: str = Form(...),
-    documento: str = Form(None),
-    usuario: Usuario = Depends(obter_usuario_logado),
-    db: Session = Depends(get_db),
-):
-    """Atualiza dados do perfil do usuário."""
-    if not usuario:
-        return RedirectResponse(url="/login", status_code=303)
-
-    usuario.nome = nome.strip()
-    usuario.telefone = telefone.strip() if telefone else None
-    usuario.documento = documento.strip() if documento else None
-    db.commit()
-
-    return RedirectResponse(url="/perfil?salvo=ok", status_code=303)
 
 
 @router.get("/login")

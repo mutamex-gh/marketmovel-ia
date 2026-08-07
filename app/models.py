@@ -21,6 +21,7 @@ class Usuario(Base):
     telefone = Column(String(50), nullable=True)  # WhatsApp
     documento = Column(String(50), nullable=True)  # CPF ou CNPJ
     tipo_usuario = Column(String(50), default="proprietario")  # proprietario, corretor, imobiliaria
+    foto_perfil = Column(String(500), nullable=True)  # Caminho da foto de perfil em static/uploads/
     criado_em = Column(DateTime, default=datetime.utcnow)
 
     # Relacionamentos
