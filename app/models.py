@@ -3,7 +3,7 @@ Modelos SQLAlchemy — representam as tabelas do banco de dados.
 """
 from datetime import datetime
 from sqlalchemy import (
-    Column, Integer, String, Float, Text, DateTime, ForeignKey
+    Column, Integer, String, Float, Text, DateTime, ForeignKey, Boolean
 )
 from sqlalchemy.orm import relationship
 
@@ -53,7 +53,17 @@ class Imovel(Base):
     bairro = Column(String(100), nullable=False)
     localizacao = Column(String(255), nullable=True)  # Endereço exato / localização detalhada
     quartos = Column(Integer, default=1)
-    area = Column(Float, nullable=True)  # metros quadrados
+    area = Column(Float, nullable=True)  # metros quadrados (área útil)
+    banheiros = Column(Integer, nullable=True)  # número de banheiros
+    suites = Column(Integer, nullable=True)  # número de suítes
+    vagas_garagem = Column(Integer, nullable=True)  # vagas de garagem
+    area_construida = Column(Float, nullable=True)  # m² construídos
+    andar = Column(Integer, nullable=True)  # andar (para apartamentos/coberturas)
+    aceita_pets = Column(Boolean, default=False)  # aceita animais
+    mobiliado = Column(String(20), default="nao")  # nao, semi, completo
+    condominio = Column(Float, nullable=True)  # valor do condomínio R$/mês
+    iptu = Column(Float, nullable=True)  # valor do IPTU R$/ano
+    finalidade = Column(String(20), default="venda")  # venda, aluguel
     tipo_imovel = Column(String(50), nullable=False)  # apartamento, casa, cobertura, terreno, comercial
     embedding = Column(Text, nullable=True)  # JSON serializado do vetor de embedding
     visualizacoes = Column(Integer, default=0)  # Contador de acessos ao imóvel

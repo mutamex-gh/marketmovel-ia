@@ -40,6 +40,11 @@
                     <input type="hidden" name="quartos_min" id="hidden-quartos" value="{{ filtros.get('quartos_min', '') }}">
                     <input type="hidden" name="preco_min" id="hidden-preco-min" value="{{ filtros.get('preco_min', '') }}">
                     <input type="hidden" name="preco_max" id="hidden-preco-max" value="{{ filtros.get('preco_max', '') }}">
+                    <input type="hidden" name="finalidade" id="hidden-finalidade" value="{{ filtros.get('finalidade', '') }}">
+                    <input type="hidden" name="banheiros_min" id="hidden-banheiros" value="{{ filtros.get('banheiros_min', '') }}">
+                    <input type="hidden" name="vagas_min" id="hidden-vagas" value="{{ filtros.get('vagas_min', '') }}">
+                    <input type="hidden" name="area_min" id="hidden-area-min" value="{{ filtros.get('area_min', '') }}">
+                    <input type="hidden" name="area_max" id="hidden-area-max" value="{{ filtros.get('area_max', '') }}">
                 </div>
                 <button type="submit"
                     style="padding: 12px 28px; background: var(--apple-blue); color: #fff; font-weight: 600; font-size: 0.875rem; border-radius: 12px; border: none; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; white-space: nowrap;"
@@ -87,6 +92,31 @@
                     onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                     Limpar
                 </button>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Finalidade -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Finalidade</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body" style="display: flex; flex-direction: column; gap: 6px;">
+                    {% set finalidades = [('venda', 'Venda'), ('aluguel', 'Aluguel')] %}
+                    {% for val, label in finalidades %}
+                    <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 4px 0; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                        <input type="checkbox" name="finalidade_check" value="{{ val }}" 
+                            {% if filtros.get('finalidade') == val %}checked{% endif %}
+                            onchange="aplicarFiltroFinalidade(this)"
+                            style="width: 16px; height: 16px; accent-color: var(--apple-blue); cursor: pointer; border-radius: 4px;">
+                        <span>{{ label }}</span>
+                    </label>
+                    {% endfor %}
+                </div>
             </div>
 
             <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
@@ -165,6 +195,73 @@
                         onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
                         style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
                         onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Banheiros -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Banheiros (mín.)</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body">
+                    <input type="number" id="filtro-banheiros" value="{{ filtros.get('banheiros_min', '') }}" min="0" step="1" placeholder="Ex: 2"
+                        onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                        style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                        onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Vagas -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Vagas (mín.)</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body">
+                    <input type="number" id="filtro-vagas" value="{{ filtros.get('vagas_min', '') }}" min="0" step="1" placeholder="Ex: 1"
+                        onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                        style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                        onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                </div>
+            </div>
+
+            <hr style="border: none; border-top: 1px solid rgba(0,0,0,0.06); margin-bottom: 18px;">
+
+            <!-- Filtro: Área -->
+            <div class="filtro-section" style="margin-bottom: 20px;">
+                <button type="button" onclick="toggleSection(this)" 
+                    style="width: 100%; display: flex; align-items: center; justify-content: space-between; background: none; border: none; cursor: pointer; padding: 0; margin-bottom: 12px;">
+                    <span style="font-size: 0.8125rem; font-weight: 600; color: var(--apple-text-primary);">Área (m²)</span>
+                    <svg class="filtro-chevron" style="width: 16px; height: 16px; color: var(--apple-text-tertiary); transition: transform 0.2s;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                </button>
+                <div class="filtro-body" style="display: flex; gap: 8px;">
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.625rem; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">Mínimo</label>
+                        <input type="number" id="filtro-area-min" value="{{ filtros.get('area_min', '') }}" min="0" step="1" placeholder="0 m²"
+                            onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                            style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                    </div>
+                    <div style="flex: 1;">
+                        <label style="font-size: 0.625rem; color: var(--apple-text-tertiary); display: block; margin-bottom: 4px;">Máximo</label>
+                        <input type="number" id="filtro-area-max" value="{{ filtros.get('area_max', '') }}" min="0" step="1" placeholder="∞ m²"
+                            onchange="aplicarFiltros()" onkeydown="if(event.key==='Enter'){ event.preventDefault(); aplicarFiltros(); }"
+                            style="width: 100%; padding: 7px 10px; background: #f5f5f7; color: var(--apple-text-primary); border: 1px solid rgba(0,0,0,0.06); border-radius: 6px; font-size: 0.8125rem; outline: none; transition: border-color 0.2s;"
+                            onfocus="this.style.borderColor='var(--apple-blue)'" onblur="this.style.borderColor='rgba(0,0,0,0.06)'">
+                    </div>
                 </div>
             </div>
 
@@ -292,6 +389,8 @@
                             </span>
                             <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
                                 <span>{{ imovel.quartos }}q</span>
+                                {% if imovel.banheiros %}<span>{{ imovel.banheiros }}b</span>{% endif %}
+                                {% if imovel.vagas_garagem %}<span>{{ imovel.vagas_garagem }}v</span>{% endif %}
                                 {% if imovel.area %}
                                 <span>{{ imovel.area|int }}m²</span>
                                 {% endif %}
@@ -358,6 +457,8 @@
                             </span>
                             <div style="display: flex; align-items: center; gap: 10px; font-size: 0.6875rem; color: var(--apple-text-tertiary);">
                                 <span>{{ imovel.quartos }}q</span>
+                                {% if imovel.banheiros %}<span>{{ imovel.banheiros }}b</span>{% endif %}
+                                {% if imovel.vagas_garagem %}<span>{{ imovel.vagas_garagem }}v</span>{% endif %}
                                 {% if imovel.area %}
                                 <span>{{ imovel.area|int }}m²</span>
                                 {% endif %}
@@ -564,6 +665,15 @@ function aplicarFiltroTipo(el) {
     aplicarFiltros();
 }
 
+// Filtro finalidade (checkbox single select)
+function aplicarFiltroFinalidade(el) {
+    const checks = document.querySelectorAll('input[name="finalidade_check"]');
+    if (el.checked) {
+        checks.forEach(c => { if (c !== el) c.checked = false; });
+    }
+    aplicarFiltros();
+}
+
 // Aplicar filtros -> submete o form da busca com hidden inputs
 function aplicarFiltros() {
     const form = document.getElementById('form-busca-hero');
@@ -583,6 +693,22 @@ function aplicarFiltros() {
     document.getElementById('hidden-preco-min').value = pMin;
     document.getElementById('hidden-preco-max').value = pMax;
     
+    // Novos filtros
+    const finalidadeChecked = document.querySelector('input[name="finalidade_check"]:checked');
+    document.getElementById('hidden-finalidade').value = finalidadeChecked ? finalidadeChecked.value : '';
+    
+    const inputBanheiros = document.getElementById('filtro-banheiros');
+    document.getElementById('hidden-banheiros').value = inputBanheiros ? inputBanheiros.value.trim() : '';
+    
+    const inputVagas = document.getElementById('filtro-vagas');
+    document.getElementById('hidden-vagas').value = inputVagas ? inputVagas.value.trim() : '';
+    
+    const inputAreaMin = document.getElementById('filtro-area-min');
+    document.getElementById('hidden-area-min').value = inputAreaMin ? inputAreaMin.value.trim() : '';
+    
+    const inputAreaMax = document.getElementById('filtro-area-max');
+    document.getElementById('hidden-area-max').value = inputAreaMax ? inputAreaMax.value.trim() : '';
+    
     form.submit();
 }
 
@@ -594,6 +720,15 @@ function limparFiltros() {
     const inputQuartos = document.getElementById('filtro-quartos');
     if (inputQuartos) inputQuartos.value = '';
     document.querySelectorAll('input[name="tipo_check"]').forEach(c => c.checked = false);
+    document.querySelectorAll('input[name="finalidade_check"]').forEach(c => c.checked = false);
+    const inputBanheiros = document.getElementById('filtro-banheiros');
+    if (inputBanheiros) inputBanheiros.value = '';
+    const inputVagas = document.getElementById('filtro-vagas');
+    if (inputVagas) inputVagas.value = '';
+    const inputAreaMin = document.getElementById('filtro-area-min');
+    if (inputAreaMin) inputAreaMin.value = '';
+    const inputAreaMax = document.getElementById('filtro-area-max');
+    if (inputAreaMax) inputAreaMax.value = '';
     window.location.href = '/';
 }
 </script>

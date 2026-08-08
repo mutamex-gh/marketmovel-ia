@@ -12,7 +12,42 @@
     <!-- Formulário -->
     <form action="/imoveis/{{ imovel.id }}/editar" method="post" enctype="multipart/form-data" class="space-y-6" onsubmit="prepararEnvioForm(this)">
 
-        <!-- Informações principais -->
+        <!-- ============================================================= -->
+        <!-- FINALIDADE + TIPO                                              -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Finalidade e Tipo
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="finalidade" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Finalidade do anúncio</label>
+                    <select id="finalidade" name="finalidade" class="input-apple">
+                        <option value="venda" {% if imovel.finalidade == 'venda' or not imovel.finalidade %}selected{% endif %}>Venda</option>
+                        <option value="aluguel" {% if imovel.finalidade == 'aluguel' %}selected{% endif %}>Aluguel</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
+                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
+                        <option value="apartamento" {% if imovel.tipo_imovel=='apartamento' %}selected{% endif %}>Apartamento</option>
+                        <option value="casa" {% if imovel.tipo_imovel=='casa' %}selected{% endif %}>Casa</option>
+                        <option value="cobertura" {% if imovel.tipo_imovel=='cobertura' %}selected{% endif %}>Cobertura</option>
+                        <option value="terreno" {% if imovel.tipo_imovel=='terreno' %}selected{% endif %}>Terreno</option>
+                        <option value="comercial" {% if imovel.tipo_imovel=='comercial' %}selected{% endif %}>Comercial</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- INFORMAÇÕES PRINCIPAIS                                         -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,42 +70,143 @@
                     class="input-apple" style="resize: vertical;">{{ imovel.descricao }}</textarea>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                    <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
-                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
-                        <option value="apartamento" {% if imovel.tipo_imovel=='apartamento' %}selected{% endif %}>Apartamento</option>
-                        <option value="casa" {% if imovel.tipo_imovel=='casa' %}selected{% endif %}>Casa</option>
-                        <option value="cobertura" {% if imovel.tipo_imovel=='cobertura' %}selected{% endif %}>Cobertura</option>
-                        <option value="terreno" {% if imovel.tipo_imovel=='terreno' %}selected{% endif %}>Terreno</option>
-                        <option value="comercial" {% if imovel.tipo_imovel=='comercial' %}selected{% endif %}>Comercial</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="preco_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
-                    <input type="text" id="preco_display" inputmode="numeric" required
-                        value="{% if imovel.preco %}{{ '{:,.0f}'.format(imovel.preco|float).replace(',', '.') }}{% endif %}"
-                        placeholder="Ex: 350.000" oninput="formatarMoedaInput(this)" class="input-apple">
-                    <input type="hidden" id="preco" name="preco" value="{{ imovel.preco|int }}">
-                </div>
+            <div>
+                <label for="preco_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
+                <input type="text" id="preco_display" inputmode="numeric" required
+                    value="{% if imovel.preco %}{{ '{:,.0f}'.format(imovel.preco|float).replace(',', '.') }}{% endif %}"
+                    placeholder="Ex: 350.000" oninput="formatarMoedaInput(this)" class="input-apple">
+                <input type="hidden" id="preco" name="preco" value="{{ imovel.preco|int }}">
             </div>
+        </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <!-- ============================================================= -->
+        <!-- ESTRUTURA DO IMÓVEL                                            -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0v-4a1 1 0 011-1h2a1 1 0 011 1v4m-4 0h4" />
+                </svg>
+                Estrutura do Imóvel
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
                     <label for="quartos" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Quartos</label>
                     <input type="number" id="quartos" name="quartos" value="{{ imovel.quartos }}" min="0" max="50"
                         step="1" class="input-apple">
                 </div>
                 <div>
-                    <label for="area" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área (m²)</label>
+                    <label for="banheiros" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Banheiros</label>
+                    <input type="number" id="banheiros" name="banheiros" value="{{ imovel.banheiros or '' }}" min="0" max="30" step="1"
+                        placeholder="Ex: 2" class="input-apple">
+                </div>
+                <div>
+                    <label for="suites" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Suítes</label>
+                    <input type="number" id="suites" name="suites" value="{{ imovel.suites or '' }}" min="0" max="30" step="1"
+                        placeholder="Ex: 1" class="input-apple">
+                </div>
+                <div>
+                    <label for="vagas_garagem" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Vagas Garagem</label>
+                    <input type="number" id="vagas_garagem" name="vagas_garagem" value="{{ imovel.vagas_garagem or '' }}" min="0" max="20" step="1"
+                        placeholder="Ex: 2" class="input-apple">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div>
+                    <label for="area" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área Útil (m²)</label>
                     <input type="number" id="area" name="area" min="1" step="any"
                         value="{{ imovel.area|int if imovel.area else '' }}"
                         class="input-apple">
                 </div>
+                <div>
+                    <label for="area_construida" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área Construída (m²)</label>
+                    <input type="number" id="area_construida" name="area_construida" min="1" step="any"
+                        value="{{ imovel.area_construida|int if imovel.area_construida else '' }}"
+                        class="input-apple">
+                </div>
+                <div>
+                    <label for="andar" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Andar</label>
+                    <input type="number" id="andar" name="andar" value="{{ imovel.andar or '' }}" min="1" max="200" step="1"
+                        placeholder="Ex: 12" class="input-apple">
+                </div>
             </div>
         </div>
 
-        <!-- Localização -->
+        <!-- ============================================================= -->
+        <!-- VALORES ADICIONAIS                                             -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Valores Adicionais
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="condominio_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Condomínio (R$/mês)</label>
+                    <input type="text" id="condominio_display" inputmode="numeric" placeholder="Ex: 800"
+                        value="{% if imovel.condominio %}{{ '{:,.0f}'.format(imovel.condominio|float).replace(',', '.') }}{% endif %}"
+                        oninput="formatarMoedaInput(this)" class="input-apple">
+                    <input type="hidden" id="condominio" name="condominio" value="{{ imovel.condominio|int if imovel.condominio else '' }}">
+                </div>
+                <div>
+                    <label for="iptu_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">IPTU (R$/ano)</label>
+                    <input type="text" id="iptu_display" inputmode="numeric" placeholder="Ex: 2.400"
+                        value="{% if imovel.iptu %}{{ '{:,.0f}'.format(imovel.iptu|float).replace(',', '.') }}{% endif %}"
+                        oninput="formatarMoedaInput(this)" class="input-apple">
+                    <input type="hidden" id="iptu" name="iptu" value="{{ imovel.iptu|int if imovel.iptu else '' }}">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- CARACTERÍSTICAS                                                -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+                Características
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="mobiliado" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Mobiliado</label>
+                    <select id="mobiliado" name="mobiliado" class="input-apple">
+                        <option value="nao" {% if imovel.mobiliado == 'nao' or not imovel.mobiliado %}selected{% endif %}>Não mobiliado</option>
+                        <option value="semi" {% if imovel.mobiliado == 'semi' %}selected{% endif %}>Semi-mobiliado</option>
+                        <option value="completo" {% if imovel.mobiliado == 'completo' %}selected{% endif %}>Totalmente mobiliado</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Aceita Pets</label>
+                    <div style="display: flex; gap: 12px; padding: 9px 0;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                            <input type="radio" name="aceita_pets" value="true" {% if imovel.aceita_pets %}checked{% endif %}
+                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
+                            Sim
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                            <input type="radio" name="aceita_pets" value="false" {% if not imovel.aceita_pets %}checked{% endif %}
+                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
+                            Não
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- LOCALIZAÇÃO                                                    -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -108,7 +244,9 @@
             </div>
         </div>
 
-        <!-- Imagens atuais + novas -->
+        <!-- ============================================================= -->
+        <!-- FOTOS                                                          -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -175,6 +313,16 @@ function prepararEnvioForm(form) {
     const inputHidden = document.getElementById('preco');
     if (inputDisplay && inputHidden) {
         inputHidden.value = inputDisplay.value.replace(/\D/g, '');
+    }
+    const condDisplay = document.getElementById('condominio_display');
+    const condHidden = document.getElementById('condominio');
+    if (condDisplay && condHidden) {
+        condHidden.value = condDisplay.value.replace(/\D/g, '') || '';
+    }
+    const iptuDisplay = document.getElementById('iptu_display');
+    const iptuHidden = document.getElementById('iptu');
+    if (iptuDisplay && iptuHidden) {
+        iptuHidden.value = iptuDisplay.value.replace(/\D/g, '') || '';
     }
 }
 </script>

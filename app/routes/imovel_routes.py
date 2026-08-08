@@ -84,6 +84,16 @@ async def criar_imovel(
     quartos: int = Form(1),
     area: float = Form(None),
     tipo_imovel: str = Form("apartamento"),
+    finalidade: str = Form("venda"),
+    banheiros: int = Form(None),
+    suites: int = Form(None),
+    vagas_garagem: int = Form(None),
+    area_construida: float = Form(None),
+    andar: int = Form(None),
+    aceita_pets: bool = Form(False),
+    mobiliado: str = Form("nao"),
+    condominio: float = Form(None),
+    iptu: float = Form(None),
     imagens: list[UploadFile] = File(default=[]),
     usuario: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db),
@@ -110,6 +120,16 @@ async def criar_imovel(
                 "quartos": quartos,
                 "area": area,
                 "tipo_imovel": tipo_imovel,
+                "finalidade": finalidade,
+                "banheiros": banheiros,
+                "suites": suites,
+                "vagas_garagem": vagas_garagem,
+                "area_construida": area_construida,
+                "andar": andar,
+                "aceita_pets": aceita_pets,
+                "mobiliado": mobiliado,
+                "condominio": condominio,
+                "iptu": iptu,
             },
         )
 
@@ -125,6 +145,16 @@ async def criar_imovel(
         quartos=quartos,
         area=area if area and area > 0 else None,
         tipo_imovel=tipo_imovel,
+        finalidade=finalidade if finalidade in ("venda", "aluguel") else "venda",
+        banheiros=banheiros if banheiros and banheiros > 0 else None,
+        suites=suites if suites and suites > 0 else None,
+        vagas_garagem=vagas_garagem if vagas_garagem and vagas_garagem > 0 else None,
+        area_construida=area_construida if area_construida and area_construida > 0 else None,
+        andar=andar if andar and andar > 0 else None,
+        aceita_pets=aceita_pets,
+        mobiliado=mobiliado if mobiliado in ("nao", "semi", "completo") else "nao",
+        condominio=condominio if condominio and condominio > 0 else None,
+        iptu=iptu if iptu and iptu > 0 else None,
     )
     db.add(novo_imovel)
     db.flush()  # Gera o ID sem commitar
@@ -390,6 +420,16 @@ async def atualizar_imovel(
     quartos: int = Form(1),
     area: float = Form(None),
     tipo_imovel: str = Form("apartamento"),
+    finalidade: str = Form("venda"),
+    banheiros: int = Form(None),
+    suites: int = Form(None),
+    vagas_garagem: int = Form(None),
+    area_construida: float = Form(None),
+    andar: int = Form(None),
+    aceita_pets: bool = Form(False),
+    mobiliado: str = Form("nao"),
+    condominio: float = Form(None),
+    iptu: float = Form(None),
     imagens: list[UploadFile] = File(default=[]),
     usuario: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db),
@@ -412,6 +452,16 @@ async def atualizar_imovel(
     imovel.quartos = quartos
     imovel.area = area if area and area > 0 else None
     imovel.tipo_imovel = tipo_imovel
+    imovel.finalidade = finalidade if finalidade in ("venda", "aluguel") else "venda"
+    imovel.banheiros = banheiros if banheiros and banheiros > 0 else None
+    imovel.suites = suites if suites and suites > 0 else None
+    imovel.vagas_garagem = vagas_garagem if vagas_garagem and vagas_garagem > 0 else None
+    imovel.area_construida = area_construida if area_construida and area_construida > 0 else None
+    imovel.andar = andar if andar and andar > 0 else None
+    imovel.aceita_pets = aceita_pets
+    imovel.mobiliado = mobiliado if mobiliado in ("nao", "semi", "completo") else "nao"
+    imovel.condominio = condominio if condominio and condominio > 0 else None
+    imovel.iptu = iptu if iptu and iptu > 0 else None
 
     # Salva novas imagens (adiciona às existentes)
     ordem_atual = len(imovel.imagens)

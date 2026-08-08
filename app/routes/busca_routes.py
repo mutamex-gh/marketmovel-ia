@@ -84,6 +84,11 @@ async def buscar(
     quartos_min: Optional[str] = Query(default=None),
     preco_min: Optional[str] = Query(default=None),
     preco_max: Optional[str] = Query(default=None),
+    finalidade: Optional[str] = Query(default=None),
+    banheiros_min: Optional[str] = Query(default=None),
+    vagas_min: Optional[str] = Query(default=None),
+    area_min: Optional[str] = Query(default=None),
+    area_max: Optional[str] = Query(default=None),
     pagina: int = Query(default=1, ge=1),
     usuario: Usuario = Depends(obter_usuario_logado),
     db: Session = Depends(get_db),
@@ -110,6 +115,10 @@ async def buscar(
     q_num_quartos = _parse_int(quartos_min)
     q_preco_min = _parse_float(preco_min)
     q_preco_max = _parse_float(preco_max)
+    q_banheiros_min = _parse_int(banheiros_min)
+    q_vagas_min = _parse_int(vagas_min)
+    q_area_min = _parse_float(area_min)
+    q_area_max = _parse_float(area_max)
 
     # Query base
     query_db = db.query(Imovel)
@@ -131,6 +140,21 @@ async def buscar(
     if q_preco_max is not None and q_preco_max > 0:
         query_db = query_db.filter(Imovel.preco <= q_preco_max)
         filtros["preco_max"] = q_preco_max
+    if finalidade and finalidade.strip() and finalidade.strip() in ("venda", "aluguel"):
+        query_db = query_db.filter(Imovel.finalidade == finalidade.strip())
+        filtros["finalidade"] = finalidade.strip()
+    if q_banheiros_min is not None and q_banheiros_min > 0:
+        query_db = query_db.filter(Imovel.banheiros >= q_banheiros_min)
+        filtros["banheiros_min"] = q_banheiros_min
+    if q_vagas_min is not None and q_vagas_min > 0:
+        query_db = query_db.filter(Imovel.vagas_garagem >= q_vagas_min)
+        filtros["vagas_min"] = q_vagas_min
+    if q_area_min is not None and q_area_min > 0:
+        query_db = query_db.filter(Imovel.area >= q_area_min)
+        filtros["area_min"] = q_area_min
+    if q_area_max is not None and q_area_max > 0:
+        query_db = query_db.filter(Imovel.area <= q_area_max)
+        filtros["area_max"] = q_area_max
 
     imoveis_filtrados = query_db.all()
 
@@ -174,3 +198,4 @@ async def buscar(
             "total_imoveis": total_resultados,
         },
     )
+

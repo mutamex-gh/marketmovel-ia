@@ -114,7 +114,7 @@
 
                 <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
 
-                    <!-- Categoria -->
+                    <!-- Finalidade (Venda/Aluguel) -->
                     <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
                         class="flex items-start gap-3">
                         <div
@@ -129,7 +129,7 @@
                             <span
                                 style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Categoria</span>
                             <span
-                                style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">Venda</span>
+                                style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary); text-transform: capitalize;">{{ imovel.finalidade or 'venda' }}</span>
                         </div>
                     </div>
 
@@ -172,7 +172,61 @@
                         </div>
                     </div>
 
-                    <!-- Área -->
+                    <!-- Banheiros -->
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(52, 199, 89, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-green); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Banheiros</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">
+                                {% if imovel.banheiros %}{{ imovel.banheiros }}{% else %}Não informado{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Suítes -->
+                    {% if imovel.suites %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(88, 86, 214, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-purple); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Suítes</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">{{ imovel.suites }}</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Vagas Garagem -->
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 149, 0, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-orange); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Vagas</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">
+                                {% if imovel.vagas_garagem %}{{ imovel.vagas_garagem }}{% else %}Não informado{% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Área Útil -->
                     <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
                         class="flex items-start gap-3">
                         <div
@@ -192,6 +246,42 @@
                             </span>
                         </div>
                     </div>
+
+                    <!-- Área Construída -->
+                    {% if imovel.area_construida %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(0, 113, 227, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-blue); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0v-4a1 1 0 011-1h2a1 1 0 011 1v4m-4 0h4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Área Construída</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">{{ imovel.area_construida|int }} m²</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Andar -->
+                    {% if imovel.andar %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(88, 86, 214, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-purple); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Andar</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">{{ imovel.andar }}º</span>
+                        </div>
+                    </div>
+                    {% endif %}
 
                     <!-- Bairro -->
                     <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
@@ -232,6 +322,80 @@
                                 imovel.cidade }}</span>
                         </div>
                     </div>
+
+                    <!-- Condomínio -->
+                    {% if imovel.condominio %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(52, 199, 89, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-green); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Condomínio</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">R$ {{ "{:,.0f}".format(imovel.condominio).replace(",", ".") }}/mês</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- IPTU -->
+                    {% if imovel.iptu %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(255, 149, 0, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-orange); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">IPTU</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">R$ {{ "{:,.0f}".format(imovel.iptu).replace(",", ".") }}/ano</span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Mobiliado -->
+                    {% if imovel.mobiliado and imovel.mobiliado != 'nao' %}
+                    <div style="background: rgba(0, 0, 0, 0.02); border: 1px solid rgba(0, 0, 0, 0.04); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(88, 86, 214, 0.08); display: flex; align-items: center; justify-content: center; color: var(--apple-purple); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Mobiliado</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-text-primary);">
+                                {% if imovel.mobiliado == 'semi' %}Semi-mobiliado{% elif imovel.mobiliado == 'completo' %}Totalmente{% else %}Não{% endif %}
+                            </span>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <!-- Aceita Pets -->
+                    {% if imovel.aceita_pets %}
+                    <div style="background: rgba(52, 199, 89, 0.04); border: 1px solid rgba(52, 199, 89, 0.12); padding: 14px; border-radius: 14px;"
+                        class="flex items-start gap-3">
+                        <div
+                            style="width: 36px; height: 36px; border-radius: 10px; background: rgba(52, 199, 89, 0.1); display: flex; align-items: center; justify-content: center; color: var(--apple-green); flex-shrink: 0;">
+                            <svg style="width: 20px; height: 20px;" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
+                        <div>
+                            <span style="display: block; font-size: 0.75rem; color: var(--apple-text-tertiary); font-weight: 500;">Pets</span>
+                            <span style="font-size: 0.9375rem; font-weight: 700; color: var(--apple-green);">Aceita pets</span>
+                        </div>
+                    </div>
+                    {% endif %}
 
                 </div>
             </div>

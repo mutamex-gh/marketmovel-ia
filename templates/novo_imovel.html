@@ -22,7 +22,42 @@
     <!-- Formulário -->
     <form action="/imoveis/novo" method="post" enctype="multipart/form-data" class="space-y-6" onsubmit="prepararEnvioForm(this)">
 
-        <!-- Informações principais -->
+        <!-- ============================================================= -->
+        <!-- FINALIDADE + TIPO                                              -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Finalidade e Tipo
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="finalidade" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Finalidade do anúncio</label>
+                    <select id="finalidade" name="finalidade" class="input-apple">
+                        <option value="venda" {% if finalidade == 'aluguel' %}{% else %}selected{% endif %}>Venda</option>
+                        <option value="aluguel" {% if finalidade == 'aluguel' %}selected{% endif %}>Aluguel</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
+                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
+                        <option value="apartamento" {% if tipo_imovel == 'apartamento' %}selected{% endif %}>Apartamento</option>
+                        <option value="casa" {% if tipo_imovel == 'casa' %}selected{% endif %}>Casa</option>
+                        <option value="cobertura" {% if tipo_imovel == 'cobertura' %}selected{% endif %}>Cobertura</option>
+                        <option value="terreno" {% if tipo_imovel == 'terreno' %}selected{% endif %}>Terreno</option>
+                        <option value="comercial" {% if tipo_imovel == 'comercial' %}selected{% endif %}>Comercial</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- INFORMAÇÕES PRINCIPAIS                                         -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -35,6 +70,7 @@
             <div>
                 <label for="titulo" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Título do anúncio</label>
                 <input type="text" id="titulo" name="titulo" required minlength="5" maxlength="200"
+                    value="{{ titulo or '' }}"
                     placeholder="Ex: Apartamento espaçoso com vista para o parque"
                     class="input-apple">
             </div>
@@ -46,44 +82,147 @@
                 </label>
                 <textarea id="descricao" name="descricao" required minlength="20" rows="5"
                     placeholder="Descreva o imóvel com detalhes: ambiente, vizinhança, diferenciais..."
-                    class="input-apple" style="resize: vertical;"></textarea>
+                    class="input-apple" style="resize: vertical;">{{ descricao or '' }}</textarea>
                 <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 4px; display: flex; align-items: center; gap: 4px;"><svg style="width: 12px; height: 12px; flex-shrink: 0;" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/></svg> Uma boa descrição ajuda a IA a conectar seu imóvel com buscas relevantes.</p>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+                <label for="preco_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
+                <input type="text" id="preco_display" inputmode="numeric" required placeholder="Ex: 350.000"
+                    value="{{ '{:,.0f}'.format(preco|float).replace(',', '.') if preco else '' }}"
+                    oninput="formatarMoedaInput(this)" class="input-apple">
+                <input type="hidden" id="preco" name="preco">
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- ESTRUTURA DO IMÓVEL                                            -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0v-4a1 1 0 011-1h2a1 1 0 011 1v4m-4 0h4" />
+                </svg>
+                Estrutura do Imóvel
+            </h2>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div>
-                    <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
-                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
-                        <option value="apartamento">Apartamento</option>
-                        <option value="casa">Casa</option>
-                        <option value="cobertura">Cobertura</option>
-                        <option value="terreno">Terreno</option>
-                        <option value="comercial">Comercial</option>
-                    </select>
+                    <label for="quartos" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Quartos</label>
+                    <input type="number" id="quartos" name="quartos" value="{{ quartos or 1 }}" min="0" max="50" step="1"
+                        class="input-apple">
                 </div>
                 <div>
-                    <label for="preco_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Preço (R$)</label>
-                    <input type="text" id="preco_display" inputmode="numeric" required placeholder="Ex: 350.000"
-                        oninput="formatarMoedaInput(this)" class="input-apple">
-                    <input type="hidden" id="preco" name="preco">
+                    <label for="banheiros" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Banheiros</label>
+                    <input type="number" id="banheiros" name="banheiros" value="{{ banheiros or '' }}" min="0" max="30" step="1"
+                        placeholder="Ex: 2" class="input-apple">
+                </div>
+                <div>
+                    <label for="suites" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Suítes</label>
+                    <input type="number" id="suites" name="suites" value="{{ suites or '' }}" min="0" max="30" step="1"
+                        placeholder="Ex: 1" class="input-apple">
+                </div>
+                <div>
+                    <label for="vagas_garagem" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Vagas Garagem</label>
+                    <input type="number" id="vagas_garagem" name="vagas_garagem" value="{{ vagas_garagem or '' }}" min="0" max="20" step="1"
+                        placeholder="Ex: 2" class="input-apple">
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div>
-                    <label for="quartos" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Quartos</label>
-                    <input type="number" id="quartos" name="quartos" value="1" min="0" max="50" step="1"
+                    <label for="area" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área Útil (m²) <span style="font-weight: 400; color: var(--apple-text-tertiary);">opcional</span></label>
+                    <input type="number" id="area" name="area" min="1" step="any" placeholder="Ex: 72"
+                        value="{{ area|int if area else '' }}"
                         class="input-apple">
                 </div>
                 <div>
-                    <label for="area" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área (m²) <span style="font-weight: 400; color: var(--apple-text-tertiary);">opcional</span></label>
-                    <input type="number" id="area" name="area" min="1" step="any" placeholder="Ex: 72"
+                    <label for="area_construida" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Área Construída (m²) <span style="font-weight: 400; color: var(--apple-text-tertiary);">opcional</span></label>
+                    <input type="number" id="area_construida" name="area_construida" min="1" step="any" placeholder="Ex: 90"
+                        value="{{ area_construida|int if area_construida else '' }}"
                         class="input-apple">
+                </div>
+                <div>
+                    <label for="andar" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Andar <span style="font-weight: 400; color: var(--apple-text-tertiary);">apto/cobertura</span></label>
+                    <input type="number" id="andar" name="andar" value="{{ andar or '' }}" min="1" max="200" step="1"
+                        placeholder="Ex: 12" class="input-apple">
                 </div>
             </div>
         </div>
 
-        <!-- Localização -->
+        <!-- ============================================================= -->
+        <!-- VALORES ADICIONAIS                                             -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                Valores Adicionais <span style="font-weight: 400; color: var(--apple-text-tertiary); font-size: 0.75rem; margin-left: 4px;">opcional</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="condominio_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Condomínio (R$/mês)</label>
+                    <input type="text" id="condominio_display" inputmode="numeric" placeholder="Ex: 800"
+                        value="{{ '{:,.0f}'.format(condominio|float).replace(',', '.') if condominio else '' }}"
+                        oninput="formatarMoedaInput(this)" class="input-apple">
+                    <input type="hidden" id="condominio" name="condominio">
+                </div>
+                <div>
+                    <label for="iptu_display" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">IPTU (R$/ano)</label>
+                    <input type="text" id="iptu_display" inputmode="numeric" placeholder="Ex: 2.400"
+                        value="{{ '{:,.0f}'.format(iptu|float).replace(',', '.') if iptu else '' }}"
+                        oninput="formatarMoedaInput(this)" class="input-apple">
+                    <input type="hidden" id="iptu" name="iptu">
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- CARACTERÍSTICAS                                                -->
+        <!-- ============================================================= -->
+        <div class="section-card p-6 space-y-5">
+            <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
+                <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+                Características <span style="font-weight: 400; color: var(--apple-text-tertiary); font-size: 0.75rem; margin-left: 4px;">opcional</span>
+            </h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
+                    <label for="mobiliado" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Mobiliado</label>
+                    <select id="mobiliado" name="mobiliado" class="input-apple">
+                        <option value="nao" {% if mobiliado == 'nao' or not mobiliado %}selected{% endif %}>Não mobiliado</option>
+                        <option value="semi" {% if mobiliado == 'semi' %}selected{% endif %}>Semi-mobiliado</option>
+                        <option value="completo" {% if mobiliado == 'completo' %}selected{% endif %}>Totalmente mobiliado</option>
+                    </select>
+                </div>
+                <div>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Aceita Pets</label>
+                    <div style="display: flex; gap: 12px; padding: 9px 0;">
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                            <input type="radio" name="aceita_pets" value="true" {% if aceita_pets %}checked{% endif %}
+                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
+                            Sim
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
+                            <input type="radio" name="aceita_pets" value="false" {% if not aceita_pets %}checked{% endif %}
+                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
+                            Não
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ============================================================= -->
+        <!-- LOCALIZAÇÃO                                                    -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,12 +238,14 @@
                 <div>
                     <label for="cidade" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Cidade</label>
                     <input type="text" id="cidade" name="cidade" required minlength="2" maxlength="100"
+                        value="{{ cidade or '' }}"
                         placeholder="Ex: São Paulo"
                         class="input-apple">
                 </div>
                 <div>
                     <label for="bairro" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Bairro</label>
                     <input type="text" id="bairro" name="bairro" required minlength="2" maxlength="100"
+                        value="{{ bairro or '' }}"
                         placeholder="Ex: Vila Mariana"
                         class="input-apple">
                 </div>
@@ -118,13 +259,16 @@
                     </span>
                 </label>
                 <input type="text" id="localizacao" name="localizacao" maxlength="255"
+                    value="{{ localizacao or '' }}"
                     placeholder="Ex: Av. Paulista, 1500 - Ap. 82"
                     class="input-apple">
                 <p style="font-size: 0.6875rem; color: var(--apple-text-tertiary); margin-top: 4px;">Visitantes anônimos verão apenas Cidade/Bairro.</p>
             </div>
         </div>
 
-        <!-- Imagens -->
+        <!-- ============================================================= -->
+        <!-- FOTOS                                                          -->
+        <!-- ============================================================= -->
         <div class="section-card p-6 space-y-5">
             <h2 style="font-size: 0.9375rem; font-weight: 600; color: var(--apple-text-primary); display: flex; align-items: center; gap: 8px;">
                 <svg style="width: 18px; height: 18px; color: var(--apple-blue);" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -168,10 +312,23 @@ function formatarMoedaInput(el) {
 }
 
 function prepararEnvioForm(form) {
+    // Preço
     const inputDisplay = document.getElementById('preco_display');
     const inputHidden = document.getElementById('preco');
     if (inputDisplay && inputHidden) {
         inputHidden.value = inputDisplay.value.replace(/\D/g, '');
+    }
+    // Condomínio
+    const condDisplay = document.getElementById('condominio_display');
+    const condHidden = document.getElementById('condominio');
+    if (condDisplay && condHidden) {
+        condHidden.value = condDisplay.value.replace(/\D/g, '') || '';
+    }
+    // IPTU
+    const iptuDisplay = document.getElementById('iptu_display');
+    const iptuHidden = document.getElementById('iptu');
+    if (iptuDisplay && iptuHidden) {
+        iptuHidden.value = iptuDisplay.value.replace(/\D/g, '') || '';
     }
 }
 </script>
