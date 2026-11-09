@@ -38,7 +38,7 @@
     <link rel="shortcut icon" href="/static/favicon.ico">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/static/css/custom.css?v=26">
+    <link rel="stylesheet" href="/static/css/custom.css?v=30">
 </head>
 
 <body class="bg-white font-sans text-slate-800 min-h-screen flex flex-col" style="background: #ffffff !important;">
@@ -315,6 +315,99 @@
             }
             input.value = v;
         }
+
+        // Custom Select Component estilo Apple
+        function convertSelectToCustom(selectEl) {
+            if (!selectEl || selectEl.dataset.customized === "true") return;
+            selectEl.dataset.customized = "true";
+            selectEl.style.display = "none";
+
+            const container = document.createElement('div');
+            container.className = 'custom-select-container';
+
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.className = 'custom-select-button';
+
+            const spanText = document.createElement('span');
+            const selectedOpt = selectEl.options[selectEl.selectedIndex] || selectEl.options[0];
+            spanText.textContent = selectedOpt ? selectedOpt.text : '';
+
+            const arrowSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            arrowSvg.setAttribute('class', 'arrow-icon');
+            arrowSvg.setAttribute('viewBox', '0 0 24 24');
+            arrowSvg.setAttribute('fill', 'none');
+            arrowSvg.setAttribute('stroke', 'currentColor');
+            arrowSvg.setAttribute('stroke-width', '2');
+            arrowSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />';
+
+            button.appendChild(spanText);
+            button.appendChild(arrowSvg);
+
+            const menu = document.createElement('div');
+            menu.className = 'custom-select-menu';
+
+            function buildOptions() {
+                menu.innerHTML = '';
+                Array.from(selectEl.options).forEach(opt => {
+                    const item = document.createElement('div');
+                    item.className = 'custom-select-option' + (opt.selected ? ' is-selected' : '');
+
+                    const txt = document.createElement('span');
+                    txt.textContent = opt.text;
+                    item.appendChild(txt);
+
+                    if (opt.selected) {
+                        const checkSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+                        checkSvg.setAttribute('class', 'item-check');
+                        checkSvg.setAttribute('viewBox', '0 0 24 24');
+                        checkSvg.setAttribute('fill', 'none');
+                        checkSvg.setAttribute('stroke', 'currentColor');
+                        checkSvg.setAttribute('stroke-width', '2.5');
+                        checkSvg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />';
+                        item.appendChild(checkSvg);
+                    }
+
+                    item.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        selectEl.value = opt.value;
+                        spanText.textContent = opt.text;
+                        container.classList.remove('is-open');
+                        buildOptions();
+                        selectEl.dispatchEvent(new Event('change', { bubbles: true }));
+                    });
+
+                    menu.appendChild(item);
+                });
+            }
+
+            buildOptions();
+
+            button.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const isOpen = container.classList.contains('is-open');
+                document.querySelectorAll('.custom-select-container.is-open').forEach(c => c.classList.remove('is-open'));
+                if (!isOpen) {
+                    container.classList.add('is-open');
+                }
+            });
+
+            container.appendChild(button);
+            container.appendChild(menu);
+            selectEl.parentNode.insertBefore(container, selectEl);
+            container.appendChild(selectEl);
+        }
+
+        function initAllCustomSelects() {
+            document.querySelectorAll('select.custom-apple-select').forEach(convertSelectToCustom);
+        }
+
+        document.addEventListener('DOMContentLoaded', initAllCustomSelects);
+        document.addEventListener('click', (e) => {
+            if (!e.target.closest('.custom-select-container')) {
+                document.querySelectorAll('.custom-select-container.is-open').forEach(c => c.classList.remove('is-open'));
+            }
+        });
     </script>
     {% block scripts %}{% endblock %}
 </body>

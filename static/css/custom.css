@@ -109,7 +109,7 @@ body {
 }
 
 /* ---------- Input Focus Ring (Apple-like) ---------- */
-input:focus,
+input:not([type="radio"]):not([type="checkbox"]):focus,
 select:focus,
 textarea:focus {
     outline: none;
@@ -117,6 +117,24 @@ textarea:focus {
     box-shadow: 0 0 0 4px var(--apple-blue-glow) !important;
     transition: border-color var(--duration-fast) var(--ease-apple),
         box-shadow var(--duration-fast) var(--ease-apple);
+}
+
+/* Explicit Reset for Radio and Checkbox focus square */
+input[type="radio"],
+input[type="checkbox"] {
+    outline: none !important;
+    box-shadow: none !important;
+    accent-color: var(--apple-blue);
+}
+
+input[type="radio"]:focus,
+input[type="checkbox"]:focus,
+input[type="radio"]:focus-visible,
+input[type="checkbox"]:focus-visible,
+input[type="radio"]:active,
+input[type="checkbox"]:active {
+    outline: none !important;
+    box-shadow: none !important;
 }
 
 /* ---------- NAVBAR — macOS Translucent Frosted Glass ---------- */
@@ -409,9 +427,176 @@ nav.apple-nav .nav-link.active {
     border: 1px solid var(--apple-border-strong);
     border-radius: var(--radius-md);
     transition: all var(--duration-fast) var(--ease-apple);
-    -webkit-appearance: none;
-    appearance: none;
 }
+
+select.input-apple {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%2386868b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 14px center;
+    background-size: 16px;
+    padding-right: 38px;
+    cursor: pointer;
+}
+
+/* ---------- Segmented Control Pills (para escolhas binárias e radios) ---------- */
+.segmented-pills {
+    display: inline-flex;
+    gap: 4px;
+    background: #f5f5f7;
+    padding: 4px;
+    border-radius: 12px;
+    border: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.segmented-pills label {
+    position: relative;
+    margin: 0;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.segmented-pills input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
+}
+
+.segmented-pills label span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px 22px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--apple-text-secondary);
+    border-radius: 9px;
+    transition: all 0.18s var(--ease-apple);
+    user-select: none;
+}
+
+.segmented-pills label input:checked + span {
+    background: #ffffff;
+    color: var(--apple-blue);
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+.segmented-pills label:hover input:not(:checked) + span {
+    color: var(--apple-text-primary);
+    background: rgba(0, 0, 0, 0.04);
+}
+/* ---------- Custom Select Component (Arredondado & Moderno) ---------- */
+.custom-select-container {
+    position: relative;
+    width: 100%;
+}
+
+.custom-select-button {
+    width: 100%;
+    padding: 10px 14px;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--apple-text-primary);
+    background: #ffffff;
+    border: 1px solid var(--apple-border-strong);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    transition: all 0.18s var(--ease-apple);
+    outline: none;
+    text-align: left;
+    user-select: none;
+}
+
+.custom-select-button:hover {
+    border-color: rgba(0, 0, 0, 0.2);
+    background: #fafafa;
+}
+
+.custom-select-container.is-open .custom-select-button,
+.custom-select-button:focus-visible {
+    border-color: var(--apple-blue) !important;
+    box-shadow: 0 0 0 4px var(--apple-blue-glow) !important;
+}
+
+.custom-select-button .arrow-icon {
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    max-width: 14px !important;
+    color: var(--apple-text-tertiary);
+    transition: transform 0.2s var(--ease-apple);
+    flex-shrink: 0;
+    margin-left: 8px;
+}
+
+.custom-select-container.is-open .custom-select-button .arrow-icon {
+    transform: rotate(180deg);
+}
+
+.custom-select-menu {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    right: 0;
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12), 0 2px 8px rgba(0, 0, 0, 0.04);
+    padding: 6px;
+    z-index: 100;
+    display: none;
+    max-height: 240px;
+    overflow-y: auto;
+}
+
+.custom-select-container.is-open .custom-select-menu {
+    display: block;
+}
+
+.custom-select-option {
+    padding: 9px 12px;
+    font-size: 0.84375rem;
+    font-weight: 450;
+    color: var(--apple-text-primary);
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: background 0.12s var(--ease-apple), color 0.12s;
+    user-select: none;
+}
+
+.custom-select-option:hover {
+    background: #0071e3;
+    color: #ffffff;
+}
+
+.custom-select-option.is-selected {
+    background: rgba(0, 113, 227, 0.08);
+    color: var(--apple-blue);
+    font-weight: 600;
+}
+
+.custom-select-option:hover.is-selected {
+    background: #0071e3;
+    color: #ffffff;
+}
+
+.custom-select-option .item-check {
+    width: 14px !important;
+    height: 14px !important;
+    min-width: 14px !important;
+    max-width: 14px !important;
+}
+
 
 .input-apple:hover {
     border-color: rgba(0, 0, 0, 0.15);

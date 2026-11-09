@@ -151,7 +151,7 @@ async def criar_imovel(
         vagas_garagem=vagas_garagem if vagas_garagem and vagas_garagem > 0 else None,
         area_construida=area_construida if area_construida and area_construida > 0 else None,
         andar=andar if andar and andar > 0 else None,
-        aceita_pets=aceita_pets,
+        aceita_pets=str(aceita_pets).lower() in ("true", "1") if isinstance(aceita_pets, (str, bool)) else False,
         mobiliado=mobiliado if mobiliado in ("nao", "semi", "completo") else "nao",
         condominio=condominio if condominio and condominio > 0 else None,
         iptu=iptu if iptu and iptu > 0 else None,
@@ -458,7 +458,7 @@ async def atualizar_imovel(
     imovel.vagas_garagem = vagas_garagem if vagas_garagem and vagas_garagem > 0 else None
     imovel.area_construida = area_construida if area_construida and area_construida > 0 else None
     imovel.andar = andar if andar and andar > 0 else None
-    imovel.aceita_pets = aceita_pets
+    imovel.aceita_pets = str(aceita_pets).lower() in ("true", "1") if isinstance(aceita_pets, (str, bool)) else False
     imovel.mobiliado = mobiliado if mobiliado in ("nao", "semi", "completo") else "nao"
     imovel.condominio = condominio if condominio and condominio > 0 else None
     imovel.iptu = iptu if iptu and iptu > 0 else None

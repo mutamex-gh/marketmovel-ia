@@ -26,15 +26,21 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="finalidade" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Finalidade do anúncio</label>
-                    <select id="finalidade" name="finalidade" class="input-apple">
-                        <option value="venda" {% if imovel.finalidade == 'venda' or not imovel.finalidade %}selected{% endif %}>Venda</option>
-                        <option value="aluguel" {% if imovel.finalidade == 'aluguel' %}selected{% endif %}>Aluguel</option>
-                    </select>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Finalidade do anúncio</label>
+                    <div class="segmented-pills">
+                        <label>
+                            <input type="radio" name="finalidade" value="venda" {% if imovel.finalidade == 'venda' or not imovel.finalidade %}checked{% endif %}>
+                            <span>Venda</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="finalidade" value="aluguel" {% if imovel.finalidade == 'aluguel' %}checked{% endif %}>
+                            <span>Aluguel</span>
+                        </label>
+                    </div>
                 </div>
                 <div>
                     <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
-                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
+                    <select id="tipo_imovel" name="tipo_imovel" class="custom-apple-select input-apple">
                         <option value="apartamento" {% if imovel.tipo_imovel=='apartamento' %}selected{% endif %}>Apartamento</option>
                         <option value="casa" {% if imovel.tipo_imovel=='casa' %}selected{% endif %}>Casa</option>
                         <option value="cobertura" {% if imovel.tipo_imovel=='cobertura' %}selected{% endif %}>Cobertura</option>
@@ -179,25 +185,32 @@
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                    <label for="mobiliado" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Mobiliado</label>
-                    <select id="mobiliado" name="mobiliado" class="input-apple">
-                        <option value="nao" {% if imovel.mobiliado == 'nao' or not imovel.mobiliado %}selected{% endif %}>Não mobiliado</option>
-                        <option value="semi" {% if imovel.mobiliado == 'semi' %}selected{% endif %}>Semi-mobiliado</option>
-                        <option value="completo" {% if imovel.mobiliado == 'completo' %}selected{% endif %}>Totalmente mobiliado</option>
-                    </select>
+                    <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Mobiliado</label>
+                    <div class="segmented-pills">
+                        <label>
+                            <input type="radio" name="mobiliado" value="nao" {% if imovel.mobiliado == 'nao' or not imovel.mobiliado %}checked{% endif %}>
+                            <span>Não</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="mobiliado" value="semi" {% if imovel.mobiliado == 'semi' %}checked{% endif %}>
+                            <span>Semi</span>
+                        </label>
+                        <label>
+                            <input type="radio" name="mobiliado" value="completo" {% if imovel.mobiliado == 'completo' %}checked{% endif %}>
+                            <span>Completo</span>
+                        </label>
+                    </div>
                 </div>
                 <div>
                     <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Aceita Pets</label>
-                    <div style="display: flex; gap: 12px; padding: 9px 0;">
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
-                            <input type="radio" name="aceita_pets" value="true" {% if imovel.aceita_pets %}checked{% endif %}
-                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
-                            Sim
+                    <div class="segmented-pills">
+                        <label>
+                            <input type="radio" name="aceita_pets" value="true" {% if imovel.aceita_pets %}checked{% endif %}>
+                            <span>Sim</span>
                         </label>
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
-                            <input type="radio" name="aceita_pets" value="false" {% if not imovel.aceita_pets %}checked{% endif %}
-                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
-                            Não
+                        <label>
+                            <input type="radio" name="aceita_pets" value="false" {% if not imovel.aceita_pets %}checked{% endif %}>
+                            <span>Não</span>
                         </label>
                     </div>
                 </div>

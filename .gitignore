@@ -3,3 +3,4 @@ marketplace.db
 app/__pycache__
 app/routes/__pycache__
 static/uploads
+entrega/

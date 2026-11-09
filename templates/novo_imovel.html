@@ -37,14 +37,14 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="finalidade" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Finalidade do anúncio</label>
-                    <select id="finalidade" name="finalidade" class="input-apple">
+                    <select id="finalidade" name="finalidade" class="custom-apple-select input-apple">
                         <option value="venda" {% if finalidade == 'aluguel' %}{% else %}selected{% endif %}>Venda</option>
                         <option value="aluguel" {% if finalidade == 'aluguel' %}selected{% endif %}>Aluguel</option>
                     </select>
                 </div>
                 <div>
                     <label for="tipo_imovel" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Tipo de imóvel</label>
-                    <select id="tipo_imovel" name="tipo_imovel" class="input-apple">
+                    <select id="tipo_imovel" name="tipo_imovel" class="custom-apple-select input-apple">
                         <option value="apartamento" {% if tipo_imovel == 'apartamento' %}selected{% endif %}>Apartamento</option>
                         <option value="casa" {% if tipo_imovel == 'casa' %}selected{% endif %}>Casa</option>
                         <option value="cobertura" {% if tipo_imovel == 'cobertura' %}selected{% endif %}>Cobertura</option>
@@ -196,26 +196,18 @@
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                     <label for="mobiliado" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Mobiliado</label>
-                    <select id="mobiliado" name="mobiliado" class="input-apple">
+                    <select id="mobiliado" name="mobiliado" class="custom-apple-select input-apple">
                         <option value="nao" {% if mobiliado == 'nao' or not mobiliado %}selected{% endif %}>Não mobiliado</option>
                         <option value="semi" {% if mobiliado == 'semi' %}selected{% endif %}>Semi-mobiliado</option>
                         <option value="completo" {% if mobiliado == 'completo' %}selected{% endif %}>Totalmente mobiliado</option>
                     </select>
                 </div>
                 <div>
-                    <label style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Aceita Pets</label>
-                    <div style="display: flex; gap: 12px; padding: 9px 0;">
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
-                            <input type="radio" name="aceita_pets" value="true" {% if aceita_pets %}checked{% endif %}
-                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
-                            Sim
-                        </label>
-                        <label style="display: flex; align-items: center; gap: 6px; cursor: pointer; font-size: 0.8125rem; color: var(--apple-text-secondary);">
-                            <input type="radio" name="aceita_pets" value="false" {% if not aceita_pets %}checked{% endif %}
-                                style="accent-color: var(--apple-blue); width: 16px; height: 16px;">
-                            Não
-                        </label>
-                    </div>
+                    <label for="aceita_pets" style="display: block; font-size: 0.8125rem; font-weight: 500; color: var(--apple-text-primary); margin-bottom: 6px;">Aceita Pets</label>
+                    <select id="aceita_pets" name="aceita_pets" class="custom-apple-select input-apple">
+                        <option value="false" {% if not aceita_pets %}selected{% endif %}>Não</option>
+                        <option value="true" {% if aceita_pets %}selected{% endif %}>Sim</option>
+                    </select>
                 </div>
             </div>
         </div>

@@ -2,12 +2,14 @@
 Aplicação principal FastAPI — ponto de entrada do servidor.
 """
 from fastapi import FastAPI, Request
+from fastapi.responses import JSONResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from contextlib import asynccontextmanager
 
 from app.database import engine, Base
 from app.routes import auth_routes, imovel_routes, busca_routes, admin_routes
+from app.api import api_router
 
 
 from sqlalchemy import text
@@ -104,6 +106,9 @@ app.include_router(auth_routes.router)
 app.include_router(imovel_routes.router)
 app.include_router(admin_routes.router)
 
+# API REST (JSON) com autenticação JWT Bearer — documentação em /docs
+app.include_router(api_router)
+
 
 # ---------------------------------------------------------------------------
 # Página de erro 404 customizada
@@ -114,6 +119,10 @@ templates = Jinja2Templates(directory="templates")
 
 @app.exception_handler(404)
 async def pagina_nao_encontrada(request: Request, exc):
+    # Rotas da API REST devolvem JSON, não HTML
+    if request.url.path.startswith("/api/"):
+        detalhe = getattr(exc, "detail", None) or "Recurso não encontrado."
+        return JSONResponse(status_code=404, content={"detail": detalhe})
     return templates.TemplateResponse(
         request=request,
         name="base.html",
